@@ -1,7 +1,6 @@
 library storage_workers_api;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'package:shared_preferences/shared_preferences.dart'
+    show SharedPreferences;
+
+export 'src/storage_workers_api.dart';
