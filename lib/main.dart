@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:storage_workers_api/storage_workers_api.dart';
 
 import 'bootstrap.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //todo initialize required api
-  // final imgApi = LocalStorageImgsApi(
-  //   plugin: await SharedPreferences.getInstance(),
-  // );
-  //
-  // final tagApi = LocalStorageTagsApi(
-  //   plugin: await SharedPreferences.getInstance(),
-  // );
+  final workersApi = StorageWorkersApi(
+    plugin: await SharedPreferences.getInstance(),
+  );
 
-  bootstrap();//todo add required parameter
+  bootstrap(workersApi: workersApi);
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 //Project imports
+import '../../creation/view/creation_page.dart';
 import '../cubit/home_cubit.dart';
 
 class HomePage extends StatelessWidget {
@@ -29,6 +30,8 @@ class HomeView extends StatelessWidget {
         index: selectedTab.index,
         children: const [
           //todo add destination page
+          CreationPage(),
+          CreationPage(),
         ],
       ),
       bottomNavigationBar: BottomAppBar(

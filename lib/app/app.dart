@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:workers_repository/workers_repository.dart';
 
 import '../home/view/view.dart';
 
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  const App({Key? key, required this.workersRepository}) : super(key: key);
 
-  //todo add required repository
+  final WorkersRepository workersRepository;
 
   @override
   Widget build(BuildContext context) {
 
     return MultiRepositoryProvider(
       providers: [
-        //todo add required repository provider
+        RepositoryProvider<WorkersRepository>(create: (context) => workersRepository),
       ],
       child: const AppView(),
     );

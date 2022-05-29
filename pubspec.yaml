@@ -17,6 +17,12 @@ dependencies:
     sdk: flutter
   flutter_services_binding: ^0.1.0
   intl: ^0.17.0
+  workers_api:
+    path: packages/workers_api
+  workers_repository:
+    path: packages/workers_repository
+  storage_workers_api:
+    path: packages/storage_workers_api
 
 
 dev_dependencies:
