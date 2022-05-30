@@ -5,6 +5,7 @@ import 'package:window_size/window_size.dart';
 
 //Project imports
 import '../../creation/view/creation_page.dart';
+import '../../gallery/view/gallery_page.dart';
 import '../cubit/home_cubit.dart';
 
 class HomePage extends StatelessWidget {
@@ -30,8 +31,7 @@ class HomeView extends StatelessWidget {
       body: IndexedStack(
         index: selectedTab.index,
         children: const [
-          //todo add destination page
-          CreationPage(),
+          GalleryPage(),
           CreationPage(),
         ],
       ),
@@ -42,14 +42,14 @@ class HomeView extends StatelessWidget {
           children: [
             _HomeTabButton(
               groupValue: selectedTab,
-              value: HomeTab.list,
-              icon: const Icon(Icons.collections),
+              value: HomeTab.gallery,
+              icon: const Icon(Icons.list),
               title: "Lavoratori Stagionali - Lista",
             ),
             _HomeTabButton(
               groupValue: selectedTab,
-              value: HomeTab.dashboard,
-              icon: const Icon(Icons.settings),
+              value: HomeTab.creation,
+              icon: const Icon(Icons.add),
               title: "Lavoratori Stagionali - Creazione",
             ),
           ],
