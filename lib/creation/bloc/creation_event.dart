@@ -7,10 +7,6 @@ abstract class CreationEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class WorkersSubscriptionRequested extends CreationEvent {
-  const WorkersSubscriptionRequested();
-}
-
 class ResetAllState extends CreationEvent{
   const ResetAllState();
 }

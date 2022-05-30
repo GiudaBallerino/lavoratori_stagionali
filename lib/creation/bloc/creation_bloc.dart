@@ -16,7 +16,6 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
         super(
           const CreationState(),
         ) {
-    on<WorkersSubscriptionRequested>(_onWorkersSubscriptionRequested);//todo remove
     on<ResetAllState>(_onReset);
     on<WorkerSubmitted>(_onWorkerSubmitted);
     on<FirstNameChanged>(_onFirstNameChanged);
@@ -44,23 +43,6 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
   }
 
   final WorkersRepository _workersRepository;
-
-  Future<void> _onWorkersSubscriptionRequested(
-      WorkersSubscriptionRequested event,
-      Emitter<CreationState> emit,
-      ) async {
-    emit(state.copyWith(status: () => CreationStatus.loading));
-
-    await emit.forEach<List<Worker>>(
-      _workersRepository.getWorkers(),
-      onData: (workers) => state.copyWith(
-        status: () => CreationStatus.success,
-      ),
-      onError: (_, __) => state.copyWith(
-        status: () => CreationStatus.failure,
-      ),
-    );
-  }
 
   Future<void> _onReset(
     ResetAllState event,
