@@ -49,6 +49,24 @@ class ExperienceList extends StatelessWidget {
             ],
           ),
         ),
+        if(list.isEmpty)
+          SizedBox(
+            width: width * 0.25,
+            child: Card(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text(
+                      "Nessuna esperienza inserita",
+                      style:
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         for (final element in list)
           SizedBox(
             width: width * 0.25,
