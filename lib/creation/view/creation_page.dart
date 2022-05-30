@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lavoratori_stagionali/creation/widgets/chip_list.dart';
+import 'package:lavoratori_stagionali/creation/widgets/experience_list.dart';
+import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
+import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
 
 import '../bloc/creation_bloc.dart';
@@ -283,57 +286,71 @@ class CreationView extends StatelessWidget {
                           ),
                           SizedBox(
                             width: size.width * 0.5 - 40,
-                            child: Wrap(
-                              spacing: 20,
-                              runSpacing: 20,
-                              children: [
-                                SizedBox(
-                                  width: size.width * 0.5 - 40,
-                                  child: Text(
-                                    'Periodi:',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                for (final element in state.periods)
-                                  InputChip(
-                                    label:
-                                        Text('${DateFormat('dd/MM/yyyy').format(element.start)} - ${DateFormat('dd/MM/yyyy').format(element.end)}'),
-                                    onDeleted: () => context
-                                        .read<CreationBloc>()
-                                        .add(PeriodDeleted(element)),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 13),
-                                  ),
-                                InputChip(
-                                  label: Text('Aggiungi periodo'),
-                                  onPressed: () async {
-                                    final DateTimeRange? result = await showDateRangePicker(
-                                      context: context,
-                                      initialEntryMode: DatePickerEntryMode.calendar,
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime(2030, 12, 31),
-                                      currentDate: DateTime.now(),
-                                      helpText: 'SELEZIONA DATE',
-                                      fieldStartHintText: 'Data di inizio',
-                                      fieldEndLabelText: 'Data di inizio',
-                                      fieldEndHintText: 'Data di fine',
-                                      fieldStartLabelText:'Data di fine',
-                                      saveText: 'Fatto',
-                                    );
-
-                                    if(result!=null){
-                                      context
-                                          .read<CreationBloc>()
-                                          .add(PeriodAdded(result.start,result.end));
-                                    }
-
-                                  },
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 13),
-                                ),
-                              ],
+                            child: ChipList(
+                              width: size.width * 0.5 - 40,
+                              title: 'Zone:',
+                              hint: 'Zona',
+                              list: state.areas,
+                              onAdd: (string) => context
+                                  .read<CreationBloc>()
+                                  .add(AreaAdded(string)),
+                              onDelete: (string) => context
+                                  .read<CreationBloc>()
+                                  .add(AreaDeleted(string)),
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.5 - 40,
+                            child: ChipList(
+                              width: size.width * 0.5 - 40,
+                              title: 'Esperienze/specializzazioni:',
+                              hint: 'esperienza/specializzazione',
+                              list: state.tasks,
+                              onAdd: (string) => context
+                                  .read<CreationBloc>()
+                                  .add(TaskAdded(string)),
+                              onDelete: (string) => context
+                                  .read<CreationBloc>()
+                                  .add(TaskDeleted(string)),
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width * 0.5 - 40,
+                            child: PeriodList(
+                              width: size.width * 0.5 - 40,
+                              title: 'Periodi:',
+                              hint: 'Aggiungi perido',
+                              list: state.periods,
+                              onAdd: (range) {
+                                context
+                                    .read<CreationBloc>()
+                                    .add(PeriodAdded(range.start, range.end));
+                              },
+                              onDelete: (element) {
+                                context
+                                    .read<CreationBloc>()
+                                    .add(PeriodDeleted(element));
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width,
+                            child: ExperienceList(
+                              width: size.width,
+                              height: size.height,
+                              title: 'Esperienze lavorative: ',
+                              hint: 'Aggiungi esperienza lavorativa',
+                              list: state.experiences,
+                              onAdd: (experience) {
+                                context
+                                    .read<CreationBloc>()
+                                    .add(ExperienceAdded(experience));
+                              },
+                              onDelete: (experience) {
+                                context
+                                    .read<CreationBloc>()
+                                    .add(ExperienceDeleted(experience));
+                              },
                             ),
                           ),
                         ],
