@@ -1,6 +1,7 @@
 // Flutter imports
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:window_size/window_size.dart';
 
 //Project imports
 import '../../creation/view/creation_page.dart';
@@ -43,11 +44,13 @@ class HomeView extends StatelessWidget {
               groupValue: selectedTab,
               value: HomeTab.list,
               icon: const Icon(Icons.collections),
+              title: "Lavoratori Stagionali - Lista",
             ),
             _HomeTabButton(
               groupValue: selectedTab,
               value: HomeTab.dashboard,
               icon: const Icon(Icons.settings),
+              title: "Lavoratori Stagionali - Creazione",
             ),
           ],
         ),
@@ -62,19 +65,24 @@ class _HomeTabButton extends StatelessWidget {
     required this.groupValue,
     required this.value,
     required this.icon,
+    required this.title,
   }) : super(key: key);
 
   final HomeTab groupValue;
   final HomeTab value;
   final Widget icon;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () => context.read<HomeCubit>().setTab(value),
+      onPressed: () {
+        context.read<HomeCubit>().setTab(value);
+        setWindowTitle(title);
+      },
       iconSize: 32,
       color:
-      groupValue != value ? null : Theme.of(context).colorScheme.secondary,
+          groupValue != value ? null : Theme.of(context).colorScheme.secondary,
       icon: icon,
     );
   }
