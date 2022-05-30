@@ -181,17 +181,12 @@ class PeriodDeleted extends CreationEvent {
 }
 
 class ExperienceAdded extends CreationEvent {
-  const ExperienceAdded(this.start, this.end, this.company, this.tasks, this.place, this.pay);
+  const ExperienceAdded(this.experience);
 
-  final DateTime start;
-  final DateTime end;
-  final String company;
-  final List<String> tasks;
-  final String place;
-  final double pay;
+  final Experience experience;
 
   @override
-  List<Object> get props => [start,end,company, tasks, place, pay];
+  List<Object> get props => [experience];
 }
 
 class ExperienceDeleted extends CreationEvent {
