@@ -143,6 +143,24 @@ class AreaDeleted extends CreationEvent {
   List<Object> get props => [area];
 }
 
+class TaskAdded extends CreationEvent {
+  const TaskAdded(this.task);
+
+  final String task;
+
+  @override
+  List<Object> get props => [task];
+}
+
+class TaskDeleted extends CreationEvent {
+  const TaskDeleted(this.task);
+
+  final String task;
+
+  @override
+  List<Object> get props => [task];
+}
+
 class PeriodAdded extends CreationEvent {
   const PeriodAdded(this.start, this.end);
 
@@ -160,4 +178,48 @@ class PeriodDeleted extends CreationEvent {
 
   @override
   List<Object> get props => [period];
+}
+
+class ExperienceAdded extends CreationEvent {
+  const ExperienceAdded(this.start, this.end, this.company, this.tasks, this.place, this.pay);
+
+  final DateTime start;
+  final DateTime end;
+  final String company;
+  final List<String> tasks;
+  final String place;
+  final double pay;
+
+  @override
+  List<Object> get props => [start,end,company, tasks, place, pay];
+}
+
+class ExperienceDeleted extends CreationEvent {
+  const ExperienceDeleted(this.experience);
+
+  final Experience experience;
+
+  @override
+  List<Object> get props => [experience];
+}
+
+class EmergencyContactAdded extends CreationEvent {
+  const EmergencyContactAdded(this.firstname, this.lastname, this.phone, this.email);
+
+  final String firstname;
+  final String lastname;
+  final String phone;
+  final String email;
+
+  @override
+  List<Object> get props => [firstname, lastname, phone, email];
+}
+
+class EmergencyContactDeleted extends CreationEvent {
+  const EmergencyContactDeleted(this.emergencyContact);
+
+  final EmergencyContact emergencyContact;
+
+  @override
+  List<Object> get props => [emergencyContact];
 }
