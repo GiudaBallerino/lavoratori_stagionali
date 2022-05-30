@@ -9,7 +9,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle('Lavoratori Stagionali');
+    setWindowTitle('Lavoratori Stagionali - Lista');
     setWindowMinSize(const Size(1100, 700));
     // setWindowMaxSize(Size.infinite);
   }

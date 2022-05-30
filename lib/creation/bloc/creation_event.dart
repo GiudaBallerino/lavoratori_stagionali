@@ -199,15 +199,12 @@ class ExperienceDeleted extends CreationEvent {
 }
 
 class EmergencyContactAdded extends CreationEvent {
-  const EmergencyContactAdded(this.firstname, this.lastname, this.phone, this.email);
+  const EmergencyContactAdded(this.emergencyContact);
 
-  final String firstname;
-  final String lastname;
-  final String phone;
-  final String email;
+  final EmergencyContact emergencyContact;
 
   @override
-  List<Object> get props => [firstname, lastname, phone, email];
+  List<Object> get props => [emergencyContact];
 }
 
 class EmergencyContactDeleted extends CreationEvent {

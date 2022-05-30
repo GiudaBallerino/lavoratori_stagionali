@@ -382,16 +382,11 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
     emit(state.copyWith(status: () => CreationStatus.loading));
 
     try {
-      EmergencyContact emergencyContact = EmergencyContact(
-          firstname: event.firstname,
-          lastname: event.lastname,
-          phone: event.phone,
-          email: event.email);
       emit(state.copyWith(
           status: () => CreationStatus.success,
           emergencyContacts: () => [
                 ...state.emergencyContacts,
-                ...[emergencyContact]
+                ...[event.emergencyContact]
               ]));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));

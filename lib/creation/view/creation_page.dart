@@ -8,6 +8,7 @@ import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
 
 import '../bloc/creation_bloc.dart';
+import '../widgets/emergency_contact_list.dart';
 
 class CreationPage extends StatelessWidget {
   const CreationPage({Key? key}) : super(key: key);
@@ -288,21 +289,6 @@ class CreationView extends StatelessWidget {
                             width: size.width * 0.5 - 40,
                             child: ChipList(
                               width: size.width * 0.5 - 40,
-                              title: 'Zone:',
-                              hint: 'Zona',
-                              list: state.areas,
-                              onAdd: (string) => context
-                                  .read<CreationBloc>()
-                                  .add(AreaAdded(string)),
-                              onDelete: (string) => context
-                                  .read<CreationBloc>()
-                                  .add(AreaDeleted(string)),
-                            ),
-                          ),
-                          SizedBox(
-                            width: size.width * 0.5 - 40,
-                            child: ChipList(
-                              width: size.width * 0.5 - 40,
                               title: 'Esperienze/specializzazioni:',
                               hint: 'esperienza/specializzazione',
                               list: state.tasks,
@@ -315,9 +301,9 @@ class CreationView extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: size.width * 0.5 - 40,
+                            width: size.width,
                             child: PeriodList(
-                              width: size.width * 0.5 - 40,
+                              width: size.width,
                               title: 'Periodi:',
                               hint: 'Aggiungi perido',
                               list: state.periods,
@@ -350,6 +336,26 @@ class CreationView extends StatelessWidget {
                                 context
                                     .read<CreationBloc>()
                                     .add(ExperienceDeleted(experience));
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.width,
+                            child: EmergencyContactList(
+                              width: size.width,
+                              height: size.height,
+                              title: 'Contatti di emergenza: ',
+                              hint: 'Aggiungi contatto di emergenza',
+                              list: state.emergencyContacts,
+                              onAdd: (emergencyContact) {
+                                context
+                                    .read<CreationBloc>()
+                                    .add(EmergencyContactAdded(emergencyContact));
+                              },
+                              onDelete: (experience) {
+                                context
+                                    .read<CreationBloc>()
+                                    .add(EmergencyContactDeleted(experience));
                               },
                             ),
                           ),
