@@ -24,7 +24,10 @@ class CreationState extends Equatable {
     this.languages = const [],
     this.licenses = const [],
     this.areas = const [],
+    this.tasks = const [],
     this.periods = const [],
+    this.experiences = const [],
+    this.emergencyContact = const [],
   });
 
   final CreationStatus status;
@@ -40,7 +43,10 @@ class CreationState extends Equatable {
   final List<String> languages;
   final List<String> licenses;
   final List<String> areas;
+  final List<String> tasks;
   final List<Period> periods;
+  final List<Experience> experiences;
+  final List<EmergencyContact> emergencyContact;
 
   CreationState copyWith({
     CreationStatus Function()? status,
@@ -55,7 +61,10 @@ class CreationState extends Equatable {
     List<String> Function()? languages,
     List<String> Function()? licenses,
     List<String> Function()? areas,
+    List<String> Function()? tasks,
     List<Period> Function()? periods,
+    List<Experience> Function()? experiences,
+    List<EmergencyContact> Function()? emergencyContact,
   }) {
     return CreationState(
       status: status != null ? status() : this.status,
@@ -70,7 +79,10 @@ class CreationState extends Equatable {
       languages: languages != null ? languages() : this.languages,
       licenses: licenses != null ? licenses() : this.licenses,
       areas: areas != null ? areas() : this.areas,
+      tasks: tasks != null ? tasks() : this.tasks,
       periods: periods != null ? periods() : this.periods,
+      experiences: experiences != null ? experiences() : this.experiences,
+      emergencyContact: emergencyContact != null ? emergencyContact() : this.emergencyContact,
     );
   }
 
@@ -88,6 +100,9 @@ class CreationState extends Equatable {
         languages,
         licenses,
         areas,
-        periods
+        tasks,
+        periods,
+        experiences,
+        emergencyContact,
       ];
 }
