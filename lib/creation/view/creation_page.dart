@@ -18,8 +18,6 @@ class CreationPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => CreationBloc(
         workersRepository: context.read<WorkersRepository>(),
-      )..add(
-        const WorkersSubscriptionRequested(),
       ),
       child: const CreationView(),
     );
@@ -84,8 +82,7 @@ class CreationView extends StatelessWidget {
                         periods: state.periods,
                         emergencyContacts: state.emergencyContacts);
                     context.read<CreationBloc>().add(WorkerSubmitted(worker));
-                    print(state.status);
-                    print(worker.toJson());
+                    context.read<CreationBloc>().add(ResetAllState());
                   },
                   child: Icon(Icons.save),
                 )
@@ -106,7 +103,6 @@ class CreationView extends StatelessWidget {
         builder: (context, state) {
           final _formKey = GlobalKey<FormState>();
 
-          //todo creare stato e eventi per tutti questi
           TextEditingController _firstName =
               TextEditingController(text: state.firstname ?? '');
           TextEditingController _lastName =
@@ -286,6 +282,7 @@ class CreationView extends StatelessWidget {
                             ],
                           ),
                         ),
+//LANGUAGES
                         SizedBox(
                           width: size.width * 0.5 - 40,
                           child: ChipList(
@@ -301,6 +298,7 @@ class CreationView extends StatelessWidget {
                                 .add(LanguageDeleted(string)),
                           ),
                         ),
+//LICENSES
                         SizedBox(
                           width: size.width * 0.5 - 40,
                           child: ChipList(
@@ -316,6 +314,7 @@ class CreationView extends StatelessWidget {
                                 .add(LicenseDeleted(string)),
                           ),
                         ),
+//AREAS
                         SizedBox(
                           width: size.width * 0.5 - 40,
                           child: ChipList(
@@ -331,6 +330,7 @@ class CreationView extends StatelessWidget {
                                 .add(AreaDeleted(string)),
                           ),
                         ),
+//TASKS
                         SizedBox(
                           width: size.width * 0.5 - 40,
                           child: ChipList(
@@ -346,6 +346,7 @@ class CreationView extends StatelessWidget {
                                 .add(TaskDeleted(string)),
                           ),
                         ),
+//PERIODS
                         SizedBox(
                           width: size.width,
                           child: PeriodList(
@@ -365,6 +366,7 @@ class CreationView extends StatelessWidget {
                             },
                           ),
                         ),
+//EXPERIENCES
                         SizedBox(
                           width: size.width,
                           child: ExperienceList(
@@ -385,6 +387,7 @@ class CreationView extends StatelessWidget {
                             },
                           ),
                         ),
+//CONTACTS
                         SizedBox(
                           width: size.width,
                           child: EmergencyContactList(
