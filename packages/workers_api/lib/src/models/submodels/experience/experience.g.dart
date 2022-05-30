@@ -7,16 +7,16 @@ part of 'experience.dart';
 // **************************************************************************
 
 Experience _$ExperienceFromJson(Map<String, dynamic> json) => Experience(
-      period: Period.fromJson(json['period']),
+      period: Period.fromJson(json['period'] as Map<String, dynamic>),
       company: json['company'] as String,
-      task: List.from(json['task']).map((item) => item as String).toList(),
+      task: (json['task'] as List<dynamic>).map((e) => e as String).toList(),
       place: json['place'] as String,
-      pay: json['pay'] as double,
+      pay: (json['pay'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$ExperienceToJson(Experience instance) =>
     <String, dynamic>{
-      'period': instance.period.toJson(),
+      'period': instance.period,
       'company': instance.company,
       'task': instance.task,
       'place': instance.place,

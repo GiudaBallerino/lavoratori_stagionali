@@ -7,29 +7,29 @@ part of 'worker.dart';
 // **************************************************************************
 
 Worker _$WorkerFromJson(Map<String, dynamic> json) => Worker(
-      id: json['id'] as String,
+      id: json['id'] as String?,
       firstname: json['firstname'] as String,
       lastname: json['lastname'] as String,
-      birthday: json['birthday'] as DateTime,
+      birthday: DateTime.parse(json['birthday'] as String),
       birthplace: json['birthplace'] as String,
       nationality: json['nationality'] as String,
       address: json['address'] as String,
       phone: json['phone'] as String,
       email: json['email'] as String,
       languages:
-          List.from(json['languages']).map((item) => item as String).toList(),
+          (json['languages'] as List<dynamic>).map((e) => e as String).toList(),
       licenses:
-          List.from(json['licenses']).map((item) => item as String).toList(),
-      areas: List.from(json['areas']).map((item) => item as String).toList(),
-      tasks: List.from(json['tasks']).map((item) => item as String).toList(),
-      experiences: List.from(json['experiences'])
-          .map((item) => Experience.fromJson(item))
+          (json['licenses'] as List<dynamic>).map((e) => e as String).toList(),
+      areas: (json['areas'] as List<dynamic>).map((e) => e as String).toList(),
+      tasks: (json['tasks'] as List<dynamic>).map((e) => e as String).toList(),
+      experiences: (json['experiences'] as List<dynamic>)
+          .map((e) => Experience.fromJson(e as Map<String, dynamic>))
           .toList(),
-      periods: List.from(json['periods'])
-          .map((item) => Period.fromJson(item))
+      periods: (json['periods'] as List<dynamic>)
+          .map((e) => Period.fromJson(e as Map<String, dynamic>))
           .toList(),
-      emergencyContacts: List.from(json['emergencyContacts'])
-          .map((item) => EmergencyContact.fromJson(item))
+      emergencyContacts: (json['emergencyContacts'] as List<dynamic>)
+          .map((e) => EmergencyContact.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -37,7 +37,7 @@ Map<String, dynamic> _$WorkerToJson(Worker instance) => <String, dynamic>{
       'id': instance.id,
       'firstname': instance.firstname,
       'lastname': instance.lastname,
-      'birthday': instance.birthday,
+      'birthday': instance.birthday.toIso8601String(),
       'birthplace': instance.birthplace,
       'nationality': instance.nationality,
       'address': instance.address,
@@ -47,7 +47,7 @@ Map<String, dynamic> _$WorkerToJson(Worker instance) => <String, dynamic>{
       'licenses': instance.licenses,
       'areas': instance.areas,
       'tasks': instance.tasks,
-      'experiences':instance.experiences.map((e)=>e.toJson()).toList(),
-      'periods':instance.periods.map((p)=>p.toJson()).toList(),
-      'emergencyContacts':instance.experiences.map((e)=>e.toJson()).toList(),
+      'experiences': instance.experiences,
+      'periods': instance.periods,
+      'emergencyContacts': instance.emergencyContacts,
     };

@@ -7,11 +7,11 @@ part of 'period.dart';
 // **************************************************************************
 
 Period _$PeriodFromJson(Map<String, dynamic> json) => Period(
-  start: json['start'] as DateTime,
-  end: json['end'] as DateTime,
-);
+      start: DateTime.parse(json['start'] as String),
+      end: DateTime.parse(json['end'] as String),
+    );
 
 Map<String, dynamic> _$PeriodToJson(Period instance) => <String, dynamic>{
-  'start': instance.start,
-  'end': instance.end,
-};
+      'start': instance.start.toIso8601String(),
+      'end': instance.end.toIso8601String(),
+    };
