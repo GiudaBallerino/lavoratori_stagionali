@@ -1,4 +1,4 @@
-name: storage_workers_api
+name: local_storage_workers_api
 description: A new Flutter project.
 version: 1.0.0+1
 publish_to: none
