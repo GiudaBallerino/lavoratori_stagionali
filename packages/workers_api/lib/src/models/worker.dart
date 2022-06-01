@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:person_abstract_model/person_abstract_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:workers_api/src/models/submodels/submodels.dart';
 
@@ -10,48 +11,53 @@ part 'worker.g.dart';
 
 @immutable
 @JsonSerializable()
-class Worker extends Equatable {
+class Worker extends Person {
   Worker({
     String? id,
-    required this.firstname,
-    required this.lastname,
+    required String firstname,
+    required String lastname,
+    required String email,
+    required String phone,
     required this.birthday,
     required this.birthplace,
     required this.nationality,
     required this.address,
-    required this.phone,
-    required this.email,
+    required this.ownCar,
     required this.languages,
     required this.licenses,
     required this.areas,
-    required this.tasks,
+    required this.fields,
     required this.experiences,
     required this.periods,
     required this.emergencyContacts,
-  })  : assert(
-          id == null || id.isNotEmpty,
-          'id can not be null and should be empty',
-        ),
-        id = id ?? const Uuid().v4();
+  }) : super(
+            id: id,
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+            phone: phone);
 
-  final String id;
-  final String firstname;
-  final String lastname;
+
   final DateTime birthday;
   final String birthplace;
   final String nationality;
   final String address;
-  final String phone;
-  final String email;
+  final bool ownCar;
 
   final List<String> languages;
   final List<String> licenses;
   final List<String> areas;
-  final List<String> tasks;
+  final List<String> fields;
 
   final List<Experience> experiences;
   final List<Period> periods;
   final List<EmergencyContact> emergencyContacts;
+
+  get getId => id;
+  get getFirstname => firstname;
+  get getLastname => lastname;
+  get getPhone => phone;
+  get getEmail => email;
 
   Worker copyWith({
     String? id,
@@ -63,10 +69,11 @@ class Worker extends Equatable {
     String? address,
     String? phone,
     String? email,
+    bool? ownCar,
     List<String>? languages,
     List<String>? licenses,
     List<String>? areas,
-    List<String>? tasks,
+    List<String>? fields,
     List<Experience>? experiences,
     List<Period>? periods,
     List<EmergencyContact>? emergencyContacts,
@@ -81,10 +88,11 @@ class Worker extends Equatable {
       address: address ?? this.address,
       phone: phone ?? this.phone,
       email: email ?? this.email,
+      ownCar: ownCar ?? this.ownCar,
       languages: languages ?? this.languages,
       licenses: licenses ?? this.licenses,
       areas: areas ?? this.areas,
-      tasks: tasks ?? this.tasks,
+      fields: fields ?? this.fields,
       experiences: experiences ?? this.experiences,
       periods: periods ?? this.periods,
       emergencyContacts: emergencyContacts ?? this.emergencyContacts,
@@ -106,10 +114,11 @@ class Worker extends Equatable {
         address,
         phone,
         email,
+        ownCar,
         languages,
         licenses,
         areas,
-        tasks,
+        fields,
         experiences,
         periods,
         emergencyContacts,

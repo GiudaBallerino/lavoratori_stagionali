@@ -8,6 +8,7 @@ part of 'emergency_contact.dart';
 
 EmergencyContact _$EmergencyContactFromJson(Map<String, dynamic> json) =>
     EmergencyContact(
+      id: json['id'] as String,
       firstname: json['firstname'] as String,
       lastname: json['lastname'] as String,
       phone: json['phone'] as String,
@@ -16,6 +17,7 @@ EmergencyContact _$EmergencyContactFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$EmergencyContactToJson(EmergencyContact instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'firstname': instance.firstname,
       'lastname': instance.lastname,
       'phone': instance.phone,

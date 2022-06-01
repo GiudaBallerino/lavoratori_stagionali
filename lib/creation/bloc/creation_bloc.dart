@@ -16,6 +16,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
         super(
           const CreationState(),
         ) {
+    on<AllLicensesSubscriptionRequested>(_onAllLicensesSubscriptionRequested);
     on<ResetAllState>(_onReset);
     on<WorkerSubmitted>(_onWorkerSubmitted);
     on<FirstNameChanged>(_onFirstNameChanged);
@@ -26,6 +27,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
     on<AddressChanged>(_onAddressChanged);
     on<PhoneChanged>(_onPhoneChanged);
     on<EmailChanged>(_onEmailChanged);
+    on<OwnCarChanged>(_onOwnCarChanged);
     on<LanguageAdded>(_onLanguageAdded);
     on<LanguageDeleted>(_onLanguageDeleted);
     on<LicenseAdded>(_onLicenseAdded);
@@ -34,8 +36,8 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
     on<AreaDeleted>(_onAreaDeleted);
     on<PeriodAdded>(_onPeriodAdded);
     on<PeriodDeleted>(_onPeriodDeleted);
-    on<TaskAdded>(_onTaskAdded);
-    on<TaskDeleted>(_onTaskDeleted);
+    on<FieldAdded>(_onTaskAdded);
+    on<FieldDeleted>(_onTaskDeleted);
     on<ExperienceAdded>(_onExperienceAdded);
     on<ExperienceDeleted>(_onExperienceDeleted);
     on<EmergencyContactAdded>(_onEmergencyContactAdded);
@@ -43,6 +45,44 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
   }
 
   final WorkersRepository _workersRepository;
+
+  Future<void> _onAllLicensesSubscriptionRequested(
+    AllLicensesSubscriptionRequested event,
+    Emitter<CreationState> emit,
+  ) async {
+    emit(state.copyWith(status: () => CreationStatus.loading));
+
+    const List<String> _licensesOptions = <String>[
+      'AM',
+      'A1',
+      'A2',
+      'A',
+      'B1',
+      'B',
+      'BE',
+      'C1',
+      'C1E',
+      'C',
+      'CE',
+      'D1E',
+      'D',
+      'DE',
+      'KA',
+      'KB',
+      'CQC Persone',
+      'CQC Merci',
+      'CFP'
+    ];
+
+    try {
+      emit(state.copyWith(
+        status: () => CreationStatus.success,
+        allLicenses: () => _licensesOptions,
+      ));
+    } catch (e) {
+      emit(state.copyWith(status: () => CreationStatus.failure));
+    }
+  }
 
   Future<void> _onReset(
     ResetAllState event,
@@ -55,19 +95,19 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
         status: () => CreationStatus.success,
         firstname: () => '',
         lastname: () => '',
-        phone: ()=>'',
-        email: ()=>'',
-        birthday:()=> null,
-        birthplace: ()=> '',
-        nationality: ()=> '',
-        address: ()=> '',
-        languages: ()=> [],
-        licenses: ()=> [],
-        areas: ()=> [],
-        experiences: ()=> [],
-        tasks: ()=> [],
-        periods: ()=> [],
-        emergencyContacts: ()=> [],
+        phone: () => '',
+        email: () => '',
+        birthday: () => null,
+        birthplace: () => '',
+        nationality: () => '',
+        address: () => '',
+        languages: () => [],
+        licenses: () => [],
+        areas: () => [],
+        experiences: () => [],
+        fields: () => [],
+        periods: () => [],
+        emergencyContacts: () => [],
       ));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));
@@ -196,6 +236,20 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
     try {
       emit(state.copyWith(
           status: () => CreationStatus.success, email: () => event.text));
+    } catch (e) {
+      emit(state.copyWith(status: () => CreationStatus.failure));
+    }
+  }
+
+  Future<void> _onOwnCarChanged(
+    OwnCarChanged event,
+    Emitter<CreationState> emit,
+  ) async {
+    emit(state.copyWith(status: () => CreationStatus.loading));
+
+    try {
+      emit(state.copyWith(
+          status: () => CreationStatus.success, ownCar: () => event.status));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));
     }
@@ -339,7 +393,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
   }
 
   Future<void> _onTaskAdded(
-    TaskAdded event,
+    FieldAdded event,
     Emitter<CreationState> emit,
   ) async {
     emit(state.copyWith(status: () => CreationStatus.loading));
@@ -347,9 +401,9 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
     try {
       emit(state.copyWith(
           status: () => CreationStatus.success,
-          tasks: () => [
-                ...state.tasks,
-                ...[event.task]
+          fields: () => [
+                ...state.fields,
+                ...[event.field]
               ]));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));
@@ -357,16 +411,16 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
   }
 
   Future<void> _onTaskDeleted(
-    TaskDeleted event,
+    FieldDeleted event,
     Emitter<CreationState> emit,
   ) async {
     emit(state.copyWith(status: () => CreationStatus.loading));
 
     try {
-      List<String> tmp = state.tasks;
-      tmp.remove(event.task);
+      List<String> tmp = state.fields;
+      tmp.remove(event.field);
       emit(state.copyWith(
-          status: () => CreationStatus.success, tasks: () => tmp));
+          status: () => CreationStatus.success, fields: () => tmp));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));
     }

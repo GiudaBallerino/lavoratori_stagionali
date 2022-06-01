@@ -1,6 +1,6 @@
 import 'package:workers_api/workers_api.dart';
 
-abstract class WorkersApi {
+abstract class WorkersApi{
   WorkersApi();
 
   Stream<List<Worker>> getWorkers();

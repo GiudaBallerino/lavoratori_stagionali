@@ -29,8 +29,8 @@ class WorkerCard extends StatelessWidget {
           spacing: 5,
           runSpacing: 5,
           children: [
-            for(final task in worker.tasks)
-              Chip(label: Text(task),),
+            for(final field in worker.fields)
+              Chip(label: Text(field),),
           ],
         ),
         trailing: PopupMenuButton<Menu>(

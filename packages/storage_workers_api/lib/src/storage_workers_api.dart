@@ -42,7 +42,7 @@ class StorageWorkersApi extends WorkersApi {
   @override
   Future<void> saveWorker(Worker worker) {
     final workers = [..._workerStreamController.value];
-    final workerIndex = workers.indexWhere((w) => w.id == worker.id);
+    final workerIndex = workers.indexWhere((w) => w.getId == worker.getId);
     if (workerIndex >= 0) {
       workers[workerIndex] = worker;
     } else {
@@ -56,7 +56,7 @@ class StorageWorkersApi extends WorkersApi {
   @override
   Future<void> deleteWorker(String id) async {
     final workers = [..._workerStreamController.value];
-    final workerIndex = workers.indexWhere((w) => w.id == id);
+    final workerIndex = workers.indexWhere((w) => w.getId == id);
     if (workerIndex == -1) {
       throw WorkerNotFoundException();
     } else {
