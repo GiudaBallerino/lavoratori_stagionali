@@ -17,6 +17,8 @@ dependencies:
     sdk: flutter
   flutter_services_binding: ^0.1.0
   intl: ^0.17.0
+  person_abstract_model:
+    path: packages/person_abstract_model
   workers_api:
     path: packages/workers_api
   workers_repository:
