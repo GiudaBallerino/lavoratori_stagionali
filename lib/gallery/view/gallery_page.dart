@@ -247,9 +247,9 @@ class GalleryView extends StatelessWidget {
                                         style: TextStyle(fontSize: 15),
                                       ),
                                     ),
-                                    for (final spec in state.selected!.tasks)
+                                    for (final field in state.selected!.fields)
                                       Chip(
-                                        label: Text(spec),
+                                        label: Text(field),
                                       ),
                                   ],
                                 ),
