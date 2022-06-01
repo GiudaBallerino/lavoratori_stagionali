@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:workers_api/workers_api.dart';
 
 class EmergencyContactList extends StatelessWidget {
@@ -145,7 +144,7 @@ class EmergencyContactList extends StatelessWidget {
                           controller: _firstname,
                           style: TextStyle(fontSize: 14),
                           decoration: InputDecoration(
-                            hintText: 'Nome',
+                            hintText: 'Nome*',
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 15),
@@ -160,7 +159,7 @@ class EmergencyContactList extends StatelessWidget {
                           controller: _lastname,
                           style: TextStyle(fontSize: 14),
                           decoration: InputDecoration(
-                            hintText: 'Cognome',
+                            hintText: 'Cognome*',
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 15),
@@ -180,7 +179,7 @@ class EmergencyContactList extends StatelessWidget {
                           controller: _phone,
                           style: TextStyle(fontSize: 14),
                           decoration: InputDecoration(
-                            hintText: 'Cellulare',
+                            hintText: 'Telefono*',
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 15),
@@ -195,7 +194,7 @@ class EmergencyContactList extends StatelessWidget {
                           controller: _email,
                           style: TextStyle(fontSize: 14),
                           decoration: InputDecoration(
-                            hintText: 'Email',
+                            hintText: 'Email*',
                             isDense: true,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 15),
@@ -217,6 +216,35 @@ class EmergencyContactList extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
+                          if (_firstname.text == ''
+                              || _lastname.text == ''
+                              || _phone.text == ''
+                              || _email.text == '') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Compilare tutti i campi obbligatori')),
+                            );
+                            return;
+                          }
+
+                          String phonePattern = r'^(?:[+0]9)?[0-9]{10}$';
+                          if (!new RegExp(phonePattern).hasMatch(_phone.text)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Inserire un numero di telefono valido')),
+                            );
+                            return;
+                          }
+
+                          String emailPattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
+                          if (!new RegExp(emailPattern).hasMatch(_email.text)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Inserire una email valida')),
+                            );
+                            return;
+                          }
+
                           EmergencyContact result = EmergencyContact(
                               firstname: _firstname.text,
                               lastname: _lastname.text,
