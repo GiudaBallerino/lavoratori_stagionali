@@ -254,10 +254,6 @@ class CreationView extends StatelessWidget {
                                   validator: (value) {
                                     if (value == null || value.isEmpty)
                                       return 'Campo obbligatorio';
-                                    String pattern = r'^([1-9]|0[1-9]|[12][0-9]|3[01])\/([1-9]|0[1-9]|1[012])\/(19|20)\d\d$';
-                                    RegExp regex = new RegExp(pattern);
-                                    if (!regex.hasMatch(value))
-                                      return 'Inserire una data valida';
                                     try {
                                       DateFormat('dd/MM/yyyy').parse(value);
                                     } catch (e) {
