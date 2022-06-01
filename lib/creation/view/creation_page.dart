@@ -87,7 +87,7 @@ class CreationView extends StatelessWidget {
                         emergencyContacts: state.emergencyContacts)
                     ? () {
                         if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(
                             const SnackBar(
                                 content:
                                     Text('Aggiunta avvenuta con successo')),
@@ -115,7 +115,13 @@ class CreationView extends StatelessWidget {
                           context.read<CreationBloc>().add(ResetAllState());
                         }
                       }
-                    : () {},
+                    : () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content:
+                        Text('Compila tutti i campi obbligatori')),
+                  );
+                },
                 child: Icon(Icons.save),
               )
             ],
