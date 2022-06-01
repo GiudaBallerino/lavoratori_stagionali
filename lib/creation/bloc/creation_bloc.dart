@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:lavoratori_stagionali/creation/creation.dart';
 import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
-import 'package:intl/intl.dart';
 
 part 'creation_state.dart';
 part 'creation_event.dart';
@@ -163,9 +160,8 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
     emit(state.copyWith(status: () => CreationStatus.loading));
 
     try {
-      DateTime date = DateFormat('dd/MM/yyyy').parse(event.text);
       emit(state.copyWith(
-          status: () => CreationStatus.success, birthday: () => date));
+          status: () => CreationStatus.success, birthday: () => event.text));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));
     }

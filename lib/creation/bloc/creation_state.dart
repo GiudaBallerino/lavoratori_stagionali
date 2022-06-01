@@ -38,7 +38,7 @@ class CreationState extends Equatable {
   //inserimento
   final String? firstname;
   final String? lastname;
-  final DateTime? birthday;
+  final String? birthday;
   final String? birthplace;
   final String? nationality;
   final String? address;
@@ -58,7 +58,7 @@ class CreationState extends Equatable {
     List<String> Function()? allLicenses,
     String? Function()? firstname,
     String? Function()? lastname,
-    DateTime? Function()? birthday,
+    String? Function()? birthday,
     String? Function()? birthplace,
     String? Function()? nationality,
     String? Function()? address,

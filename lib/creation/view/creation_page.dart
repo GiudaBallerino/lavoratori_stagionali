@@ -51,76 +51,47 @@ class CreationView extends StatelessWidget {
                 height: 5,
               ),
               FloatingActionButton(
-                backgroundColor: allFieldsIsCompiled(
-                        firstname: state.firstname,
-                        lastname: state.lastname,
-                        birthday: state.birthday,
-                        birthplace: state.birthplace,
-                        nationality: state.nationality,
-                        address: state.address,
-                        phone: state.phone,
-                        email: state.email,
-                        languages: state.languages,
-                        licenses: state.licenses,
-                        areas: state.areas,
-                        fields: state.fields,
-                        experiences: state.experiences,
-                        periods: state.periods,
-                        emergencyContacts: state.emergencyContacts)
-                    ? null
-                    : Colors.grey,
-                onPressed: allFieldsIsCompiled(
-                        firstname: state.firstname,
-                        lastname: state.lastname,
-                        birthday: state.birthday,
-                        birthplace: state.birthplace,
-                        nationality: state.nationality,
-                        address: state.address,
-                        phone: state.phone,
-                        email: state.email,
-                        languages: state.languages,
-                        licenses: state.licenses,
-                        areas: state.areas,
-                        fields: state.fields,
-                        experiences: state.experiences,
-                        periods: state.periods,
-                        emergencyContacts: state.emergencyContacts)
-                    ? () {
-                        if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Aggiunta avvenuta con successo')),
-                          );
-                          Worker worker = Worker(
-                              firstname: state.firstname!,
-                              lastname: state.lastname!,
-                              birthday: state.birthday!,
-                              birthplace: state.birthplace!,
-                              nationality: state.nationality!,
-                              address: state.address!,
-                              phone: state.phone!,
-                              email: state.email!,
-                              ownCar: state.ownCar,
-                              languages: state.languages,
-                              licenses: state.licenses,
-                              areas: state.areas,
-                              fields: state.fields,
-                              experiences: state.experiences,
-                              periods: state.periods,
-                              emergencyContacts: state.emergencyContacts);
-                          context
-                              .read<CreationBloc>()
-                              .add(WorkerSubmitted(worker));
-                          context.read<CreationBloc>().add(ResetAllState());
-                        }
-                      }
-                    : () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content:
-                        Text('Compila tutti i campi obbligatori')),
+                onPressed:() {
+                  bool allFieldCompiled = allFieldsIsCompiled(
+                      languages: state.languages,
+                      licenses: state.licenses,
+                      areas: state.areas,
+                      fields: state.fields,
+                      experiences: state.experiences,
+                      periods: state.periods,
+                      emergencyContacts: state.emergencyContacts
                   );
+                  if (_formKey.currentState!.validate() && allFieldCompiled) {
+                    Worker worker = Worker(
+                        firstname: state.firstname!,
+                        lastname: state.lastname!,
+                        birthday: DateFormat('dd/MM/yyyy').parse(state.birthday!),
+                        birthplace: state.birthplace!,
+                        nationality: state.nationality!,
+                        address: state.address!,
+                        phone: state.phone!,
+                        email: state.email!,
+                        ownCar: state.ownCar,
+                        languages: state.languages,
+                        licenses: state.licenses,
+                        areas: state.areas,
+                        fields: state.fields,
+                        experiences: state.experiences,
+                        periods: state.periods,
+                        emergencyContacts: state.emergencyContacts);
+                    context
+                        .read<CreationBloc>()
+                        .add(WorkerSubmitted(worker));
+                    context.read<CreationBloc>().add(ResetAllState());
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Aggiunta avvenuta con successo')),
+                    );
+                  } else
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Compilare tutti i campi obbligatori')),
+                    );
                 },
                 child: Icon(Icons.save),
               )
@@ -139,10 +110,8 @@ class CreationView extends StatelessWidget {
           TextEditingController _email =
               TextEditingController(text: state.email ?? '');
 
-          TextEditingController _birthday = TextEditingController(
-              text: state.birthday != null
-                  ? DateFormat('dd/MM/yyyy').format(state.birthday!)
-                  : '');
+          TextEditingController _birthday =
+              TextEditingController(text: state.birthday ?? '');
           TextEditingController _birthplace =
               TextEditingController(text: state.birthplace ?? '');
           TextEditingController _nationality =
@@ -184,9 +153,8 @@ class CreationView extends StatelessWidget {
                                       labelText: 'Nome*',
                                     ),
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Errore!';
-                                      }
+                                      if (value == null || value.isEmpty)
+                                        return 'Campo obbligatorio';
                                       return null;
                                     },
                                   ),
@@ -207,9 +175,8 @@ class CreationView extends StatelessWidget {
                                       labelText: 'Cognome*',
                                     ),
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Errore!';
-                                      }
+                                      if (value == null || value.isEmpty)
+                                        return 'Campo obbligatorio';
                                       return null;
                                     },
                                   ),
@@ -229,9 +196,12 @@ class CreationView extends StatelessWidget {
                                       labelText: 'Telefono*',
                                     ),
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Errore!';
-                                      }
+                                      if (value == null || value.isEmpty)
+                                        return 'Campo obbligatorio';
+                                      String pattern = r'^(?:[+0]9)?[0-9]{10}$';
+                                      RegExp regex = new RegExp(pattern);
+                                      if (!regex.hasMatch(value))
+                                        return 'Inserire un numero di telefono valido';
                                       return null;
                                     },
                                   ),
@@ -251,9 +221,12 @@ class CreationView extends StatelessWidget {
                                       labelText: 'E-mail*',
                                     ),
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Errore!';
-                                      }
+                                      if (value == null || value.isEmpty)
+                                        return 'Campo obbligatorio';
+                                      String pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
+                                      RegExp regex = new RegExp(pattern);
+                                      if (!regex.hasMatch(value))
+                                        return 'Inserire una email valida';
                                       return null;
                                     },
                                   ),
@@ -276,11 +249,15 @@ class CreationView extends StatelessWidget {
                                 child: TextFormField(
                                   controller: _birthday,
                                   decoration: InputDecoration(
-                                    labelText: 'Data di nascita (GG/MM/AAAA)*',
+                                    labelText: 'Data di nascita (gg/mm/aaaa)*',
                                   ),
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Errore!';
+                                    if (value == null || value.isEmpty)
+                                      return 'Campo obbligatorio';
+                                    try {
+                                      DateFormat('dd/MM/yyyy').parse(value);
+                                    } catch (e) {
+                                      return 'Inserire una data valida';
                                     }
                                     return null;
                                   },
@@ -301,9 +278,8 @@ class CreationView extends StatelessWidget {
                                     labelText: 'Luogo di nascita*',
                                   ),
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Errore!';
-                                    }
+                                    if (value == null || value.isEmpty)
+                                      return 'Campo obbligatorio';
                                     return null;
                                   },
                                 ),
@@ -323,9 +299,8 @@ class CreationView extends StatelessWidget {
                                     labelText: 'Nazionalità*',
                                   ),
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Errore!';
-                                    }
+                                    if (value == null || value.isEmpty)
+                                      return 'Campo obbligatorio';
                                     return null;
                                   },
                                 ),
@@ -347,9 +322,8 @@ class CreationView extends StatelessWidget {
                                         'Indirizzo (Via/Piazza, Comune, CAP)*',
                                   ),
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Errore!';
-                                    }
+                                    if (value == null || value.isEmpty)
+                                      return 'Campo obbligatorio';
                                     return null;
                                   },
                                 ),
@@ -520,14 +494,6 @@ class CreationView extends StatelessWidget {
   }
 
   bool allFieldsIsCompiled({
-    required final String? firstname,
-    required final String? lastname,
-    required final DateTime? birthday,
-    required final String? birthplace,
-    required final String? nationality,
-    required final String? address,
-    required final String? phone,
-    required final String? email,
     required final List<String> languages,
     required final List<String> licenses,
     required final List<String> areas,
@@ -536,27 +502,10 @@ class CreationView extends StatelessWidget {
     required final List<Period> periods,
     required final List<EmergencyContact> emergencyContacts,
   }) {
-    if (firstname != null &&
-        firstname != '' &&
-        lastname != null &&
-        lastname != '' &&
-        birthday != null &&
-        birthplace != null &&
-        birthplace != '' &&
-        nationality != null &&
-        nationality != '' &&
-        address != null &&
-        address != '' &&
-        phone != null &&
-        phone != '' &&
-        email != null &&
-        email != '' &&
-        languages.isNotEmpty &&
-        //licenses.isNotEmpty &&
+    if (languages.isNotEmpty &&
         areas.isNotEmpty &&
         fields.isNotEmpty &&
         periods.isNotEmpty &&
-        //experiences.isNotEmpty &&
         emergencyContacts.isNotEmpty) {
       return true;
     } else {

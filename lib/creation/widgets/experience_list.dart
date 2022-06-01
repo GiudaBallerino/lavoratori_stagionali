@@ -49,7 +49,7 @@ class ExperienceList extends StatelessWidget {
             ],
           ),
         ),
-        if(list.isEmpty)
+        if (list.isEmpty)
           SizedBox(
             width: width * 0.25,
             child: Card(
@@ -60,7 +60,7 @@ class ExperienceList extends StatelessWidget {
                     title: Text(
                       "Nessuna esperienza inserita",
                       style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -82,7 +82,7 @@ class ExperienceList extends StatelessWidget {
                     ),
                     trailing: InkWell(
                       child: Icon(Icons.cancel),
-                      onTap: (){
+                      onTap: () {
                         onDelete(element);
                       },
                     ),
@@ -116,6 +116,7 @@ class ExperienceList extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (_) {
+        final _formKey = GlobalKey<FormState>();
         TextEditingController _company = TextEditingController();
         TextEditingController _start = TextEditingController();
         TextEditingController _end = TextEditingController();
@@ -125,142 +126,190 @@ class ExperienceList extends StatelessWidget {
         return Dialog(
           child: SizedBox(
             width: width * 0.5,
-            height: height * 0.5,
+            height: height * 0.6,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    hint,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextField(
-                    controller: _company,
-                    style: TextStyle(fontSize: 14),
-                    decoration: InputDecoration(
-                      hintText: 'Azienda',
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 15),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      hint,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: width * 0.25 - 22,
-                        child: TextField(
-                          controller: _start,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Inizio periodo (GG/MM/AAAA)',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                        ),
+                    TextFormField(
+                      controller: _company,
+                      style: TextStyle(fontSize: 14),
+                      decoration: InputDecoration(
+                        hintText: 'Azienda',
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30)),
                       ),
-                      SizedBox(
-                        width: width * 0.25 - 22,
-                        child: TextField(
-                          controller: _end,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Fine periodo (GG/MM/AAAA)',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: width * 0.125 - 12,
-                        child: TextField(
-                          controller: _place,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Luogo',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: width * 0.125 - 12,
-                        child: TextField(
-                          controller: _pay,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Paga giornaliera lorda',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  TextField(
-                    controller: _tasks,
-                    style: TextStyle(fontSize: 14),
-                    decoration: InputDecoration(
-                      hintText:
-                          'Mansioni separate da | (esempio: "Agricoltore|Contadino|Trattorista").',
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 15),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Campo obbligatorio';
+                        return null;
+                      },
                     ),
-                    minLines: 1,
-                    maxLines: 2,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(null);
-                        },
-                        child: Text('Annulla'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: width * 0.25 - 22,
+                          child: TextFormField(
+                            controller: _start,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Inizio periodo (gg/mm/aaaa)',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Campo obbligatorio';
+                              try {
+                                DateFormat('dd/MM/yyyy').parse(value);
+                              } catch (e) {
+                                return 'Inserire una data valida';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: width * 0.25 - 22,
+                          child: TextFormField(
+                            controller: _end,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Fine periodo (gg/mm/aaaa)',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Campo obbligatorio';
+                              try {
+                                DateFormat('dd/MM/yyyy').parse(value);
+                              } catch (e) {
+                                return 'Inserire una data valida';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: width * 0.25 - 22,
+                          child: TextFormField(
+                            controller: _place,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Luogo',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Campo obbligatorio';
+                              return null;
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: width * 0.25 - 22,
+                          child: TextFormField(
+                            controller: _pay,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Paga giornaliera lorda',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Campo obbligatorio';
+                              try {
+                                double.parse(value);
+                              } catch (e) {
+                                return 'Inserire un numero valido';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextFormField(
+                      controller: _tasks,
+                      style: TextStyle(fontSize: 14),
+                      decoration: InputDecoration(
+                        hintText:
+                            'Mansioni separate da | (esempio: "Agricoltore|Contadino|Trattorista").',
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30)),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Experience exp = Experience(
-                              period: Period(
-                                  start: DateFormat('dd/MM/yyyy')
-                                      .parse(_start.text),
-                                  end: DateFormat('dd/MM/yyyy')
-                                      .parse(_end.text)),
-                              company: _company.text,
-                              task: _tasks.text.split('|'),
-                              place: _place.text,
-                              pay: double.parse(_pay.text));
-                          Navigator.of(context).pop(exp);
-                        },
-                        child: Text('Conferma'),
-                      ),
-                    ],
-                  ),
-                ],
+                      minLines: 1,
+                      maxLines: 2,
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Campo obbligatorio';
+                        return null;
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(null);
+                          },
+                          child: Text('Annulla'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              Experience exp = Experience(
+                                  period: Period(
+                                      start: DateFormat('dd/MM/yyyy').parse(_start.text),
+                                      end: DateFormat('dd/MM/yyyy').parse(_end.text)),
+                                  company: _company.text,
+                                  task: _tasks.text.split('|'),
+                                  place: _place.text,
+                                  pay: double.parse(_pay.text));
+                              Navigator.of(context).pop(exp);
+                            }
+                          },
+                          child: Text('Conferma'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

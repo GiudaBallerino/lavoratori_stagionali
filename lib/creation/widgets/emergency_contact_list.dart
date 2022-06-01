@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:workers_api/workers_api.dart';
 
 class EmergencyContactList extends StatelessWidget {
@@ -118,6 +117,7 @@ class EmergencyContactList extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (_) {
+        final _formKey = GlobalKey<FormState>();
         TextEditingController _firstname = TextEditingController();
         TextEditingController _lastname = TextEditingController();
         TextEditingController _phone = TextEditingController();
@@ -128,107 +128,141 @@ class EmergencyContactList extends StatelessWidget {
             height: height * 0.5,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    hint,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: width * 0.25 - 22,
-                        child: TextField(
-                          controller: _firstname,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Nome',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      hint,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: width * 0.25 - 22,
+                          child: TextFormField(
+                            controller: _firstname,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Nome*',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Campo obbligatorio';
+                              return null;
+                            },
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: width * 0.25 - 22,
-                        child: TextField(
-                          controller: _lastname,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Cognome',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
+                        SizedBox(
+                          width: width * 0.25 - 22,
+                          child: TextFormField(
+                            controller: _lastname,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Cognome*',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Campo obbligatorio';
+                              return null;
+                            },
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: width * 0.125 - 12,
-                        child: TextField(
-                          controller: _phone,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Cellulare',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: width * 0.25 - 22,
+                          child: TextFormField(
+                            controller: _phone,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Telefono*',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Campo obbligatorio';
+                              String pattern = r'^(?:[+0]9)?[0-9]{10}$';
+                              RegExp regex = new RegExp(pattern);
+                              if (!regex.hasMatch(value))
+                                return 'Inserire un numero di telefono valido';
+                              return null;
+                            },
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: width * 0.125 - 12,
-                        child: TextField(
-                          controller: _email,
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
+                        SizedBox(
+                          width: width * 0.25 - 22,
+                          child: TextFormField(
+                            controller: _email,
+                            style: TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Email*',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty)
+                                return 'Campo obbligatorio';
+                              String pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
+                              RegExp regex = new RegExp(pattern);
+                              if (!regex.hasMatch(value))
+                                return 'Inserire una email valida';
+                              return null;
+                            },
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(null);
-                        },
-                        child: Text('Annulla'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          EmergencyContact result = EmergencyContact(
-                              firstname: _firstname.text,
-                              lastname: _lastname.text,
-                              phone: _phone.text,
-                              email: _email.text);
-                          Navigator.of(context).pop(result);
-                        },
-                        child: Text('Conferma'),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(null);
+                          },
+                          child: Text('Annulla'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              EmergencyContact result = EmergencyContact(
+                                  firstname: _firstname.text,
+                                  lastname: _lastname.text,
+                                  phone: _phone.text,
+                                  email: _email.text
+                              );
+                              Navigator.of(context).pop(result);
+                            }
+                          },
+                          child: Text('Conferma'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
