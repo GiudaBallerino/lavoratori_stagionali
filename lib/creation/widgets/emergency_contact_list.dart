@@ -49,7 +49,7 @@ class EmergencyContactList extends StatelessWidget {
             ],
           ),
         ),
-        if(list.isEmpty)
+        if (list.isEmpty)
           SizedBox(
             width: width * 0.25,
             child: Card(
@@ -60,7 +60,7 @@ class EmergencyContactList extends StatelessWidget {
                     title: Text(
                       "Nessun contatto inserito",
                       style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -93,12 +93,14 @@ class EmergencyContactList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:EdgeInsets.symmetric(horizontal:5),
+                          padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Chip(label: Text(element.email)),
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Padding(
-                          padding:EdgeInsets.symmetric(horizontal:5),
+                          padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Chip(label: Text(element.phone)),
                         ),
                       ],
