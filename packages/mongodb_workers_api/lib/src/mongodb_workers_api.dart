@@ -35,9 +35,6 @@ class MongoDBWorkersApi extends WorkersApi {
     if (workersJson != null) {
       List<Worker> workers = List.generate(
           workersJson.length, (index) => Worker.fromJson(workersJson[index]));
-      // final workers = List<Map>.from(workersJson)
-      //     .map((jsonMap) => Worker.fromJson(Map<String, dynamic>.from(jsonMap)))
-      //     .toList();
       _workerStreamController.add(workers);
     } else {
       _workerStreamController.add(const []);

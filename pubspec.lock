@@ -259,6 +259,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.5.0"
+  local_storage_workers_api:
+    dependency: "direct main"
+    description:
+      path: "packages/local_storage_workers_api"
+      relative: true
+    source: path
+    version: "1.0.0+1"
   logging:
     dependency: transitive
     description:
@@ -329,13 +336,6 @@ packages:
       relative: true
     source: path
     version: "1.0.0+1"
-  mysql1:
-    dependency: "direct main"
-    description:
-      name: mysql1
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.19.2"
   nested:
     dependency: transitive
     description:
@@ -593,13 +593,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
-  storage_workers_api:
-    dependency: "direct main"
-    description:
-      path: "packages/storage_workers_api"
-      relative: true
-    source: path
-    version: "1.0.0+1"
   stream_channel:
     dependency: transitive
     description:

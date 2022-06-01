@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mongodb_workers_api/mongodb_workers_api.dart'
     show Db, MongoDBWorkersApi;
 import 'package:window_size/window_size.dart';
-import 'package:storage_workers_api/storage_workers_api.dart';
+import 'package:local_storage_workers_api/local_storage_workers_api.dart';
 
 import 'bootstrap.dart';
 import 'config.dart';
