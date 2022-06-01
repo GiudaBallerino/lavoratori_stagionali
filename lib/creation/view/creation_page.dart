@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lavoratori_stagionali/creation/widgets/chip_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/experience_list.dart';
+import 'package:lavoratori_stagionali/creation/widgets/licenses_selection_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
 import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
@@ -18,14 +19,16 @@ class CreationPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => CreationBloc(
         workersRepository: context.read<WorkersRepository>(),
-      ),
-      child: const CreationView(),
+      )..add(AllLicensesSubscriptionRequested()),
+      child: CreationView(),
     );
   }
 }
 
 class CreationView extends StatelessWidget {
-  const CreationView({Key? key}) : super(key: key);
+  CreationView({Key? key}) : super(key: key);
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,75 +37,93 @@ class CreationView extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: BlocBuilder<CreationBloc, CreationState>(
         builder: (context, state) {
-          if (allFieldsIsCompiled(
-              firstname: state.firstname,
-              lastname: state.lastname,
-              birthday: state.birthday,
-              birthplace: state.birthplace,
-              nationality: state.nationality,
-              address: state.address,
-              phone: state.phone,
-              email: state.email,
-              languages: state.languages,
-              licenses: state.licenses,
-              areas: state.areas,
-              tasks: state.tasks,
-              experiences: state.experiences,
-              periods: state.periods,
-              emergencyContacts: state.emergencyContacts)) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  backgroundColor: Colors.red,
-                  onPressed: () {
-                    context.read<CreationBloc>().add(ResetAllState());
-                  },
-                  child: Icon(Icons.clear),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                FloatingActionButton(
-                  onPressed: () {
-                    Worker worker = Worker(
-                        firstname: state.firstname!,
-                        lastname: state.lastname!,
-                        birthday: state.birthday!,
-                        birthplace: state.birthplace!,
-                        nationality: state.nationality!,
-                        address: state.address!,
-                        phone: state.phone!,
-                        email: state.email!,
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                backgroundColor: Colors.red,
+                onPressed: () {
+                  context.read<CreationBloc>().add(ResetAllState());
+                },
+                child: Icon(Icons.clear),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              FloatingActionButton(
+                backgroundColor: allFieldsIsCompiled(
+                        firstname: state.firstname,
+                        lastname: state.lastname,
+                        birthday: state.birthday,
+                        birthplace: state.birthplace,
+                        nationality: state.nationality,
+                        address: state.address,
+                        phone: state.phone,
+                        email: state.email,
                         languages: state.languages,
                         licenses: state.licenses,
                         areas: state.areas,
-                        tasks: state.tasks,
+                        fields: state.fields,
                         experiences: state.experiences,
                         periods: state.periods,
-                        emergencyContacts: state.emergencyContacts);
-                    context.read<CreationBloc>().add(WorkerSubmitted(worker));
-                    context.read<CreationBloc>().add(ResetAllState());
-                  },
-                  child: Icon(Icons.save),
-                )
-              ],
-            );
-          } else {
-            return FloatingActionButton(
-              backgroundColor: Colors.red,
-              onPressed: () {
-                context.read<CreationBloc>().add(ResetAllState());
-              },
-              child: Icon(Icons.clear),
-            );
-          }
+                        emergencyContacts: state.emergencyContacts)
+                    ? null
+                    : Colors.grey,
+                onPressed: allFieldsIsCompiled(
+                        firstname: state.firstname,
+                        lastname: state.lastname,
+                        birthday: state.birthday,
+                        birthplace: state.birthplace,
+                        nationality: state.nationality,
+                        address: state.address,
+                        phone: state.phone,
+                        email: state.email,
+                        languages: state.languages,
+                        licenses: state.licenses,
+                        areas: state.areas,
+                        fields: state.fields,
+                        experiences: state.experiences,
+                        periods: state.periods,
+                        emergencyContacts: state.emergencyContacts)
+                    ? () {
+                        if (_formKey.currentState!.validate()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Aggiunta avvenuta con successo')),
+                          );
+                          Worker worker = Worker(
+                              firstname: state.firstname!,
+                              lastname: state.lastname!,
+                              birthday: state.birthday!,
+                              birthplace: state.birthplace!,
+                              nationality: state.nationality!,
+                              address: state.address!,
+                              phone: state.phone!,
+                              email: state.email!,
+                              ownCar: state.ownCar,
+                              languages: state.languages,
+                              licenses: state.licenses,
+                              areas: state.areas,
+                              fields: state.fields,
+                              experiences: state.experiences,
+                              periods: state.periods,
+                              emergencyContacts: state.emergencyContacts);
+                          context
+                              .read<CreationBloc>()
+                              .add(WorkerSubmitted(worker));
+                          context.read<CreationBloc>().add(ResetAllState());
+                        }
+                      }
+                    : () {},
+                child: Icon(Icons.save),
+              )
+            ],
+          );
         },
       ),
       body: BlocBuilder<CreationBloc, CreationState>(
         builder: (context, state) {
-          final _formKey = GlobalKey<FormState>();
-
           TextEditingController _firstName =
               TextEditingController(text: state.firstname ?? '');
           TextEditingController _lastName =
@@ -154,8 +175,14 @@ class CreationView extends StatelessWidget {
                                   child: TextFormField(
                                     controller: _firstName,
                                     decoration: InputDecoration(
-                                      labelText: 'Nome',
+                                      labelText: 'Nome*',
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Errore!';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
 
@@ -171,8 +198,14 @@ class CreationView extends StatelessWidget {
                                   child: TextFormField(
                                     controller: _lastName,
                                     decoration: InputDecoration(
-                                      labelText: 'Cognome',
+                                      labelText: 'Cognome*',
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Errore!';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
 // -- PHONE
@@ -187,8 +220,14 @@ class CreationView extends StatelessWidget {
                                   child: TextFormField(
                                     controller: _phone,
                                     decoration: InputDecoration(
-                                      labelText: 'Telefono',
+                                      labelText: 'Telefono*',
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Errore!';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
 // -- EMAIL
@@ -203,8 +242,14 @@ class CreationView extends StatelessWidget {
                                   child: TextFormField(
                                     controller: _email,
                                     decoration: InputDecoration(
-                                      labelText: 'E-mail',
+                                      labelText: 'E-mail*',
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Errore!';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
                               ],
@@ -225,8 +270,14 @@ class CreationView extends StatelessWidget {
                                 child: TextFormField(
                                   controller: _birthday,
                                   decoration: InputDecoration(
-                                    labelText: 'Data di nascita (GG/MM/AAAA)',
+                                    labelText: 'Data di nascita (GG/MM/AAAA)*',
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Errore!';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -241,8 +292,14 @@ class CreationView extends StatelessWidget {
                                 child: TextFormField(
                                   controller: _birthplace,
                                   decoration: InputDecoration(
-                                    labelText: 'Luogo di nascita',
+                                    labelText: 'Luogo di nascita*',
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Errore!';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -257,8 +314,14 @@ class CreationView extends StatelessWidget {
                                 child: TextFormField(
                                   controller: _nationality,
                                   decoration: InputDecoration(
-                                    labelText: 'Nazionalità',
+                                    labelText: 'Nazionalità*',
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Errore!';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
 
@@ -275,19 +338,25 @@ class CreationView extends StatelessWidget {
                                   controller: _address,
                                   decoration: InputDecoration(
                                     labelText:
-                                        'Indirizzo (Via/Piazza, Comune, CAP)',
+                                        'Indirizzo (Via/Piazza, Comune, CAP)*',
                                   ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Errore!';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                             ],
                           ),
                         ),
-//LANGUAGES
+// //LANGUAGES
                         SizedBox(
                           width: size.width * 0.5 - 40,
                           child: ChipList(
                             width: size.width * 0.5 - 40,
-                            title: 'Lingue parlate',
+                            title: 'Lingue parlate*',
                             hint: 'Lingua',
                             list: state.languages,
                             onAdd: (string) => context
@@ -301,11 +370,12 @@ class CreationView extends StatelessWidget {
 //LICENSES
                         SizedBox(
                           width: size.width * 0.5 - 40,
-                          child: ChipList(
+                          child: LicensesSelection(
                             width: size.width * 0.5 - 40,
                             title: 'Patenti possedute:',
                             hint: 'Patente',
-                            list: state.licenses,
+                            licenses: state.allLicenses,
+                            selected: state.licenses,
                             onAdd: (string) => context
                                 .read<CreationBloc>()
                                 .add(LicenseAdded(string)),
@@ -319,8 +389,8 @@ class CreationView extends StatelessWidget {
                           width: size.width * 0.5 - 40,
                           child: ChipList(
                             width: size.width * 0.5 - 40,
-                            title: 'Zone:',
-                            hint: 'Zona',
+                            title: 'Zone*:',
+                            hint: 'Comune',
                             list: state.areas,
                             onAdd: (string) => context
                                 .read<CreationBloc>()
@@ -330,28 +400,51 @@ class CreationView extends StatelessWidget {
                                 .add(AreaDeleted(string)),
                           ),
                         ),
+//OWN CAR
+                        SizedBox(
+                          width: size.width * 0.5 - 40,
+                          child: Row(
+                            children: [
+                              Text(
+                                'Automunito',
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                              Checkbox(
+                                value: state.ownCar,
+                                onChanged: (bool? value) {
+                                  if (value != null) {
+                                    context
+                                        .read<CreationBloc>()
+                                        .add(OwnCarChanged(value));
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+                        ),
 //TASKS
                         SizedBox(
                           width: size.width * 0.5 - 40,
                           child: ChipList(
                             width: size.width * 0.5 - 40,
-                            title: 'Esperienze/specializzazioni:',
-                            hint: 'esperienza/specializzazione',
-                            list: state.tasks,
+                            title: 'Campo*:',
+                            hint: 'agricoltura/turismo',
+                            list: state.fields,
                             onAdd: (string) => context
                                 .read<CreationBloc>()
-                                .add(TaskAdded(string)),
+                                .add(FieldAdded(string)),
                             onDelete: (string) => context
                                 .read<CreationBloc>()
-                                .add(TaskDeleted(string)),
+                                .add(FieldDeleted(string)),
                           ),
                         ),
 //PERIODS
                         SizedBox(
-                          width: size.width,
+                          width: size.width * 0.5 - 40,
                           child: PeriodList(
-                            width: size.width,
-                            title: 'Periodi:',
+                            width: size.width * 0.5 - 40,
+                            title: 'Periodi*:',
                             hint: 'Aggiungi perido',
                             list: state.periods,
                             onAdd: (range) {
@@ -393,7 +486,7 @@ class CreationView extends StatelessWidget {
                           child: EmergencyContactList(
                             width: size.width,
                             height: size.height,
-                            title: 'Contatti di emergenza: ',
+                            title: 'Contatti di emergenza*: ',
                             hint: 'Aggiungi contatto di emergenza',
                             list: state.emergencyContacts,
                             onAdd: (emergencyContact) {
@@ -432,7 +525,7 @@ class CreationView extends StatelessWidget {
     required final List<String> languages,
     required final List<String> licenses,
     required final List<String> areas,
-    required final List<String> tasks,
+    required final List<String> fields,
     required final List<Experience> experiences,
     required final List<Period> periods,
     required final List<EmergencyContact> emergencyContacts,
@@ -455,7 +548,7 @@ class CreationView extends StatelessWidget {
         languages.isNotEmpty &&
         //licenses.isNotEmpty &&
         areas.isNotEmpty &&
-        tasks.isNotEmpty &&
+        fields.isNotEmpty &&
         periods.isNotEmpty &&
         //experiences.isNotEmpty &&
         emergencyContacts.isNotEmpty) {
