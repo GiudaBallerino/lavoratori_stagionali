@@ -29,6 +29,14 @@ class CreationView extends StatelessWidget {
   CreationView({Key? key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
+  final _fistnameKey = GlobalKey<FormFieldState>();
+  final _lastnameKey = GlobalKey<FormFieldState>();
+  final _phoneKey = GlobalKey<FormFieldState>();
+  final _mailKey = GlobalKey<FormFieldState>();
+  final _birthdayKey = GlobalKey<FormFieldState>();
+  final _birthplaceKey = GlobalKey<FormFieldState>();
+  final _nationalityKey = GlobalKey<FormFieldState>();
+  final _addressKey = GlobalKey<FormFieldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -143,11 +151,13 @@ class CreationView extends StatelessWidget {
                                 FocusScope(
                                   onFocusChange: (focus) {
                                     if (!focus) {
+                                      _fistnameKey.currentState!.validate();
                                       context.read<CreationBloc>().add(
                                           FirstNameChanged(_firstName.text));
                                     }
                                   },
                                   child: TextFormField(
+                                    key: _fistnameKey,
                                     controller: _firstName,
                                     decoration: InputDecoration(
                                       labelText: 'Nome*',
@@ -164,12 +174,14 @@ class CreationView extends StatelessWidget {
                                 FocusScope(
                                   onFocusChange: (focus) {
                                     if (!focus) {
+                                      _lastnameKey.currentState!.validate();
                                       context
                                           .read<CreationBloc>()
                                           .add(LastNameChanged(_lastName.text));
                                     }
                                   },
                                   child: TextFormField(
+                                    key: _lastnameKey,
                                     controller: _lastName,
                                     decoration: InputDecoration(
                                       labelText: 'Cognome*',
@@ -185,12 +197,14 @@ class CreationView extends StatelessWidget {
                                 FocusScope(
                                   onFocusChange: (focus) {
                                     if (!focus) {
+                                      _phoneKey.currentState!.validate();
                                       context
                                           .read<CreationBloc>()
                                           .add(PhoneChanged(_phone.text));
                                     }
                                   },
                                   child: TextFormField(
+                                    key: _phoneKey,
                                     controller: _phone,
                                     decoration: InputDecoration(
                                       labelText: 'Telefono*',
@@ -210,12 +224,14 @@ class CreationView extends StatelessWidget {
                                 FocusScope(
                                   onFocusChange: (focus) {
                                     if (!focus) {
+                                      _mailKey.currentState!.validate();
                                       context
                                           .read<CreationBloc>()
                                           .add(EmailChanged(_email.text));
                                     }
                                   },
                                   child: TextFormField(
+                                    key: _mailKey,
                                     controller: _email,
                                     decoration: InputDecoration(
                                       labelText: 'E-mail*',
@@ -241,12 +257,14 @@ class CreationView extends StatelessWidget {
                               FocusScope(
                                 onFocusChange: (focus) {
                                   if (!focus) {
+                                    _birthdayKey.currentState!.validate();
                                     context
                                         .read<CreationBloc>()
                                         .add(BirthdayChanged(_birthday.text));
                                   }
                                 },
                                 child: TextFormField(
+                                  key: _birthdayKey,
                                   controller: _birthday,
                                   decoration: InputDecoration(
                                     labelText: 'Data di nascita (gg/mm/aaaa)*',
@@ -268,11 +286,13 @@ class CreationView extends StatelessWidget {
                               FocusScope(
                                 onFocusChange: (focus) {
                                   if (!focus) {
+                                    _birthplaceKey.currentState!.validate();
                                     context.read<CreationBloc>().add(
                                         BirthplaceChanged(_birthplace.text));
                                   }
                                 },
                                 child: TextFormField(
+                                  key: _birthplaceKey,
                                   controller: _birthplace,
                                   decoration: InputDecoration(
                                     labelText: 'Luogo di nascita*',
@@ -288,12 +308,14 @@ class CreationView extends StatelessWidget {
 // -- NATIONALITY
                               FocusScope(
                                 onFocusChange: (focus) {
+                                  _nationalityKey.currentState!.validate();
                                   if (!focus) {
                                     context.read<CreationBloc>().add(
                                         NationalityChanged(_nationality.text));
                                   }
                                 },
                                 child: TextFormField(
+                                  key: _nationalityKey,
                                   controller: _nationality,
                                   decoration: InputDecoration(
                                     labelText: 'Nazionalità*',
@@ -310,12 +332,14 @@ class CreationView extends StatelessWidget {
                               FocusScope(
                                 onFocusChange: (focus) {
                                   if (!focus) {
+                                    _addressKey.currentState!.validate();
                                     context
                                         .read<CreationBloc>()
                                         .add(AddressChanged(_address.text));
                                   }
                                 },
                                 child: TextFormField(
+                                  key: _addressKey,
                                   controller: _address,
                                   decoration: InputDecoration(
                                     labelText:

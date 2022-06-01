@@ -6,8 +6,8 @@ import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workers_api/workers_api.dart';
 
-class StorageWorkersApi extends WorkersApi {
-  StorageWorkersApi({
+class LocalStorageWorkersApi extends WorkersApi {
+  LocalStorageWorkersApi({
     required SharedPreferences plugin,
   }) : _plugin = plugin {
     _init();
@@ -18,7 +18,7 @@ class StorageWorkersApi extends WorkersApi {
   final _workerStreamController = BehaviorSubject<List<Worker>>.seeded(const []);
 
   @visibleForTesting
-  static const kWorkersCollectionKey = '__workers_collection_key__';
+  static const kWorkersCollectionKey = 'workers';
 
   String? _getValue(String key) => _plugin.getString(key);
   Future<void> _setValue(String key, String value) =>
