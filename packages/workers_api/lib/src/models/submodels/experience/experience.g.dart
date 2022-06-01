@@ -18,7 +18,7 @@ Experience _$ExperienceFromJson(Map<String, dynamic> json) => Experience(
 Map<String, dynamic> _$ExperienceToJson(Experience instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'period': instance.period,
+      'period': instance.period.toJson(),
       'company': instance.company,
       'task': instance.task,
       'place': instance.place,

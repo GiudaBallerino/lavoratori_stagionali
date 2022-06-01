@@ -118,7 +118,8 @@ class GalleryView extends StatelessWidget {
                       thickness: 3,
                     ),
                     if (state.selected != null)
-                      CupertinoScrollbar(
+                      SingleChildScrollView(
+                        controller: ScrollController(),
                         child: SizedBox(
                           width: size.width * 0.5 - 8,
                           child: Wrap(
@@ -231,6 +232,22 @@ class GalleryView extends StatelessWidget {
                                       Chip(
                                         label: Text(area),
                                       ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.25 - 8,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Automunito',
+                                      style: TextStyle(
+                                          fontSize: 15,),
+                                    ),
+                                    Checkbox(
+                                      value: state.selected!.ownCar,
+                                      onChanged: (value){},
+                                    )
                                   ],
                                 ),
                               ),

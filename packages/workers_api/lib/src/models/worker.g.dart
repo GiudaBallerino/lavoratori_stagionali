@@ -50,7 +50,7 @@ Map<String, dynamic> _$WorkerToJson(Worker instance) => <String, dynamic>{
       'licenses': instance.licenses,
       'areas': instance.areas,
       'fields': instance.fields,
-      'experiences': instance.experiences,
-      'periods': instance.periods,
-      'emergencyContacts': instance.emergencyContacts,
+      'experiences': instance.experiences.map((e)=>e.toJson()).toList(),
+      'periods': instance.periods.map((p)=>p.toJson()).toList(),
+      'emergencyContacts': instance.emergencyContacts.map((e)=>e.toJson()).toList(),
     };
