@@ -7,6 +7,10 @@ abstract class CreationEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class AllLicensesSubscriptionRequested extends CreationEvent {
+  const AllLicensesSubscriptionRequested();
+}
+
 class ResetAllState extends CreationEvent{
   const ResetAllState();
 }
@@ -93,6 +97,15 @@ class EmailChanged extends CreationEvent{
   List<Object> get props => [text];
 }
 
+class OwnCarChanged extends CreationEvent{
+  const OwnCarChanged(this.status);
+
+  final bool status;
+
+  @override
+  List<Object> get props => [status];
+}
+
 class LanguageAdded extends CreationEvent {
   const LanguageAdded(this.language);
 
@@ -147,22 +160,22 @@ class AreaDeleted extends CreationEvent {
   List<Object> get props => [area];
 }
 
-class TaskAdded extends CreationEvent {
-  const TaskAdded(this.task);
+class FieldAdded extends CreationEvent {
+  const FieldAdded(this.field);
 
-  final String task;
+  final String field;
 
   @override
-  List<Object> get props => [task];
+  List<Object> get props => [field];
 }
 
-class TaskDeleted extends CreationEvent {
-  const TaskDeleted(this.task);
+class FieldDeleted extends CreationEvent {
+  const FieldDeleted(this.field);
 
-  final String task;
+  final String field;
 
   @override
-  List<Object> get props => [task];
+  List<Object> get props => [field];
 }
 
 class PeriodAdded extends CreationEvent {
