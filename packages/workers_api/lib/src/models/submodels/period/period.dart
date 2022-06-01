@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../workers_api.dart';
 
@@ -10,10 +11,16 @@ part 'period.g.dart';
 @JsonSerializable()
 class Period extends Equatable {
   Period({
+    String? id,
     required this.start,
     required this.end,
-  });
+  })  : assert(
+          id == null || id.isNotEmpty,
+          'id can not be null and should be empty',
+        ),
+        id = id ?? const Uuid().v4();
 
+  final String id;
   final DateTime start;
   final DateTime end;
 
@@ -33,6 +40,7 @@ class Period extends Equatable {
 
   @override
   List<Object> get props => [
+        id,
         start,
         end,
       ];
