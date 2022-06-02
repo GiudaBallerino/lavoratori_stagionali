@@ -21,18 +21,23 @@ dependencies:
     path: packages/person_abstract_model
   workers_api:
     path: packages/workers_api
+  employees_api:
+    path: packages/employees_api
   workers_repository:
     path: packages/workers_repository
   local_storage_workers_api:
     path: packages/local_storage_workers_api
   mongodb_workers_api:
     path: packages/mongodb_workers_api
+  authentication_repository:
+    path: packages/authentication_repository
 
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
       ref: a738913c8ce2c9f47515382d40827e794a334274
+  flow_builder: ^0.0.9
 
 dev_dependencies:
   bloc_test: ^9.0.1

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:mongodb_workers_api/mongodb_workers_api.dart'
     show Db, MongoDBWorkersApi;
@@ -17,15 +18,27 @@ Future<void> main() async {
     // setWindowMaxSize(Size.infinite);
   }
 
+  // -- Uncomment this for use local storage
   // final workersApi = StorageWorkersApi(
   //   plugin: await SharedPreferences.getInstance(),
   // );
 
-  final db = await Db.create('mongodb+srv://${Config.MONGO_USER}:${Config.MONGO_PASSWORD}@${Config.MONGO_HOST}/${Config.MONGO_DATABASE}?retryWrites=true&w=majority');
-  await db.open();
-  final workersCollection = db.collection(Config.MONGO_COLLECTIONS[0]);
+  // Initialize mongoDb
+  final  db = await Db.create('mongodb+srv://${Config.MONGO_USER}:${Config.MONGO_PASSWORD}@${Config.MONGO_HOST}/${Config.MONGO_DATABASE}?retryWrites=true&w=majority');
+  await  db.open();
 
+  //Get workers collection
+  final workersCollection =  db.collection(Config.MONGO_COLLECTIONS[0]);
+
+  //Initialize workers db api
   final workersApi = MongoDBWorkersApi(plugin: workersCollection);
 
-  bootstrap(workersApi: workersApi);
+  //Get employeers collection
+  final employeersCollection =  db.collection(Config.MONGO_COLLECTIONS[1]);
+
+
+  //Initialize authentication repository
+  final authenticationRepository = AuthenticationRepository(authPlugin: await SharedPreferences.getInstance(), dbPlugin: employeersCollection,);
+
+  bootstrap(workersApi: workersApi, authenticationRepository: authenticationRepository);
 }
