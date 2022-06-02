@@ -8,7 +8,7 @@ part 'employee.g.dart';
 
 @immutable
 @JsonSerializable()
-class Employee extends Person{
+class Employee extends Person {
   Employee({
     String? id,
     required String firstname,
@@ -19,11 +19,11 @@ class Employee extends Person{
     required this.username,
     required this.password,
   }) : super(
-      id: id,
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      phone: phone);
+            id: id,
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+            phone: phone);
 
   final DateTime birthday;
   final String username;
@@ -50,11 +50,22 @@ class Employee extends Person{
       firstname: firstname ?? this.firstname,
       lastname: lastname ?? this.lastname,
       email: email ?? this.email,
-      phone:phone ?? this.phone,
+      phone: phone ?? this.phone,
       birthday: birthday ?? this.birthday,
       username: username ?? this.username,
       password: password ?? this.password,
     );
+  }
+
+  static Employee get empty {
+    return Employee(
+        firstname: '',
+        lastname: '',
+        email: '',
+        phone: '',
+        birthday: DateTime.fromMicrosecondsSinceEpoch(0),
+        username: '',
+        password: '');
   }
 
   static Employee fromJson(JsonMap json) => _$EmployeeFromJson(json);
@@ -62,14 +73,6 @@ class Employee extends Person{
   JsonMap toJson() => _$EmployeeToJson(this);
 
   @override
-  List<Object> get props => [
-    id,
-    firstname,
-    lastname,
-    birthday,
-    phone,
-    email,
-    username,
-    password
-  ];
+  List<Object> get props =>
+      [id, firstname, lastname, birthday, phone, email, username, password];
 }
