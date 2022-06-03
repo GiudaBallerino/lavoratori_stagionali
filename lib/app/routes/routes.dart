@@ -1,14 +1,14 @@
 import 'package:flutter/widgets.dart';
-import 'package:lavoratori_stagionali/home/home.dart';
+import 'package:workers_repository/workers_repository.dart';
 
+import '../../home/view/home_page.dart';
 import '../../login/view/login_page.dart';
 import '../bloc/app_bloc.dart';
-//import 'package:lavoratori_stagionali/login/login.dart';
 
-List<Page> onGenerateAppViewPages(AppStatus state, List<Page<dynamic>> pages) {
+List<Page> onGenerateAppViewPages(AppStatus state, List<Page<dynamic>> pages, WorkersRepository workersRepository) {
   switch (state) {
     case AppStatus.authenticated:
-      return [HomePage.page()];
+      return [HomePage.page(workersRepository)];
     case AppStatus.unauthenticated:
       return [LoginPage.page()];
   }

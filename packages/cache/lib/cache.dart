@@ -1,25 +1,17 @@
 library cache;
 
-import 'package:employees_api/employees_api.dart' show Employee;
-
 class CacheClient {
-  CacheClient() : _cache = <String, dynamic>{};
+  CacheClient() : _cache = <String, Object>{};
 
-  final Map<String, dynamic> _cache;
+  final Map<String, Object> _cache;
 
-  void write(
-      {required String key, required Employee value}){
-    _cache[key] = value.toJson();
+  void write<T extends Object>({required String key, required T value}) {
+    _cache[key] = value;
   }
 
-  Employee? read({required String key}){
-    if(_cache[key]!={}&&_cache[key]!=null){
-      return Employee.fromJson(_cache[key]);
-    }
+  T? read<T extends Object>({required String key}) {
+    final value = _cache[key];
+    if (value is T) return value;
     return null;
-  }
-
-  Future<void> reset({required String key}) async{
-    _cache[key] = {};
   }
 }

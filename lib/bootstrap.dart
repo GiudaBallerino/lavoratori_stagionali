@@ -10,23 +10,28 @@ import 'package:workers_repository/workers_repository.dart';
 import 'app/view/app.dart';
 import 'app/app_bloc_observer.dart';
 
-
-void bootstrap({required WorkersApi workersApi, required AuthenticationRepository authenticationRepository}) {
+void bootstrap(
+    {required WorkersApi workersApi,
+    required AuthenticationRepository authenticationRepository}) {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
 
-  final workersRepository= WorkersRepository(workersApi: workersApi);
+  final workersRepository = WorkersRepository(workersApi: workersApi);
 
   runZonedGuarded(
-        () async {
+    () async {
       await BlocOverrides.runZoned(
-            () async => runApp(
-          App(workersRepository: workersRepository,authenticationRepository: authenticationRepository,),
-        ),
+        () async {
+          await authenticationRepository.employee.first;
+          runApp(App(
+            workersRepository: workersRepository,
+            authenticationRepository: authenticationRepository,
+          ));
+        },
         blocObserver: AppBlocObserver(),
       );
     },
-        (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
+    (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );
 }

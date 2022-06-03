@@ -40,5 +40,6 @@ Future<void> main() async {
   //Initialize authentication repository
   final authenticationRepository = AuthenticationRepository(authPlugin: await SharedPreferences.getInstance(), dbPlugin: employeersCollection,);
 
+
   bootstrap(workersApi: workersApi, authenticationRepository: authenticationRepository);
 }
