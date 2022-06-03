@@ -47,7 +47,7 @@ class MongoDBEmployeesApi extends EmployeesApi {
   @override
   Future<void> saveEmployee(Employee employee) async {
     final employees = [..._employeeStreamController.value];
-    final employeeIndex = employees.indexWhere((e) => e.getId == employee.getId);
+    final employeeIndex = employees.indexWhere((e) => e.id == employee.id);
     if (employeeIndex >= 0) {
       employees[employeeIndex] = employee;
       _employeeStreamController.add(employees);
@@ -62,7 +62,7 @@ class MongoDBEmployeesApi extends EmployeesApi {
   @override
   Future<void> deleteEmployee(String id) async {
     final employees = [..._employeeStreamController.value];
-    final employeeIndex = employees.indexWhere((e) => e.getId == id);
+    final employeeIndex = employees.indexWhere((e) => e.id == id);
     if (employeeIndex == -1) {
       throw EmployeeNotFoundException();
     } else {

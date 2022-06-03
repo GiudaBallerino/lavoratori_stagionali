@@ -9,7 +9,7 @@ enum AppStatus {
 class AppState extends Equatable {
   const AppState._({
     required this.status,
-    this.employee = null,
+    this.employee = Employee.empty,
   });
 
   const AppState.authenticated(Employee employee)
@@ -18,8 +18,8 @@ class AppState extends Equatable {
   const AppState.unauthenticated() : this._(status: AppStatus.unauthenticated);
 
   final AppStatus status;
-  final Employee? employee;
+  final Employee employee;
 
   @override
-  List<Object?> get props => [status, employee];
+  List<Object> get props => [status, employee];
 }

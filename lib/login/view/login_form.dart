@@ -16,7 +16,7 @@ class LoginForm extends StatelessWidget {
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(
-                content: Text(state.errorMessage ?? 'Authentication Failure'),
+                content: Text(state.errorMessage ?? 'Autenticazione fallita'),
               ),
             );
         }
@@ -27,10 +27,7 @@ class LoginForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Image.asset(
-              //   'assets/bloc_logo_small.png',
-              //   height: 120,
-              // ),
+              FlutterLogo(size: 128,),
               const SizedBox(height: 16),
               _EmailInput(),
               const SizedBox(height: 8),
@@ -56,7 +53,7 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) => context.read<LoginCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            labelText: 'email',
+            labelText: 'E-mail',
             helperText: '',
           ),
         );
@@ -77,7 +74,7 @@ class _PasswordInput extends StatelessWidget {
               context.read<LoginCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'password',
+            labelText: 'Password',
             helperText: '',
           ),
         );

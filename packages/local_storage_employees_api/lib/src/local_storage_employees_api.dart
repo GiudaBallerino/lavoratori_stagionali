@@ -42,7 +42,7 @@ class LocalStorageEmployeesApi extends EmployeesApi {
   @override
   Future<void> saveEmployee(Employee employee) {
     final employees = [..._employeesStreamController.value];
-    final employeeIndex = employees.indexWhere((e) => e.getId == employee.getId);
+    final employeeIndex = employees.indexWhere((e) => e.id == employee.id);
     if (employeeIndex >= 0) {
       employees[employeeIndex] = employee;
     } else {
@@ -56,7 +56,7 @@ class LocalStorageEmployeesApi extends EmployeesApi {
   @override
   Future<void> deleteEmployee(String id) async {
     final employees = [..._employeesStreamController.value];
-    final employeeIndex = employees.indexWhere((e) => e.getId == id);
+    final employeeIndex = employees.indexWhere((e) => e.id == id);
     if (employeeIndex == -1) {
       throw EmployeeNotFoundException();
     } else {

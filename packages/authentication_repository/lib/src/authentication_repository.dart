@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cache/cache.dart';
 import 'package:employees_api/employees_api.dart' show Employee;
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInWithEmailAndPasswordFailure implements Exception {
@@ -40,33 +42,28 @@ class AuthenticationRepository {
   final SharedPreferences _authPlugin;
 
   static const authCacheKey = 'logged_in';
+  final controller = BehaviorSubject<Employee>.seeded(Employee.empty);
 
-  void setCurrentEmployee(Employee employee) {
-    print(employee);
-    _cache.write(
-      key: authCacheKey,
-      value: employee,
-    );
+  Employee get currentEmployee {
+    return _cache.read<Employee>(key: authCacheKey) ?? Employee.empty;
   }
 
-  Employee? get currentEmployee {
-    return _cache.read(key: authCacheKey);
-  }
-
-  Stream<Employee?> get employee async* {
+  Stream<Employee> get employee{
     String? employeePref = _authPlugin.getString(authCacheKey);
 
-    final employee = employeePref == null
-        ? null
+    Employee emp = employeePref == null
+        ? Employee.empty
         : Employee.fromJson(jsonDecode(employeePref));
-    if (employee != null) {
-      _cache.write(key: authCacheKey, value: employee);
-    }
 
-    yield employee;
+    _cache.write(key: authCacheKey, value: emp);
+    print('listen: $emp');
+    controller.add(emp);
+    return controller.stream;
   }
 
-  Future<Employee> logInWithEmailAndPassword({
+  //Stream<Employee> get employee=>controller.stream;
+
+  Future<void> logInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
@@ -76,15 +73,13 @@ class AuthenticationRepository {
       Employee employee = Employee.fromJson(result);
 
       await _authPlugin.setString(authCacheKey, json.encode(employee));
-      setCurrentEmployee(employee);
-
-      return employee;
+      controller.add(employee);
     } else {
       throw LogInWithEmailAndPasswordFailure.fromCode('user-not-found');
     }
   }
 
-  Future<Employee> logInWithUserAndPassword({
+  Future<void> logInWithUserAndPassword({
     required String username,
     required String password,
   }) async {
@@ -94,9 +89,7 @@ class AuthenticationRepository {
       Employee employee = Employee.fromJson(result);
 
       await _authPlugin.setString(authCacheKey, json.encode(employee));
-      setCurrentEmployee(employee);
-
-      return employee;
+      controller.add(employee);
     } else {
       throw LogInWithEmailAndPasswordFailure.fromCode('user-not-found');
     }
@@ -104,8 +97,8 @@ class AuthenticationRepository {
 
   Future<void> logOut() async {
     try {
-      await _authPlugin.remove(authCacheKey);
-      _cache.reset(key: authCacheKey);
+      controller.add(Employee.empty);
+      await _authPlugin.setString(authCacheKey, json.encode(Employee.empty));
     } catch (_) {
       throw LogOutFailure();
     }

@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:person_abstract_model/person_abstract_model.dart' show Person;
+import 'package:uuid/uuid.dart';
 
 import '../../employees_api.dart';
 
@@ -8,32 +10,26 @@ part 'employee.g.dart';
 
 @immutable
 @JsonSerializable()
-class Employee extends Person {
-  Employee({
-    String? id,
-    required String firstname,
-    required String lastname,
-    required String email,
-    required String phone,
+class Employee extends Equatable {
+  const Employee({
+    required this.id,
+    required this.firstname,
+    required this.lastname,
+    required this.email,
+    required this.phone,
     required this.birthday,
     required this.username,
     required this.password,
-  }) : super(
-            id: id,
-            firstname: firstname,
-            lastname: lastname,
-            email: email,
-            phone: phone);
+  });
 
-  final DateTime birthday;
+  final String id;
+  final String firstname;
+  final String lastname;
+  final String email;
+  final String phone;
+  final DateTime? birthday;
   final String username;
   final String password;
-
-  get getId => id;
-  get getFirstname => firstname;
-  get getLastname => lastname;
-  get getPhone => phone;
-  get getEmail => email;
 
   Employee copyWith({
     String? id,
@@ -56,23 +52,25 @@ class Employee extends Person {
       password: password ?? this.password,
     );
   }
+  static const Employee empty = Employee(
+      id: '',
+      firstname: '',
+      lastname: '',
+      email: '',
+      phone: '',
+      birthday: null,
+      username: '',
+      password: '');
 
-  static Employee get empty {
-    return Employee(
-        firstname: '',
-        lastname: '',
-        email: '',
-        phone: '',
-        birthday: DateTime.fromMicrosecondsSinceEpoch(0),
-        username: '',
-        password: '');
-  }
+  bool get isEmpty => this == Employee.empty;
+
+  bool get isNotEmpty => this != Employee.empty;
 
   static Employee fromJson(JsonMap json) => _$EmployeeFromJson(json);
 
   JsonMap toJson() => _$EmployeeToJson(this);
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [id, firstname, lastname, birthday, phone, email, username, password];
 }
