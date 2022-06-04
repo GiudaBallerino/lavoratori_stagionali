@@ -61,8 +61,7 @@ class ExperienceList extends StatelessWidget {
                   ListTile(
                     title: Text(
                       "Nessuna esperienza inserita",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      // style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -102,8 +101,7 @@ class ExperienceList extends StatelessWidget {
                     ),
                   ),
                   ListTile(
-                    title: Text(
-                        'Paga giornaliera lorda:'), //Text(element.company),
+                    title: Text('Paga giornaliera lorda:'),
                     trailing: Text('€${element.pay}'),
                   ),
                 ],
