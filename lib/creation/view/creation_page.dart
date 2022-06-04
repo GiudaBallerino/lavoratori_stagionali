@@ -38,10 +38,12 @@ class CreationView extends StatelessWidget {
   final _nationalityKey = GlobalKey<FormFieldState>();
   final _addressKey = GlobalKey<FormFieldState>();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: BlocBuilder<CreationBloc, CreationState>(
         builder: (context, state) {
@@ -467,6 +469,7 @@ class CreationView extends StatelessWidget {
                         SizedBox(
                           width: size.width,
                           child: ExperienceList(
+                            scaffoldKey: _scaffoldKey,
                             width: size.width,
                             height: size.height,
                             title: 'Esperienze lavorative: ',
@@ -488,6 +491,7 @@ class CreationView extends StatelessWidget {
                         SizedBox(
                           width: size.width,
                           child: EmergencyContactList(
+                            scaffoldKey: _scaffoldKey,
                             width: size.width,
                             height: size.height,
                             title: 'Contatti di emergenza*: ',

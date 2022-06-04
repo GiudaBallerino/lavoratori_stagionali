@@ -36,7 +36,7 @@ class PeriodList extends StatelessWidget {
         for (final element in list)
           InputChip(
             label: Text(
-                'Da: ${DateFormat('dd/MM/yyyy').format(element.start)} - A: ${DateFormat('dd/MM/yyyy').format(element.end)}'),
+                'Da: ${DateFormat('dd/MM').format(element.start)} - A: ${DateFormat('dd/MM').format(element.end)}'),
             onDeleted: () =>onDelete(element),
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
           ),
