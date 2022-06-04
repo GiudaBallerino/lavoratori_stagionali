@@ -49,24 +49,12 @@ class HomeView extends StatelessWidget {
           CreationPage(),
         ],
       ),
-      floatingActionButton: PopupMenuButton<Menu>(
-          child: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
+            tooltip: "Logout",
             backgroundColor: Colors.white,
-            child: Icon(Icons.account_circle_outlined,color: Colors.black,),
-            onPressed: null,
+            child: Icon(Icons.logout,color: Colors.black,),
+            onPressed: ()=>context.read<AppBloc>().add(AppLogoutRequested()),
           ),
-          onSelected: (Menu item) {
-            if (item == Menu.Logout) {
-              context.read<AppBloc>().add(AppLogoutRequested());
-            }
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
-                for (final action in Menu.values)
-                  PopupMenuItem<Menu>(
-                    value: action,
-                    child: Text(action.name),
-                  ),
-              ]),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniStartDocked,
       bottomNavigationBar: BottomAppBar(

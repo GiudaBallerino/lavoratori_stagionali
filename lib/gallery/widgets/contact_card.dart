@@ -10,7 +10,7 @@ class ContactCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width * 0.3,
+      width: width * 0.5,
       child: Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
