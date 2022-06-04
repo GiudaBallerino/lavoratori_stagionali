@@ -48,16 +48,15 @@ class AuthenticationRepository {
     return _cache.read<Employee>(key: authCacheKey) ?? Employee.empty;
   }
 
-  Stream<Employee> get employee{
+  Stream<Employee> get employee {
     String? employeePref = _authPlugin.getString(authCacheKey);
 
     Employee emp = employeePref == null
         ? Employee.empty
         : Employee.fromJson(jsonDecode(employeePref));
-
     _cache.write(key: authCacheKey, value: emp);
-    print('listen: $emp');
-    controller.add(emp);
+
+    logInWithEmailAndPassword(email: emp.email, password: emp.password);
     return controller.stream;
   }
 

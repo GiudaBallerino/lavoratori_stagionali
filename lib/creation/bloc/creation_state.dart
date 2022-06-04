@@ -13,6 +13,9 @@ class CreationState extends Equatable {
   const CreationState({
     this.status = CreationStatus.initial,
     this.allLicenses = const [],
+    this.allLanguages = const [],
+    this.allAreas = const [],
+    this.allFields = const [],
     this.firstname,
     this.lastname,
     this.birthday,
@@ -33,7 +36,10 @@ class CreationState extends Equatable {
 
   //funzionamento
   final CreationStatus status;
+  final List<String> allLanguages;
   final List<String> allLicenses;
+  final List<String> allAreas;
+  final List<String> allFields;
 
   //inserimento
   final String? firstname;
@@ -55,7 +61,10 @@ class CreationState extends Equatable {
 
   CreationState copyWith({
     CreationStatus Function()? status,
+    List<String> Function()? allLanguages,
     List<String> Function()? allLicenses,
+    List<String> Function()? allAreas,
+    List<String> Function()? allFields,
     String? Function()? firstname,
     String? Function()? lastname,
     String? Function()? birthday,
@@ -75,7 +84,10 @@ class CreationState extends Equatable {
   }) {
     return CreationState(
       status: status != null ? status() : this.status,
+      allLanguages: allLanguages != null ? allLanguages() : this.allLanguages,
       allLicenses: allLicenses != null ? allLicenses() : this.allLicenses,
+      allAreas: allAreas != null ? allAreas() : this.allAreas,
+      allFields: allFields != null ? allFields() : this.allFields,
       firstname: firstname != null ? firstname() : this.firstname,
       lastname: lastname != null ? lastname() : this.lastname,
       birthday: birthday != null ? birthday() : this.birthday,
@@ -100,7 +112,10 @@ class CreationState extends Equatable {
   @override
   List<Object?> get props => [
         status,
+        allFields,
+        allLanguages,
         allLicenses,
+        allAreas,
         firstname,
         lastname,
         birthday,

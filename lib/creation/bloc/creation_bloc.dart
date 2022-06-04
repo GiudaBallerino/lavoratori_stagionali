@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:lavoratori_stagionali/utils/string_extension.dart';
 import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
 
@@ -13,7 +14,10 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
         super(
           const CreationState(),
         ) {
-    on<AllLicensesSubscriptionRequested>(_onAllLicensesSubscriptionRequested);
+    on<LanguagesSubscriptionRequested>(_onLanguagesSubscriptionRequested);
+    on<LicensesSubscriptionRequested>(_onLicensesSubscriptionRequested);
+    on<AreasSubscriptionRequested>(_onAreasSubscriptionRequested);
+    on<FieldsSubscriptionRequested>(_onFieldsSubscriptionRequested);
     on<ResetAllState>(_onReset);
     on<WorkerSubmitted>(_onWorkerSubmitted);
     on<FirstNameChanged>(_onFirstNameChanged);
@@ -43,42 +47,118 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
 
   final WorkersRepository _workersRepository;
 
-  Future<void> _onAllLicensesSubscriptionRequested(
-    AllLicensesSubscriptionRequested event,
-    Emitter<CreationState> emit,
-  ) async {
+  Future<void> _onLanguagesSubscriptionRequested(
+      LanguagesSubscriptionRequested event,
+      Emitter<CreationState> emit,
+      ) async {
     emit(state.copyWith(status: () => CreationStatus.loading));
 
-    const List<String> _licensesOptions = <String>[
-      'AM',
-      'A1',
-      'A2',
-      'A',
-      'B1',
-      'B',
-      'BE',
-      'C1',
-      'C1E',
-      'C',
-      'CE',
-      'D1E',
-      'D',
-      'DE',
-      'KA',
-      'KB',
-      'CQC Persone',
-      'CQC Merci',
-      'CFP'
-    ];
+    await emit.forEach<List<Worker>>(
+      _workersRepository.getWorkers(),
+      onData: (workers) {
+        List<String> tmpLanguages = [];
 
-    try {
-      emit(state.copyWith(
-        status: () => CreationStatus.success,
-        allLicenses: () => _licensesOptions,
-      ));
-    } catch (e) {
-      emit(state.copyWith(status: () => CreationStatus.failure));
-    }
+        workers.forEach((w) {
+          w.languages.forEach((l) {
+            if (!tmpLanguages.contains(l.capitalize())) {
+              tmpLanguages.add(l.capitalize());
+            }
+          });
+        });
+
+        return state.copyWith(
+            status: () => CreationStatus.success,
+            allLanguages: () => tmpLanguages);
+      },
+      onError: (_, __) => state.copyWith(
+        status: () => CreationStatus.failure,
+      ),
+    );
+  }
+
+  Future<void> _onLicensesSubscriptionRequested(
+      LicensesSubscriptionRequested event,
+      Emitter<CreationState> emit,
+      ) async {
+    emit(state.copyWith(status: () => CreationStatus.loading));
+
+    await emit.forEach<List<Worker>>(
+      _workersRepository.getWorkers(),
+      onData: (workers) {
+        List<String> tmpLicenses = [];
+
+        workers.forEach((w) {
+          w.licenses.forEach((l) {
+            if (!tmpLicenses.contains(l.toUpperCase())) {
+              tmpLicenses.add(l.toUpperCase());
+            }
+          });
+        });
+
+        return state.copyWith(
+            status: () => CreationStatus.success,
+            allLicenses: () => tmpLicenses);
+      },
+      onError: (_, __) => state.copyWith(
+        status: () => CreationStatus.failure,
+      ),
+    );
+  }
+
+  Future<void> _onAreasSubscriptionRequested(
+      AreasSubscriptionRequested event,
+      Emitter<CreationState> emit,
+      ) async {
+    emit(state.copyWith(status: () => CreationStatus.loading));
+
+    await emit.forEach<List<Worker>>(
+      _workersRepository.getWorkers(),
+      onData: (workers) {
+        List<String> tmpAreas = [];
+
+        workers.forEach((w) {
+          w.areas.forEach((a) {
+            if (!tmpAreas.contains(a.toTitleCase())) {
+              tmpAreas.add(a.toTitleCase());
+            }
+          });
+        });
+
+        return state.copyWith(
+            status: () => CreationStatus.success, allAreas: () => tmpAreas);
+      },
+      onError: (_, __) => state.copyWith(
+        status: () => CreationStatus.failure,
+      ),
+    );
+  }
+
+  Future<void> _onFieldsSubscriptionRequested(
+      FieldsSubscriptionRequested event,
+      Emitter<CreationState> emit,
+      ) async {
+    emit(state.copyWith(status: () => CreationStatus.loading));
+
+    await emit.forEach<List<Worker>>(
+      _workersRepository.getWorkers(),
+      onData: (workers) {
+        List<String> tmpFields = [];
+
+        workers.forEach((w) {
+          w.fields.forEach((f) {
+            if (!tmpFields.contains(f.capitalize())) {
+              tmpFields.add(f.capitalize());
+            }
+          });
+        });
+
+        return state.copyWith(
+            status: () => CreationStatus.success, allFields: () => tmpFields);
+      },
+      onError: (_, __) => state.copyWith(
+        status: () => CreationStatus.failure,
+      ),
+    );
   }
 
   Future<void> _onReset(
@@ -262,7 +342,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
           status: () => CreationStatus.success,
           languages: () => [
                 ...state.languages,
-                ...[event.language]
+                ...[event.language.capitalize()]
               ]));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));
@@ -296,7 +376,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
           status: () => CreationStatus.success,
           licenses: () => [
                 ...state.licenses,
-                ...[event.license]
+                ...[event.license.toUpperCase()]
               ]));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));
@@ -330,7 +410,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
           status: () => CreationStatus.success,
           areas: () => [
                 ...state.areas,
-                ...[event.area]
+                ...[event.area.toTitleCase()]
               ]));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));
@@ -399,7 +479,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
           status: () => CreationStatus.success,
           fields: () => [
                 ...state.fields,
-                ...[event.field]
+                ...[event.field.capitalize()]
               ]));
     } catch (e) {
       emit(state.copyWith(status: () => CreationStatus.failure));

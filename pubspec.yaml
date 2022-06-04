@@ -40,6 +40,7 @@ dependencies:
       path: plugins/window_size
       ref: a738913c8ce2c9f47515382d40827e794a334274
   flow_builder: ^0.0.9
+  crypto: ^3.0.2
 
 dev_dependencies:
   bloc_test: ^9.0.1

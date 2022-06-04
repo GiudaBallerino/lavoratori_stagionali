@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:filters/filters.dart';
+import 'package:lavoratori_stagionali/utils/string_extension.dart';
 import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
 
@@ -67,8 +68,8 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
 
         workers.forEach((w) {
           w.languages.forEach((l) {
-            if (!tmpLanguages.contains(l)) {
-              tmpLanguages.add(l);
+            if (!tmpLanguages.contains(l.capitalize())) {
+              tmpLanguages.add(l.capitalize());
             }
           });
         });
@@ -96,8 +97,8 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
 
         workers.forEach((w) {
           w.licenses.forEach((l) {
-            if (!tmpLicenses.contains(l)) {
-              tmpLicenses.add(l);
+            if (!tmpLicenses.contains(l.toUpperCase())) {
+              tmpLicenses.add(l.toUpperCase());
             }
           });
         });
@@ -125,8 +126,8 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
 
         workers.forEach((w) {
           w.areas.forEach((a) {
-            if (!tmpAreas.contains(a)) {
-              tmpAreas.add(a);
+            if (!tmpAreas.contains(a.toTitleCase())) {
+              tmpAreas.add(a.toTitleCase());
             }
           });
         });
@@ -153,8 +154,8 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
 
         workers.forEach((w) {
           w.fields.forEach((f) {
-            if (!tmpFields.contains(f)) {
-              tmpFields.add(f);
+            if (!tmpFields.contains(f.capitalize())) {
+              tmpFields.add(f.capitalize());
             }
           });
         });
@@ -248,7 +249,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
           status: () => GalleryStatus.success,
           filters: () => state.filters.copyWith(languages: [
                 ...state.filters.languages,
-                ...[event.language]
+                ...[event.language.capitalize()]
               ])));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
@@ -266,7 +267,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
           status: () => GalleryStatus.success,
           filters: () => state.filters.copyWith(licenses: [
                 ...state.filters.licenses,
-                ...[event.license]
+                ...[event.license.toUpperCase()]
               ])));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
@@ -284,7 +285,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
           status: () => GalleryStatus.success,
           filters: () => state.filters.copyWith(areas: [
                 ...state.filters.areas,
-                ...[event.area]
+                ...[event.area.toTitleCase()]
               ])));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
@@ -302,7 +303,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
           status: () => GalleryStatus.success,
           filters: () => state.filters.copyWith(fields: [
                 ...state.filters.fields,
-                ...[event.field]
+                ...[event.field.capitalize()]
               ])));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
