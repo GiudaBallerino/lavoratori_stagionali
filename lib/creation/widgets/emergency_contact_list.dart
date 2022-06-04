@@ -11,6 +11,7 @@ class EmergencyContactList extends StatelessWidget {
     required this.list,
     required this.onAdd,
     required this.onDelete,
+    required this.scaffoldKey,
   }) : super(key: key);
 
   final String title;
@@ -20,6 +21,7 @@ class EmergencyContactList extends StatelessWidget {
   final List<EmergencyContact> list;
   final Function(EmergencyContact) onAdd;
   final Function(EmergencyContact) onDelete;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class EmergencyContactList extends StatelessWidget {
                 child: Icon(Icons.add_circle),
                 onTap: () async {
                   final EmergencyContact? result =
-                      await showEmergencyContactBuilder(context);
+                      await showEmergencyContactBuilder(scaffoldKey);
                   if (result != null) {
                     onAdd(result);
                   }
@@ -113,9 +115,9 @@ class EmergencyContactList extends StatelessWidget {
     );
   }
 
-  Future<EmergencyContact?> showEmergencyContactBuilder(BuildContext context) {
+  Future<EmergencyContact?> showEmergencyContactBuilder(GlobalKey<ScaffoldState> scaffoldKey) {
     return showDialog(
-      context: context,
+      context: scaffoldKey.currentContext!,
       builder: (_) {
         final _formKey = GlobalKey<FormState>();
         TextEditingController _firstname = TextEditingController();
@@ -241,7 +243,7 @@ class EmergencyContactList extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).pop(null);
+                            Navigator.of(_).pop(null);
                           },
                           child: Text('Annulla'),
                         ),
@@ -254,7 +256,7 @@ class EmergencyContactList extends StatelessWidget {
                                   phone: _phone.text,
                                   email: _email.text
                               );
-                              Navigator.of(context).pop(result);
+                              Navigator.of(_).pop(result);
                             }
                           },
                           child: Text('Conferma'),

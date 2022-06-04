@@ -12,6 +12,7 @@ class ExperienceList extends StatelessWidget {
     required this.list,
     required this.onAdd,
     required this.onDelete,
+    required this.scaffoldKey,
   }) : super(key: key);
 
   final String title;
@@ -21,6 +22,7 @@ class ExperienceList extends StatelessWidget {
   final List<Experience> list;
   final Function(Experience) onAdd;
   final Function(Experience) onDelete;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class ExperienceList extends StatelessWidget {
                 child: Icon(Icons.add_circle),
                 onTap: () async {
                   final Experience? result =
-                      await showExperienceBuilder(context);
+                      await showExperienceBuilder(scaffoldKey);
                   if (result != null) {
                     onAdd(result);
                   }
@@ -112,9 +114,9 @@ class ExperienceList extends StatelessWidget {
     );
   }
 
-  Future<Experience?> showExperienceBuilder(BuildContext context) {
+  Future<Experience?> showExperienceBuilder(final GlobalKey<ScaffoldState> scaffoldKey) {
     return showDialog(
-      context: context,
+      context: scaffoldKey.currentContext!,
       builder: (_) {
         final _formKey = GlobalKey<FormState>();
         TextEditingController _company = TextEditingController();
@@ -286,7 +288,7 @@ class ExperienceList extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).pop(null);
+                            Navigator.of(_).pop(null);
                           },
                           child: Text('Annulla'),
                         ),
@@ -301,7 +303,7 @@ class ExperienceList extends StatelessWidget {
                                   task: _tasks.text.split('|'),
                                   place: _place.text,
                                   pay: double.parse(_pay.text));
-                              Navigator.of(context).pop(exp);
+                              Navigator.of(_).pop(exp);
                             }
                           },
                           child: Text('Conferma'),
