@@ -2,8 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:lavoratori_stagionali/creation/widgets/licenses_selection_list.dart';
+import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/experience_card.dart';
+import 'package:lavoratori_stagionali/gallery/widgets/selection_list.dart';
+import 'package:lavoratori_stagionali/gallery/widgets/serach_bar.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/worker_card.dart';
+import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
 
 import '../bloc/gallery_bloc.dart';
@@ -17,8 +22,21 @@ class GalleryPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => GalleryBloc(
         workersRepository: context.read<WorkersRepository>(),
-      )..add(
+      )
+        ..add(
           const WorkersSubscriptionRequested(),
+        )
+        ..add(
+          const LanguagesSubscriptionRequested(),
+        )
+        ..add(
+          const LicensesSubscriptionRequested(),
+        )
+        ..add(
+          const AreasSubscriptionRequested(),
+        )
+        ..add(
+          const FieldsSubscriptionRequested(),
         ),
       child: GalleryView(),
     );
@@ -61,7 +79,8 @@ class GalleryView extends StatelessWidget {
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
                       SnackBar(
-                        content: Text("Eliminazione avvenuta con successo"),
+                        content: Text(
+                            "${deletedWorker.firstname} ${deletedWorker.lastname} eliminato con successo"),
                         action: SnackBarAction(
                           label: "Annulla",
                           onPressed: () {
@@ -94,30 +113,178 @@ class GalleryView extends StatelessWidget {
                 }
                 return Row(
                   children: [
-                    CupertinoScrollbar(
-                      child: SizedBox(
-                        width: size.width * 0.5 - 8,
-                        child: ListView(
-                          children: [
-                            for (final worker in state.workers)
-                              WorkerCard(
-                                worker: worker,
-                                selected: state.selected == worker,
-                                onDelete: () => context
-                                    .read<GalleryBloc>()
-                                    .add(WorkerDeleted(worker)),
-                                onSelected: () => context
-                                    .read<GalleryBloc>()
-                                    .add(WorkerSelection(worker)),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: SizedBox(
+                            width: size.width * 0.5 - 48,
+                            child: SearchBarWidget(
+                              backgroudColor: Theme.of(context).focusColor,
+                              onChange: (String) {},
+                              onFieldSubmitted: (String) {},
+                              hintText: 'Cerca',
+                              suffix: IconButton(
+                                tooltip: 'Filtri',
+                                icon: Icon(
+                                  state.filtersIsOpen
+                                      ? Icons.filter_list_off
+                                      : Icons.filter_list,
+                                  color: Theme.of(context).hintColor,
+                                ),
+                                onPressed: () {
+                                  context
+                                      .read<GalleryBloc>()
+                                      .add(OpenFilters());
+                                },
                               ),
-                          ],
+                            ),
+                          ),
                         ),
-                      ),
+                        CupertinoScrollbar(
+                          child: SizedBox(
+                            width: size.width * 0.5 - 8,
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                for (final worker in state.andFilteredWorkers)
+                                  WorkerCard(
+                                    worker: worker,
+                                    selected: state.selected == worker,
+                                    onDelete: () => context
+                                        .read<GalleryBloc>()
+                                        .add(WorkerDeleted(worker)),
+                                    onSelected: () => context
+                                        .read<GalleryBloc>()
+                                        .add(WorkerSelection(worker)),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     VerticalDivider(
                       thickness: 3,
                     ),
-                    if (state.selected != null)
+                    if (state.filtersIsOpen)
+                      SingleChildScrollView(
+                        controller: ScrollController(),
+                        child: SizedBox(
+                          width: size.width * 0.5 - 8,
+                          child: Wrap(
+                            runSpacing: 10,
+                            children: [
+                              SizedBox(
+                                width: size.width * 0.5 - 8,
+                                child: Text(
+                                  'Filtri',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.5 - 8,
+                                child: SelectionWidget(
+                                  width: size.width * 0.5 - 8,
+                                  title: 'Lingue',
+                                  list: state.allLanguages,
+                                  selected: state.filters.languages,
+                                  onAdd: (string) => context
+                                      .read<GalleryBloc>()
+                                      .add(AddLanguages(string)),
+                                  onDelete: (string) => context
+                                      .read<GalleryBloc>()
+                                      .add(RemoveLanguages(string)),
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.5 - 8,
+                                child: SelectionWidget(
+                                  width: size.width * 0.5 - 8,
+                                  title: 'Patenti',
+                                  list: state.allLicenses,
+                                  selected: state.filters.licenses,
+                                  onAdd: (string) => context
+                                      .read<GalleryBloc>()
+                                      .add(AddLicenses(string)),
+                                  onDelete: (string) => context
+                                      .read<GalleryBloc>()
+                                      .add(RemoveLicenses(string)),
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.5 - 8,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Automunito',
+                                      style: TextStyle(
+                                          fontSize: 15, fontWeight: FontWeight.bold),
+                                    ),
+                                    Checkbox(
+                                      value: state.filters.ownCar,
+                                      onChanged: (bool? value) {
+                                        if (value != null) {
+                                          context
+                                              .read<GalleryBloc>()
+                                              .add(OwnCarChange());
+                                        }
+                                      },
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.5 - 8,
+                                child: SelectionWidget(
+                                  width: size.width * 0.5 - 8,
+                                  title: 'Comuni',
+                                  list: state.allAreas,
+                                  selected: state.filters.areas,
+                                  onAdd: (string) => context
+                                      .read<GalleryBloc>()
+                                      .add(AddAreas(string)),
+                                  onDelete: (string) => context
+                                      .read<GalleryBloc>()
+                                      .add(RemoveAreas(string)),
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.5 - 8,
+                                child: SelectionWidget(
+                                  width: size.width * 0.5 - 8,
+                                  title: 'Campi',
+                                  list: state.allFields,
+                                  selected: state.filters.fields,
+                                  onAdd: (string) => context
+                                      .read<GalleryBloc>()
+                                      .add(AddFields(string)),
+                                  onDelete: (string) => context
+                                      .read<GalleryBloc>()
+                                      .add(RemoveFields(string)),
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.5 - 8,
+                                child: PeriodList(
+                                  hint: 'Aggiungi periodo',
+                                  onAdd: (date) => context
+                                      .read<GalleryBloc>()
+                                      .add(AddPeriods(Period(
+                                          start: date.start, end: date.end))),
+                                  width: size.width * 0.5 - 8,
+                                  title: 'Periodi',
+                                  list: state.filters.periods,
+                                  onDelete: (period) => context
+                                      .read<GalleryBloc>()
+                                      .add(RemovePeriods(period)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else if (state.selected != null)
                       SingleChildScrollView(
                         controller: ScrollController(),
                         child: SizedBox(
@@ -242,11 +409,12 @@ class GalleryView extends StatelessWidget {
                                     Text(
                                       'Automunito',
                                       style: TextStyle(
-                                          fontSize: 15,),
+                                        fontSize: 15,
+                                      ),
                                     ),
                                     Checkbox(
                                       value: state.selected!.ownCar,
-                                      onChanged: (value){},
+                                      onChanged: (value) {},
                                     )
                                   ],
                                 ),
