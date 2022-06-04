@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:lavoratori_stagionali/creation/widgets/licenses_selection_list.dart';
+import 'package:lavoratori_stagionali/creation/widgets/selection_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/experience_card.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/selection_list.dart';

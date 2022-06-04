@@ -7,8 +7,20 @@ abstract class CreationEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AllLicensesSubscriptionRequested extends CreationEvent {
-  const AllLicensesSubscriptionRequested();
+class LanguagesSubscriptionRequested extends CreationEvent {
+  const LanguagesSubscriptionRequested();
+}
+
+class LicensesSubscriptionRequested extends CreationEvent {
+  const LicensesSubscriptionRequested();
+}
+
+class AreasSubscriptionRequested extends CreationEvent {
+  const AreasSubscriptionRequested();
+}
+
+class FieldsSubscriptionRequested extends CreationEvent {
+  const FieldsSubscriptionRequested();
 }
 
 class ResetAllState extends CreationEvent{

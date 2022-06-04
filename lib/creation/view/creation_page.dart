@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lavoratori_stagionali/creation/widgets/chip_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/experience_list.dart';
-import 'package:lavoratori_stagionali/creation/widgets/licenses_selection_list.dart';
+import 'package:lavoratori_stagionali/creation/widgets/selection_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
 import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
@@ -19,7 +19,19 @@ class CreationPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => CreationBloc(
         workersRepository: context.read<WorkersRepository>(),
-      )..add(AllLicensesSubscriptionRequested()),
+      )
+        ..add(
+          const LanguagesSubscriptionRequested(),
+        )
+        ..add(
+          const LicensesSubscriptionRequested(),
+        )
+        ..add(
+          const AreasSubscriptionRequested(),
+        )
+        ..add(
+          const FieldsSubscriptionRequested(),
+        ),
       child: CreationView(),
     );
   }
@@ -61,7 +73,7 @@ class CreationView extends StatelessWidget {
                 height: 5,
               ),
               FloatingActionButton(
-                onPressed:() {
+                onPressed: () {
                   bool allFieldCompiled = allFieldsIsCompiled(
                       languages: state.languages,
                       licenses: state.licenses,
@@ -69,13 +81,13 @@ class CreationView extends StatelessWidget {
                       fields: state.fields,
                       experiences: state.experiences,
                       periods: state.periods,
-                      emergencyContacts: state.emergencyContacts
-                  );
+                      emergencyContacts: state.emergencyContacts);
                   if (_formKey.currentState!.validate() && allFieldCompiled) {
                     Worker worker = Worker(
                         firstname: state.firstname!,
                         lastname: state.lastname!,
-                        birthday: DateFormat('dd/MM/yyyy').parse(state.birthday!),
+                        birthday:
+                            DateFormat('dd/MM/yyyy').parse(state.birthday!),
                         birthplace: state.birthplace!,
                         nationality: state.nationality!,
                         address: state.address!,
@@ -89,9 +101,7 @@ class CreationView extends StatelessWidget {
                         experiences: state.experiences,
                         periods: state.periods,
                         emergencyContacts: state.emergencyContacts);
-                    context
-                        .read<CreationBloc>()
-                        .add(WorkerSubmitted(worker));
+                    context.read<CreationBloc>().add(WorkerSubmitted(worker));
                     context.read<CreationBloc>().add(ResetAllState());
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -241,7 +251,8 @@ class CreationView extends StatelessWidget {
                                     validator: (value) {
                                       if (value == null || value.isEmpty)
                                         return 'Campo obbligatorio';
-                                      String pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
+                                      String pattern =
+                                          r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
                                       RegExp regex = new RegExp(pattern);
                                       if (!regex.hasMatch(value))
                                         return 'Inserire una email valida';
@@ -360,11 +371,12 @@ class CreationView extends StatelessWidget {
 // //LANGUAGES
                         SizedBox(
                           width: size.width * 0.5 - 40,
-                          child: ChipList(
+                          child: SelectionList(
                             width: size.width * 0.5 - 40,
                             title: 'Lingue parlate*',
                             hint: 'Lingua',
-                            list: state.languages,
+                            list: state.allLanguages,
+                            selected: state.languages,
                             onAdd: (string) => context
                                 .read<CreationBloc>()
                                 .add(LanguageAdded(string)),
@@ -376,11 +388,11 @@ class CreationView extends StatelessWidget {
 //LICENSES
                         SizedBox(
                           width: size.width * 0.5 - 40,
-                          child: LicensesSelection(
+                          child: SelectionList(
                             width: size.width * 0.5 - 40,
                             title: 'Patenti possedute:',
                             hint: 'Patente',
-                            licenses: state.allLicenses,
+                            list: state.allLicenses,
                             selected: state.licenses,
                             onAdd: (string) => context
                                 .read<CreationBloc>()
@@ -393,11 +405,12 @@ class CreationView extends StatelessWidget {
 //AREAS
                         SizedBox(
                           width: size.width * 0.5 - 40,
-                          child: ChipList(
+                          child: SelectionList(
                             width: size.width * 0.5 - 40,
                             title: 'Zone*:',
                             hint: 'Comune',
-                            list: state.areas,
+                            list: state.allAreas,
+                            selected: state.areas,
                             onAdd: (string) => context
                                 .read<CreationBloc>()
                                 .add(AreaAdded(string)),
@@ -432,11 +445,12 @@ class CreationView extends StatelessWidget {
 //TASKS
                         SizedBox(
                           width: size.width * 0.5 - 40,
-                          child: ChipList(
+                          child: SelectionList(
                             width: size.width * 0.5 - 40,
                             title: 'Campo*:',
                             hint: 'agricoltura/turismo',
-                            list: state.fields,
+                            list: state.allFields,
+                            selected: state.fields,
                             onAdd: (string) => context
                                 .read<CreationBloc>()
                                 .add(FieldAdded(string)),
