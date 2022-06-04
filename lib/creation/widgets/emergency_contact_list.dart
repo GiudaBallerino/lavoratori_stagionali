@@ -58,8 +58,7 @@ class EmergencyContactList extends StatelessWidget {
                   ListTile(
                     title: Text(
                       "Nessun contatto inserito",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      // style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
