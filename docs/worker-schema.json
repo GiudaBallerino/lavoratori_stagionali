@@ -1,0 +1,186 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Worker",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier for a product"
+    },
+    "firstname": {
+      "type": "string"
+    },
+    "lastname": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "birthday": {
+      "type": "string"
+    },
+    "birthplace": {
+      "type": "string"
+    },
+    "nationality": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "ownCar": {
+      "type": "boolean"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "licenses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "experiences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "period": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "start": {
+                "type": "string"
+              },
+              "end": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end"
+            ]
+          },
+          "company": {
+            "type": "string"
+          },
+          "task": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "place": {
+            "type": "string"
+          },
+          "pay": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "period",
+          "company",
+          "task",
+          "place",
+          "pay"
+        ]
+      }
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ]
+      }
+    },
+    "emergencyContacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "firstname",
+          "lastname",
+          "phone",
+          "email"
+        ]
+      }
+    }
+  },
+  "required": [
+    "id",
+    "firstname",
+    "lastname",
+    "phone",
+    "email",
+    "birthday",
+    "birthplace",
+    "nationality",
+    "address",
+    "ownCar",
+    "languages",
+    "licenses",
+    "areas",
+    "fields",
+    "experiences",
+    "periods",
+    "emergencyContacts"
+  ]
+}
