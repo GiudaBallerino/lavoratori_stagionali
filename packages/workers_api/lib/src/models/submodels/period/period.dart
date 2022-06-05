@@ -34,6 +34,13 @@ class Period extends Equatable {
     );
   }
 
+  bool include(Period period) {
+    if (period.start.isBefore(this.end) && period.end.isAfter(this.start)){
+      return true;
+    }
+    return false;
+  }
+
   static Period fromJson(JsonMap json) => _$PeriodFromJson(json);
 
   JsonMap toJson() => _$PeriodToJson(this);
