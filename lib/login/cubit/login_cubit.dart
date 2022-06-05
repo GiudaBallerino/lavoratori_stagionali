@@ -1,11 +1,6 @@
-import 'dart:convert';
-
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:crypto/crypto.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../config.dart';
 
 part 'login_state.dart';
 
@@ -50,11 +45,10 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> logInWithCredentials() async {
     if (state.status != LoginStatus.isValidated) return;
     emit(state.copyWith(status: LoginStatus.submissionInProgress));
-    print(md5.convert(utf8.encode('${Config.SALT}${state.password}${Config.PEPPER}')).toString());
     try {
       await _authenticationRepository.logInWithEmailAndPassword(
         email: state.email,
-        password: md5.convert(utf8.encode('${Config.SALT}${state.password}${Config.PEPPER}')).toString(),
+        password: state.password,
       );
       emit(state.copyWith(status: LoginStatus.submissionSuccess));
     } on LogInWithEmailAndPasswordFailure catch (e) {
