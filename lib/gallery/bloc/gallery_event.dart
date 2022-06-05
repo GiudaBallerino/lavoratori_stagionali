@@ -146,3 +146,7 @@ class RemovePeriods extends GalleryEvent {
 class OwnCarChange extends GalleryEvent{
   const OwnCarChange();
 }
+
+class ChangeSearchMode extends GalleryEvent{
+  const ChangeSearchMode();
+}

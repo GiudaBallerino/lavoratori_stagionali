@@ -147,7 +147,7 @@ class GalleryView extends StatelessWidget {
                             child: ListView(
                               shrinkWrap: true,
                               children: [
-                                for (final worker in state.andFilteredWorkers)
+                                for (final worker in state.filteredWorkers)
                                   WorkerCard(
                                     worker: worker,
                                     selected: state.selected == worker,
@@ -180,6 +180,25 @@ class GalleryView extends StatelessWidget {
                                 child: Text(
                                   'Filtri',
                                   style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              SizedBox(
+                                width: size.width * 0.5 - 8,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Modalità di ricerca',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextButton(
+                                        onPressed: () => context
+                                            .read<GalleryBloc>()
+                                            .add(ChangeSearchMode()),
+                                        child: Text(
+                                            state.searchMode ? 'OR' : 'AND')),
+                                  ],
                                 ),
                               ),
                               SizedBox(
@@ -219,7 +238,8 @@ class GalleryView extends StatelessWidget {
                                     Text(
                                       'Automunito',
                                       style: TextStyle(
-                                          fontSize: 15, fontWeight: FontWeight.bold),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     Checkbox(
                                       value: state.filters.ownCar,

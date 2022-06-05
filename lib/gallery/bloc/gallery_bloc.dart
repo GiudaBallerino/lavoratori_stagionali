@@ -24,6 +24,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     on<WorkerUndoDeletionRequested>(_onUndoDeletionRequested);
     on<WorkerSelection>(_onWorkerSelected);
     on<OpenFilters>(_onOpenFilters);
+    on<ChangeSearchMode>(_onSearchModeChange);
     on<AddLanguages>(_onAddLanguages);
     on<AddLicenses>(_onAddLicenses);
     on<AddAreas>(_onAddAreas);
@@ -200,8 +201,9 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     try {
       emit(state.copyWith(
           status: () => GalleryStatus.success,
-          selected: () =>
-              state.selected == event.selection ? null : event.selection));
+          selected: () => state.selected == event.selection ? null : event.selection,
+          filtersIsOpen: ()=>state.selected == event.selection ? state.filtersIsOpen : false,
+      ));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
     }
@@ -222,6 +224,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     }
   }
 
+
   Future<void> _onOwnCarChange(
     OwnCarChange event,
     Emitter<GalleryState> emit,
@@ -233,6 +236,21 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
           status: () => GalleryStatus.success,
           filters: () =>
               state.filters.copyWith(ownCar: !state.filters.ownCar)));
+    } catch (e) {
+      emit(state.copyWith(status: () => GalleryStatus.failure));
+    }
+  }
+
+  Future<void> _onSearchModeChange(
+      ChangeSearchMode event,
+      Emitter<GalleryState> emit,
+      ) async {
+    emit(state.copyWith(status: () => GalleryStatus.loading));
+
+    try {
+      emit(state.copyWith(
+          status: () => GalleryStatus.success,
+          searchMode: () =>!state.searchMode));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
     }
