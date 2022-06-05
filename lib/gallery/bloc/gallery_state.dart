@@ -21,6 +21,7 @@ class GalleryState extends Equatable {
     this.allLanguages = const [],
     this.allAreas = const [],
     this.allFields = const [],
+    this.searchMode = false,
   });
 
   final GalleryStatus status;
@@ -35,18 +36,41 @@ class GalleryState extends Equatable {
   final List<String> allFields;
 
   final Filters filters;
+  final bool searchMode;
 
-  Iterable<Worker> get andFilteredWorkers {
+  Iterable<Worker> get filteredWorkers {
     if (filters.isEmpty) {
       return workers;
     }
+    if (searchMode) {
+      //OR
+      // return workers.where((w) =>
+      //     filters.licenses.any((l) => w.licenses.contains(l))&&
+      //     filters.languages.any((l) => w.languages.contains(l))&&
+      //     filters.areas.any((a) => w.areas.contains(a)) &&
+      //     filters.fields.any((f) => w.fields.contains(f)) &&
+      //     (filters.ownCar == true ? filters.ownCar == w.ownCar : true) &&
+      //     filters.periods.any((p) => w.periods.indexWhere((pw) => p.include(pw)) > -1));
 
-    return workers.where((w) =>
-        filters.licenses.every((l) => w.licenses.contains(l)) &&
-        filters.languages.every((l) => w.languages.contains(l)) &&
-        filters.areas.every((a) => w.areas.contains(a)) &&
-        filters.fields.every((f) => w.fields.contains(f)) &&
-        (filters.ownCar==true ? filters.ownCar == w.ownCar : true));
+      return workers.where((w) =>
+      filters.licenses.toSet().intersection(w.licenses.toSet()).isNotEmpty&&
+          filters.languages.toSet().intersection(w.languages.toSet()).isNotEmpty&&
+          filters.areas.toSet().intersection(w.areas.toSet()).isNotEmpty&&
+          filters.fields.toSet().intersection(w.fields.toSet()).isNotEmpty&&
+          (filters.ownCar == true ? filters.ownCar == w.ownCar : true)&&
+          filters.periods.any((p) => w.periods.indexWhere((pw) => p.include(pw)) > -1)
+      );
+    } else {
+      //AND
+      return workers.where((w) =>
+          filters.licenses.every((l) => w.licenses.contains(l)) &&
+          filters.languages.every((l) => w.languages.contains(l)) &&
+          filters.areas.every((a) => w.areas.contains(a)) &&
+          filters.fields.every((f) => w.fields.contains(f)) &&
+          (filters.ownCar == true ? filters.ownCar == w.ownCar : true) &&
+          filters.periods
+              .every((p) => w.periods.indexWhere((pw) => p.include(pw)) > -1));
+    }
   }
 
   GalleryState copyWith({
@@ -60,6 +84,7 @@ class GalleryState extends Equatable {
     List<String> Function()? allAreas,
     List<String> Function()? allFields,
     Filters Function()? filters,
+    bool Function()? searchMode,
   }) {
     return GalleryState(
       status: status != null ? status() : this.status,
@@ -75,6 +100,7 @@ class GalleryState extends Equatable {
       allAreas: allAreas != null ? allAreas() : this.allAreas,
       allFields: allFields != null ? allFields() : this.allFields,
       filters: filters != null ? filters() : this.filters,
+      searchMode: searchMode != null ? searchMode() : this.searchMode,
     );
   }
 
@@ -90,5 +116,6 @@ class GalleryState extends Equatable {
         allLicenses,
         allAreas,
         filters,
+        searchMode,
       ];
 }
