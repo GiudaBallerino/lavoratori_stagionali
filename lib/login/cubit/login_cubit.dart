@@ -38,6 +38,15 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
+  void passwordVisibilityChanged() {
+    final password_visibility = !state.password_visibility;
+    emit(
+      state.copyWith(
+        password_visibility: password_visibility
+      ),
+    );
+  }
+
   Future<void> logInWithCredentials() async {
     if (state.status != LoginStatus.isValidated) return;
     emit(state.copyWith(status: LoginStatus.submissionInProgress));
