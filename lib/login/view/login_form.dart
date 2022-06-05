@@ -89,7 +89,7 @@ class _LoginButton extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status==LoginStatus.isSubmissionFailure
+        return state.status == LoginStatus.submissionInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
           key: const Key('loginForm_continue_raisedButton'),
