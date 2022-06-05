@@ -66,16 +66,27 @@ class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
-      buildWhen: (previous, current) => previous.password != current.password,
+      buildWhen: (previous, current) => previous.password != current.password
+          || previous.password_visibility != current.password_visibility,
       builder: (context, state) {
         return TextField(
           key: const Key('loginForm_passwordInput_textField'),
           onChanged: (password) =>
               context.read<LoginCubit>().passwordChanged(password),
-          obscureText: true,
+          obscureText: !state.password_visibility,
+          enableSuggestions: false,
+          autocorrect: false,
           decoration: InputDecoration(
             labelText: 'Password',
             helperText: '',
+            suffixIcon: IconButton(
+              icon: Icon(
+                state.password_visibility ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: () {
+                context.read<LoginCubit>().passwordVisibilityChanged();
+              },
+            )
           ),
         );
       },
@@ -89,7 +100,7 @@ class _LoginButton extends StatelessWidget {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status==LoginStatus.isSubmissionFailure
+        return state.status == LoginStatus.submissionInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
           key: const Key('loginForm_continue_raisedButton'),

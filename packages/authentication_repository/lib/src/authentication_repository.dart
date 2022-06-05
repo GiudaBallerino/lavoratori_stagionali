@@ -56,7 +56,8 @@ class AuthenticationRepository {
         : Employee.fromJson(jsonDecode(employeePref));
     _cache.write(key: authCacheKey, value: emp);
 
-    logInWithEmailAndPassword(email: emp.email, password: emp.password);
+    if (emp.email != '' && emp.password != '')
+      logInWithEmailAndPassword(email: emp.email, password: emp.password);
     return controller.stream;
   }
 
