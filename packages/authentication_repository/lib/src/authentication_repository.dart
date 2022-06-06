@@ -5,6 +5,7 @@ import 'package:cache/cache.dart';
 import 'package:employees_api/employees_api.dart' show Employee;
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInWithEmailAndPasswordFailure implements Exception {
@@ -33,13 +34,16 @@ class AuthenticationRepository {
     CacheClient? cache,
     required DbCollection dbPlugin,
     required SharedPreferences authPlugin,
+    required String pepper,
   })  : _cache = cache ?? CacheClient(),
         _dbPlugin = dbPlugin,
-        _authPlugin = authPlugin {}
+        _authPlugin = authPlugin,
+        _pepper = pepper {}
 
   final CacheClient _cache;
   final DbCollection _dbPlugin;
   final SharedPreferences _authPlugin;
+  final String _pepper;
 
   static const authCacheKey = 'logged_in';
   final controller = BehaviorSubject<Employee>.seeded(Employee.empty);
@@ -56,7 +60,8 @@ class AuthenticationRepository {
         : Employee.fromJson(jsonDecode(employeePref));
     _cache.write(key: authCacheKey, value: emp);
 
-    logInWithEmailAndPassword(email: emp.email, password: emp.password);
+    if (emp.email != '' && emp.password != '')
+      logInWithEmailAndEncryptedPassword(email: emp.email, password: emp.password);
     return controller.stream;
   }
 
@@ -66,8 +71,28 @@ class AuthenticationRepository {
     required String email,
     required String password,
   }) async {
-    final result = await _dbPlugin
-        .findOne(where.eq('email', email).eq('password', password));
+    final result = await _dbPlugin.findOne(where.eq('email', email));
+    if (result != null) {
+      final encrypted = md5.convert(utf8.encode('${result['salt']}${password}${_pepper}')).toString();
+      if (result['password'] == encrypted) {
+        Employee employee = Employee.fromJson(result);
+
+        await _authPlugin.setString(authCacheKey, json.encode(employee));
+        controller.add(employee);
+      } else {
+        throw LogInWithEmailAndPasswordFailure.fromCode('user-not-found');
+      }
+    } else {
+      throw LogInWithEmailAndPasswordFailure.fromCode('user-not-found');
+    }
+  }
+
+  Future<void> logInWithEmailAndEncryptedPassword({
+    required String email,
+    required String password,
+  }) async {
+    final result = await _dbPlugin.findOne(
+        where.eq('email', email).eq('password', password));
     if (result != null) {
       Employee employee = Employee.fromJson(result);
 

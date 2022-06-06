@@ -4,6 +4,5 @@ class Config{
   static String MONGO_HOST = '<host>';
   static String MONGO_USER='<username>';
   static String MONGO_PASSWORD='<password>';
-  static String SALT='<salt>';
   static String PEPPER='<pepper>';
 }

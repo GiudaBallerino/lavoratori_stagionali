@@ -227,6 +227,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     }
   }
 
+
   Future<void> _onOwnCarChange(
     OwnCarChange event,
     Emitter<GalleryState> emit,
@@ -247,6 +248,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     ChangeSearchMode event,
     Emitter<GalleryState> emit,
   ) async {
+
     emit(state.copyWith(status: () => GalleryStatus.loading));
 
     try {
