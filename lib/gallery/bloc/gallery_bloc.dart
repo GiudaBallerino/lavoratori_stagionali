@@ -36,6 +36,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     on<RemoveFields>(_onRemoveFields);
     on<RemovePeriods>(_onRemovePeriods);
     on<OwnCarChange>(_onOwnCarChange);
+    on<KeywordsChange>(_onKeywordsChanged);
   }
 
   final WorkersRepository _workersRepository;
@@ -200,9 +201,11 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
 
     try {
       emit(state.copyWith(
-          status: () => GalleryStatus.success,
-          selected: () => state.selected == event.selection ? null : event.selection,
-          filtersIsOpen: ()=>state.selected == event.selection ? state.filtersIsOpen : false,
+        status: () => GalleryStatus.success,
+        selected: () =>
+            state.selected == event.selection ? null : event.selection,
+        filtersIsOpen: () =>
+            state.selected == event.selection ? state.filtersIsOpen : false,
       ));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
@@ -224,7 +227,6 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     }
   }
 
-
   Future<void> _onOwnCarChange(
     OwnCarChange event,
     Emitter<GalleryState> emit,
@@ -242,15 +244,15 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
   }
 
   Future<void> _onSearchModeChange(
-      ChangeSearchMode event,
-      Emitter<GalleryState> emit,
-      ) async {
+    ChangeSearchMode event,
+    Emitter<GalleryState> emit,
+  ) async {
     emit(state.copyWith(status: () => GalleryStatus.loading));
 
     try {
       emit(state.copyWith(
           status: () => GalleryStatus.success,
-          searchMode: () =>!state.searchMode));
+          searchMode: () => !state.searchMode));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
     }
@@ -426,6 +428,21 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
       emit(state.copyWith(
           status: () => GalleryStatus.success,
           filters: () => state.filters.copyWith(periods: tmp)));
+    } catch (e) {
+      emit(state.copyWith(status: () => GalleryStatus.failure));
+    }
+  }
+
+  Future<void> _onKeywordsChanged(
+    KeywordsChange event,
+    Emitter<GalleryState> emit,
+  ) async {
+    emit(state.copyWith(status: () => GalleryStatus.loading));
+
+    try {
+      emit(state.copyWith(
+          status: () => GalleryStatus.success,
+          filters: () => state.filters.copyWith(keywords: event.keywords)));
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
     }
