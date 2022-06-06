@@ -7,7 +7,6 @@ class SearchBarWidget extends StatelessWidget {
       required this.hintText,
       this.suffix,
       this.prefix,
-      required this.onFieldSubmitted,
       required this.onChange})
       : super(key: key);
 
@@ -16,17 +15,14 @@ class SearchBarWidget extends StatelessWidget {
   final Widget? suffix;
   final Widget? prefix;
 
-  final Function(String) onFieldSubmitted;
   final Function(String) onChange;
 
-  final TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return TextField(
       textInputAction: TextInputAction.search,
-      controller: controller,
+      key: const Key('searchbar_textField'),
       onChanged: (string) => onChange(string),
-      onSubmitted: (string) => onFieldSubmitted(string),
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(
             vertical: 20, horizontal: prefix == null ? 20 : 0),

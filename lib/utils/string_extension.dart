@@ -7,4 +7,14 @@ extension StringExtension on String {
       .split(' ')
       .map((str) => str.capitalize())
       .join(' ');
+
+  bool containKeys(String keys){
+    List<String> keywords= keys.split(' ');
+    for(String key in keywords){
+      if(this.toLowerCase().contains(key.toLowerCase())){
+        return true;
+      }
+    }
+    return false;
+  }
 }

@@ -41,28 +41,37 @@ class GalleryState extends Equatable {
   Iterable<Worker> get filteredWorkers {
     if (filters.isEmpty) {
       return workers;
-    }
-    if (searchMode) {
+    } else if (searchMode) {
       //OR
-      // return workers.where((w) =>
-      //     filters.licenses.any((l) => w.licenses.contains(l))&&
-      //     filters.languages.any((l) => w.languages.contains(l))&&
-      //     filters.areas.any((a) => w.areas.contains(a)) &&
-      //     filters.fields.any((f) => w.fields.contains(f)) &&
-      //     (filters.ownCar == true ? filters.ownCar == w.ownCar : true) &&
-      //     filters.periods.any((p) => w.periods.indexWhere((pw) => p.include(pw)) > -1));
-
       return workers.where((w) =>
-      filters.licenses.toSet().intersection(w.licenses.toSet()).isNotEmpty&&
-          filters.languages.toSet().intersection(w.languages.toSet()).isNotEmpty&&
-          filters.areas.toSet().intersection(w.areas.toSet()).isNotEmpty&&
-          filters.fields.toSet().intersection(w.fields.toSet()).isNotEmpty&&
-          (filters.ownCar == true ? filters.ownCar == w.ownCar : true)&&
-          filters.periods.any((p) => w.periods.indexWhere((pw) => p.include(pw)) > -1)
-      );
+          (filters.keywords == ''
+              ? true
+              : '${w.firstname} ${w.lastname} ${w.experiences.join(' ')}'
+                  .containKeys(filters.keywords)) &&
+          (filters.languages.isEmpty
+              ? true
+              : w.languages.any((l) => filters.languages.contains(l))) &&
+          (filters.licenses.isEmpty
+              ? true
+              : w.licenses.any((l) => filters.licenses.contains(l))) &&
+          (filters.areas.isEmpty
+              ? true
+              : w.areas.any((a) => filters.areas.contains(a))) &&
+          (filters.fields.isEmpty
+              ? true
+              : w.fields.any((f) => filters.fields.contains(f))) &&
+          (filters.ownCar == true ? filters.ownCar == w.ownCar : true) &&
+          (filters.periods.isEmpty
+              ? true
+              : w.periods.any((p) =>
+                  filters.periods.indexWhere((pf) => pf.include(p)) > -1)));
     } else {
       //AND
       return workers.where((w) =>
+          (filters.keywords == ''
+              ? true
+              : '${w.firstname} ${w.lastname} ${w.experiences.join(' ')}'
+                  .containKeys(filters.keywords)) &&
           filters.licenses.every((l) => w.licenses.contains(l)) &&
           filters.languages.every((l) => w.languages.contains(l)) &&
           filters.areas.every((a) => w.areas.contains(a)) &&
