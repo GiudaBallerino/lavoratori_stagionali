@@ -150,3 +150,12 @@ class OwnCarChange extends GalleryEvent{
 class ChangeSearchMode extends GalleryEvent{
   const ChangeSearchMode();
 }
+
+class KeywordsChange extends GalleryEvent{
+  const KeywordsChange(this.keywords);
+
+  final String keywords;
+
+  @override
+  List<Object> get props => [keywords];
+}

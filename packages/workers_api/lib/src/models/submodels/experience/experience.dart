@@ -53,6 +53,8 @@ class Experience extends Equatable {
 
   JsonMap toJson() => _$ExperienceToJson(this);
 
+  String toString()=>'${this.company} ${this.task.join(' ')}';
+
   @override
   List<Object> get props => [
         id,
