@@ -50,7 +50,14 @@ class Filters {
       licenses: [],
       periods: []);
 
-  bool get isEmpty => this == Filters.empty;
+  bool get isEmpty =>
+      this.keywords == '' &&
+      this.fields.isEmpty &&
+      this.languages.isEmpty &&
+      this.areas.isEmpty &&
+      !this.ownCar &&
+      this.licenses.isEmpty &&
+      this.periods.isEmpty;
 
   bool get isNotEmpty => this != Filters.empty;
 
