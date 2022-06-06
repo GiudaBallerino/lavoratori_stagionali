@@ -119,26 +119,34 @@ class GalleryView extends StatelessWidget {
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           child: SizedBox(
                             width: size.width * 0.5 - 48,
-                            child: SearchBarWidget(
-                              backgroudColor: Theme.of(context).focusColor,
-                              onChange: (String) {},
-                              onFieldSubmitted: (String) {},
-                              hintText: 'Cerca',
-                              suffix: IconButton(
-                                tooltip: 'Filtri',
-                                icon: Icon(
-                                  state.filtersIsOpen
-                                      ? Icons.filter_list_off
-                                      : Icons.filter_list,
-                                  color: Theme.of(context).hintColor,
-                                ),
-                                onPressed: () {
-                                  context
-                                      .read<GalleryBloc>()
-                                      .add(OpenFilters());
-                                },
-                              ),
-                            ),
+                            child: BlocBuilder<GalleryBloc, GalleryState>(
+                                buildWhen: (previous, current) =>
+                                    previous.filters.keywords !=
+                                    current.filters.keywords,
+                                builder: (context, state) {
+                                  return SearchBarWidget(
+                                    backgroudColor:
+                                        Theme.of(context).focusColor,
+                                    onChange: (text) {
+                                      context.read<GalleryBloc>().add(KeywordsChange(text));
+                                    },
+                                    hintText: 'Cerca',
+                                    suffix: IconButton(
+                                      tooltip: 'Filtri',
+                                      icon: Icon(
+                                        state.filtersIsOpen
+                                            ? Icons.filter_list_off
+                                            : Icons.filter_list,
+                                        color: Theme.of(context).hintColor,
+                                      ),
+                                      onPressed: () {
+                                        context
+                                            .read<GalleryBloc>()
+                                            .add(OpenFilters());
+                                      },
+                                    ),
+                                  );
+                                }),
                           ),
                         ),
                         CupertinoScrollbar(
