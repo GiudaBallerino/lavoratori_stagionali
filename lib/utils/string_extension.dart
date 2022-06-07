@@ -11,10 +11,10 @@ extension StringExtension on String {
   bool containKeys(String keys){
     List<String> keywords= keys.split(' ');
     for(String key in keywords){
-      if(this.toLowerCase().contains(key.toLowerCase())){
-        return true;
+      if(!this.toLowerCase().contains(key.toLowerCase())){
+        return false;
       }
     }
-    return false;
+    return true;
   }
 }
