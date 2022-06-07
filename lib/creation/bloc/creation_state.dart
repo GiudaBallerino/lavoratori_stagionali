@@ -25,7 +25,7 @@ class CreationState extends Equatable {
     this.phone,
     this.email,
     this.ownCar = false,
-    this.languages = const [],
+    this.languages = const ['Italiano'],
     this.licenses = const [],
     this.areas = const [],
     this.fields = const [],

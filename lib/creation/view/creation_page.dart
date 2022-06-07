@@ -63,8 +63,10 @@ class CreationView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton(
+                tooltip: 'Clear',
                 backgroundColor: Colors.red,
                 onPressed: () {
+                  _formKey.currentState?.reset();
                   context.read<CreationBloc>().add(ResetAllState());
                 },
                 child: Icon(Icons.clear),
@@ -73,6 +75,7 @@ class CreationView extends StatelessWidget {
                 height: 5,
               ),
               FloatingActionButton(
+                tooltip: 'Salva',
                 onPressed: () {
                   bool allFieldCompiled = allFieldsIsCompiled(
                       languages: state.languages,
