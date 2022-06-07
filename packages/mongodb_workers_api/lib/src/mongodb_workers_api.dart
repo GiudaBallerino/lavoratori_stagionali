@@ -31,7 +31,6 @@ class MongoDBWorkersApi extends WorkersApi {
 
   Future<void> _init() async {
     final workersJson = await _getValue();
-    print(workersJson);
     if (workersJson != null) {
       List<Worker> workers = List.generate(
           workersJson.length, (index) => Worker.fromJson(workersJson[index]));
