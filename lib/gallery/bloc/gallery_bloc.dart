@@ -40,19 +40,23 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     on<OwnCarChange>(_onOwnCarChange);
     on<KeywordsChange>(_onKeywordsChanged);
     _workersSubscription = _workersRepository.watch.listen(
-      (event) => print('Value emitted: $event'),
+      (event) async {
+        var fullDocument=(await event).fullDocument;
+
+        await _workersRepository.init();
+      },
+      cancelOnError: false,
     );
   }
 
   final WorkersRepository _workersRepository;
-  late final StreamSubscription<List<Worker>> _workersSubscription;
+  late final StreamSubscription _workersSubscription;
 
   Future<void> _onWorkersSubscriptionRequested(
     WorkersSubscriptionRequested event,
     Emitter<GalleryState> emit,
   ) async {
     emit(state.copyWith(status: () => GalleryStatus.loading));
-
     await emit.forEach<List<Worker>>(
       _workersRepository.getWorkers(),
       onData: (workers) => state.copyWith(
@@ -454,9 +458,4 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     }
   }
 
-  @override
-  Future<void> close() {
-    _workersSubscription.cancel();
-    return super.close();
-  }
 }

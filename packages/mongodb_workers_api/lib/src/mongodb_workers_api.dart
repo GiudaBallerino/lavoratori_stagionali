@@ -10,7 +10,7 @@ class MongoDBWorkersApi extends WorkersApi {
   MongoDBWorkersApi({
     required DbCollection plugin,
   }) : _plugin = plugin {
-    _init();
+    init();
   }
 
   final DbCollection _plugin;
@@ -33,31 +33,32 @@ class MongoDBWorkersApi extends WorkersApi {
       await _plugin.deleteOne(where.eq('id', id));
 
   @override
-  Stream<List<Worker>> get watch {
-    print(
-        '#####################################################################\n#####################################################################\n#####################################################################\n#####################################################################\n#####################################################################\n#####################################################################\n#####################################################################\n');
-    var stream = _plugin.watch(<Map<String, Object>>[
-      {
-        r'$match': {
-          'operationType': ['insert']
-        },
-      }
-    ], changeStreamOptions: ChangeStreamOptions(fullDocument: 'updateLookup'));
-    var controller = stream.listen((changeEvent) {
-      List<Map<String, dynamic>> fullDocument = changeEvent.updateLookup;
+  Stream get watch{
+    final pipeline = AggregationPipelineBuilder().addStage(Match(
+        where.eq('operationType', 'insert').or(where.eq('operationType', 'delete')).map['\$query']));
+    //.addStage(Match(where.eq('operationType', 'delete').map['\$query']));
+    // .addStage(Match(where.eq('operationType', 'update').map['\$query']));
 
-      List<Worker> w = List.generate(
-          fullDocument.length, (index) => Worker.fromJson(fullDocument[index]));
-
-      print('CIOAO');
-
-      _watchController.add(w);
-    });
-
-    return _watchController.stream;
+    return _plugin
+        .watch(pipeline,
+            changeStreamOptions:
+                ChangeStreamOptions(fullDocument: 'updateLookup'));
+    // var controller = stream.listen((changeEvent) {
+    //   List<Map<String, dynamic>> fullDocument = changeEvent.updateLookup;
+    //
+    //   List<Worker> w = List.generate(
+    //       fullDocument.length, (index) => Worker.fromJson(fullDocument[index]));
+    //
+    //   print('CIOAO');
+    //
+    //   _watchController.add(w);
+    // });
+    //
+    // return _watchController.stream;
   }
 
-  Future<void> _init() async {
+  @override
+  Future<void> init() async {
     final workersJson = await _getValue();
     if (workersJson != null) {
       List<Worker> workers = List.generate(

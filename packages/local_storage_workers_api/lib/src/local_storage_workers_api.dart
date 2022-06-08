@@ -68,4 +68,10 @@ class LocalStorageWorkersApi extends WorkersApi {
 
   @override
   Stream<List<Worker>> get watch => throw UnimplementedError();
+
+  @override
+  Future<void> init() {
+    // TODO: implement init
+    throw UnimplementedError();
+  }
 }
