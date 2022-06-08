@@ -10,13 +10,15 @@ class MongoDBWorkersApi extends WorkersApi {
   MongoDBWorkersApi({
     required DbCollection plugin,
   }) : _plugin = plugin {
-    _init();
+    init();
   }
 
   final DbCollection _plugin;
 
   final _workerStreamController =
       BehaviorSubject<List<Worker>>.seeded(const []);
+
+  final _watchController = BehaviorSubject<List<Worker>>.seeded(const []);
 
   @visibleForTesting
   static const kWorkersCollectionKey = 'workers';
@@ -27,9 +29,36 @@ class MongoDBWorkersApi extends WorkersApi {
       await _plugin.updateOne(where.eq('id', id), value);
   Future<void> _setValue(Map<String, dynamic> value) async =>
       await _plugin.insertOne(value);
-  Future<void> _deleteValue(String id) async=>await _plugin.deleteOne(where.eq('id', id));
+  Future<void> _deleteValue(String id) async =>
+      await _plugin.deleteOne(where.eq('id', id));
 
-  Future<void> _init() async {
+  @override
+  Stream get watch{
+    final pipeline = AggregationPipelineBuilder().addStage(Match(
+        where.eq('operationType', 'insert').or(where.eq('operationType', 'delete')).map['\$query']));
+    //.addStage(Match(where.eq('operationType', 'delete').map['\$query']));
+    // .addStage(Match(where.eq('operationType', 'update').map['\$query']));
+
+    return _plugin
+        .watch(pipeline,
+            changeStreamOptions:
+                ChangeStreamOptions(fullDocument: 'updateLookup'));
+    // var controller = stream.listen((changeEvent) {
+    //   List<Map<String, dynamic>> fullDocument = changeEvent.updateLookup;
+    //
+    //   List<Worker> w = List.generate(
+    //       fullDocument.length, (index) => Worker.fromJson(fullDocument[index]));
+    //
+    //   print('CIOAO');
+    //
+    //   _watchController.add(w);
+    // });
+    //
+    // return _watchController.stream;
+  }
+
+  @override
+  Future<void> init() async {
     final workersJson = await _getValue();
     if (workersJson != null) {
       List<Worker> workers = List.generate(
@@ -45,7 +74,7 @@ class MongoDBWorkersApi extends WorkersApi {
       _workerStreamController.asBroadcastStream();
 
   @override
-  Future<void> saveWorker(Worker worker) async{
+  Future<void> saveWorker(Worker worker) async {
     final workers = [..._workerStreamController.value];
     final workerIndex = workers.indexWhere((w) => w.getId == worker.getId);
     if (workerIndex >= 0) {

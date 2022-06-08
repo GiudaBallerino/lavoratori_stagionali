@@ -7,9 +7,13 @@ class WorkersRepository {
 
   final WorkersApi _workersApi;
 
+  Stream get watch => _workersApi.watch;
+
   Stream<List<Worker>> getWorkers() => _workersApi.getWorkers();
 
   Future<void> saveWorker(Worker worker) => _workersApi.saveWorker(worker);
 
   Future<void> deleteWorker(String id) => _workersApi.deleteWorker(id);
+
+  Future<void> init() => _workersApi.init();
 }
