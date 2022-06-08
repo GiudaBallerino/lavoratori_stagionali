@@ -65,4 +65,7 @@ class LocalStorageWorkersApi extends WorkersApi {
       return _setValue(kWorkersCollectionKey, json.encode(workers));
     }
   }
+
+  @override
+  Stream<List<Worker>> get watch => throw UnimplementedError();
 }

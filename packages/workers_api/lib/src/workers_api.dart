@@ -9,6 +9,8 @@ abstract class WorkersApi{
 
   Future<void> deleteWorker(String id);
 
+  Stream<List<Worker>> get watch;
+
 }
 
 class WorkerNotFoundException implements Exception {}

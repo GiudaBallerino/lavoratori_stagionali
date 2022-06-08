@@ -7,6 +7,8 @@ class WorkersRepository {
 
   final WorkersApi _workersApi;
 
+  Stream<List<Worker>> get watch => _workersApi.watch;
+
   Stream<List<Worker>> getWorkers() => _workersApi.getWorkers();
 
   Future<void> saveWorker(Worker worker) => _workersApi.saveWorker(worker);
