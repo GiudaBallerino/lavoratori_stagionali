@@ -60,7 +60,6 @@ class SelectionList extends StatelessWidget {
           ),
         ),
         for (final element in items)
-          //if (selected.contains(element))
             InputChip(
               label: Text(element),
               selected: selected.contains(element),
@@ -69,23 +68,6 @@ class SelectionList extends StatelessWidget {
                   : () => onAdd(element),
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
             ),
-        // Collapse(
-        //   title:Text('Mostra tutti'),
-        //   body:Wrap(
-        //     children: [
-        //       for (final element in items)
-        //         if (!selected.contains(element))
-        //           InputChip(
-        //             label: Text(element),
-        //             selected: selected.contains(element),
-        //             onPressed: selected.contains(element)
-        //                 ? () => onDelete(element)
-        //                 : () => onAdd(element),
-        //             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
-        //           ),
-        //     ],
-        //   ),
-        // ),
       ],
     );
   }
