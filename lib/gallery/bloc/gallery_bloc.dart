@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:filters/filters.dart';
@@ -37,9 +39,13 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     on<RemovePeriods>(_onRemovePeriods);
     on<OwnCarChange>(_onOwnCarChange);
     on<KeywordsChange>(_onKeywordsChanged);
+    _workersSubscription = _workersRepository.watch.listen(
+      (event) => print('Value emitted: $event'),
+    );
   }
 
   final WorkersRepository _workersRepository;
+  late final StreamSubscription<List<Worker>> _workersSubscription;
 
   Future<void> _onWorkersSubscriptionRequested(
     WorkersSubscriptionRequested event,
@@ -227,7 +233,6 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     }
   }
 
-
   Future<void> _onOwnCarChange(
     OwnCarChange event,
     Emitter<GalleryState> emit,
@@ -248,7 +253,6 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     ChangeSearchMode event,
     Emitter<GalleryState> emit,
   ) async {
-
     emit(state.copyWith(status: () => GalleryStatus.loading));
 
     try {
@@ -448,5 +452,11 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     } catch (e) {
       emit(state.copyWith(status: () => GalleryStatus.failure));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _workersSubscription.cancel();
+    return super.close();
   }
 }
