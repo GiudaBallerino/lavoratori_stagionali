@@ -33,14 +33,14 @@ Future<void> main() async {
   //Initialize workers db api
   final workersApi = MongoDBWorkersApi(plugin: workersCollection);
 
-  //Get employeers collection
-  final employeersCollection =  db.collection(Config.MONGO_COLLECTIONS[1]);
+  //Get employers collection
+  final employersCollection =  db.collection(Config.MONGO_COLLECTIONS[1]);
 
 
   //Initialize authentication repository
   final authenticationRepository = AuthenticationRepository(
     authPlugin: await SharedPreferences.getInstance(),
-    dbPlugin: employeersCollection,
+    dbPlugin: employersCollection,
     pepper: Config.PEPPER
   );
 
