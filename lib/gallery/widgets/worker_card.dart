@@ -3,6 +3,7 @@ import 'package:workers_api/workers_api.dart';
 
 enum Menu {
   Elimina,
+  Modifica,
 }
 
 class WorkerCard extends StatelessWidget {
@@ -37,6 +38,9 @@ class WorkerCard extends StatelessWidget {
             onSelected: (Menu item) {
               if (item == Menu.Elimina) {
                 onDelete();
+              }
+              if (item == Menu.Modifica) {
+                //onEdit();
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
