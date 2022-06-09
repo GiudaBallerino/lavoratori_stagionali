@@ -122,13 +122,17 @@ class GalleryView extends StatelessWidget {
                             child: BlocBuilder<GalleryBloc, GalleryState>(
                                 buildWhen: (previous, current) =>
                                     previous.filters.keywords !=
-                                    current.filters.keywords,
+                                        current.filters.keywords ||
+                                    previous.filtersIsOpen !=
+                                        current.filtersIsOpen,
                                 builder: (context, state) {
                                   return SearchBarWidget(
                                     backgroudColor:
                                         Theme.of(context).focusColor,
                                     onChange: (text) {
-                                      context.read<GalleryBloc>().add(KeywordsChange(text));
+                                      context
+                                          .read<GalleryBloc>()
+                                          .add(KeywordsChange(text));
                                     },
                                     hintText: 'Cerca',
                                     suffix: IconButton(
@@ -149,24 +153,26 @@ class GalleryView extends StatelessWidget {
                                 }),
                           ),
                         ),
-                        CupertinoScrollbar(
-                          child: SizedBox(
-                            width: size.width * 0.5 - 8,
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: [
-                                for (final worker in state.filteredWorkers)
-                                  WorkerCard(
-                                    worker: worker,
-                                    selected: state.selected == worker,
-                                    onDelete: () => context
-                                        .read<GalleryBloc>()
-                                        .add(WorkerDeleted(worker)),
-                                    onSelected: () => context
-                                        .read<GalleryBloc>()
-                                        .add(WorkerSelection(worker)),
-                                  ),
-                              ],
+                        Expanded(
+                          child: CupertinoScrollbar(
+                            child: SizedBox(
+                              width: size.width * 0.5 - 8,
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: [
+                                  for (final worker in state.filteredWorkers)
+                                    WorkerCard(
+                                      worker: worker,
+                                      selected: state.selected == worker,
+                                      onDelete: () => context
+                                          .read<GalleryBloc>()
+                                          .add(WorkerDeleted(worker)),
+                                      onSelected: () => context
+                                          .read<GalleryBloc>()
+                                          .add(WorkerSelection(worker)),
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
