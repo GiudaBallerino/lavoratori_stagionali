@@ -5,9 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:lavoratori_stagionali/creation/widgets/selection_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/experience_card.dart';
+import 'package:lavoratori_stagionali/gallery/widgets/filters_section.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/selection_list.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/serach_bar.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/worker_card.dart';
+import 'package:lavoratori_stagionali/gallery/widgets/worker_section.dart';
 import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
 
@@ -95,25 +97,26 @@ class GalleryView extends StatelessWidget {
                 },
               ),
             ],
-            child: BlocBuilder<GalleryBloc, GalleryState>(
-              builder: (context, state) {
-                if (state.workers.isEmpty) {
-                  if (state.status == GalleryStatus.loading) {
-                    return const Center(child: CupertinoActivityIndicator());
-                  } else if (state.status != GalleryStatus.success) {
-                    return const SizedBox();
-                  } else {
-                    return Center(
-                      child: Text(
-                        "Nessun lavoratore trovato",
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                    );
-                  }
-                }
-                return Row(
-                  children: [
-                    Column(
+            child: Row(
+              children: [
+                BlocBuilder<GalleryBloc, GalleryState>(
+                  builder: (context, state) {
+                    if (state.workers.isEmpty) {
+                      if (state.status == GalleryStatus.loading) {
+                        return const Center(
+                            child: CupertinoActivityIndicator());
+                      } else if (state.status != GalleryStatus.success) {
+                        return const SizedBox();
+                      } else {
+                        return Center(
+                          child: Text(
+                            "Nessun lavoratore trovato",
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        );
+                      }
+                    }
+                    return Column(
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -177,375 +180,71 @@ class GalleryView extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),
-                    VerticalDivider(
-                      thickness: 3,
-                    ),
-                    if (state.filtersIsOpen)
-                      SingleChildScrollView(
-                        controller: ScrollController(),
-                        child: SizedBox(
-                          width: size.width * 0.5 - 8,
-                          child: Wrap(
-                            runSpacing: 10,
-                            children: [
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: Text(
-                                  'Filtri',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Modalità di ricerca',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    TextButton(
-                                        onPressed: () => context
-                                            .read<GalleryBloc>()
-                                            .add(ChangeSearchMode()),
-                                        child: Text(
-                                            state.searchMode ? 'OR' : 'AND')),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: SelectionWidget(
-                                  width: size.width * 0.5 - 8,
-                                  title: 'Lingue',
-                                  list: state.allLanguages,
-                                  selected: state.filters.languages,
-                                  onAdd: (string) => context
-                                      .read<GalleryBloc>()
-                                      .add(AddLanguages(string)),
-                                  onDelete: (string) => context
-                                      .read<GalleryBloc>()
-                                      .add(RemoveLanguages(string)),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: SelectionWidget(
-                                  width: size.width * 0.5 - 8,
-                                  title: 'Patenti',
-                                  list: state.allLicenses,
-                                  selected: state.filters.licenses,
-                                  onAdd: (string) => context
-                                      .read<GalleryBloc>()
-                                      .add(AddLicenses(string)),
-                                  onDelete: (string) => context
-                                      .read<GalleryBloc>()
-                                      .add(RemoveLicenses(string)),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Automunito',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Checkbox(
-                                      value: state.filters.ownCar,
-                                      onChanged: (bool? value) {
-                                        if (value != null) {
-                                          context
-                                              .read<GalleryBloc>()
-                                              .add(OwnCarChange());
-                                        }
-                                      },
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: SelectionWidget(
-                                  width: size.width * 0.5 - 8,
-                                  title: 'Comuni',
-                                  list: state.allAreas,
-                                  selected: state.filters.areas,
-                                  onAdd: (string) => context
-                                      .read<GalleryBloc>()
-                                      .add(AddAreas(string)),
-                                  onDelete: (string) => context
-                                      .read<GalleryBloc>()
-                                      .add(RemoveAreas(string)),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: SelectionWidget(
-                                  width: size.width * 0.5 - 8,
-                                  title: 'Campi',
-                                  list: state.allFields,
-                                  selected: state.filters.fields,
-                                  onAdd: (string) => context
-                                      .read<GalleryBloc>()
-                                      .add(AddFields(string)),
-                                  onDelete: (string) => context
-                                      .read<GalleryBloc>()
-                                      .add(RemoveFields(string)),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: PeriodList(
-                                  hint: 'Aggiungi periodo',
-                                  onAdd: (date) => context
-                                      .read<GalleryBloc>()
-                                      .add(AddPeriods(Period(
-                                          start: date.start, end: date.end))),
-                                  width: size.width * 0.5 - 8,
-                                  title: 'Periodi',
-                                  list: state.filters.periods,
-                                  onDelete: (period) => context
-                                      .read<GalleryBloc>()
-                                      .add(RemovePeriods(period)),
-                                ),
-                              ),
-                            ],
+                    );
+                  },
+                ),
+                VerticalDivider(
+                  thickness: 3,
+                ),
+                BlocBuilder<GalleryBloc, GalleryState>(
+                  builder: (context, state) {
+                    if (state.filtersIsOpen) {
+                      return FilterSection(
+                        width: size.width * 0.5 - 8,
+                        filters: state.filters,
+                        searchMode: state.searchMode,
+                        allLanguages: state.allLanguages,
+                        allLicenses: state.allLicenses,
+                        allAreas: state.allAreas,
+                        allFields: state.allFields,
+                        changeMode: () =>
+                            context.read<GalleryBloc>().add(ChangeSearchMode()),
+                        addLanguages: (string) => context
+                            .read<GalleryBloc>()
+                            .add(AddLanguages(string)),
+                        removeLanguages: (string) => context
+                            .read<GalleryBloc>()
+                            .add(RemoveLanguages(string)),
+                        addLicenses: (string) => context
+                            .read<GalleryBloc>()
+                            .add(AddLicenses(string)),
+                        removeLicenses: (string) => context
+                            .read<GalleryBloc>()
+                            .add(RemoveLicenses(string)),
+                        addAreas: (string) =>
+                            context.read<GalleryBloc>().add(AddAreas(string)),
+                        removeAreas: (string) => context
+                            .read<GalleryBloc>()
+                            .add(RemoveAreas(string)),
+                        addFields: (string) =>
+                            context.read<GalleryBloc>().add(AddFields(string)),
+                        removeFields: (string) => context
+                            .read<GalleryBloc>()
+                            .add(RemoveFields(string)),
+                        changeOwnCar: (value) =>
+                            context.read<GalleryBloc>().add(OwnCarChange()),
+                        addPeriods: (date) =>
+                            context.read<GalleryBloc>().add(AddPeriods(date)),
+                        removePeriods: (period) => context
+                            .read<GalleryBloc>()
+                            .add(RemovePeriods(period)),
+                      );
+                    } else if (state.selected != null) {
+                      return WorkerSection(
+                          width: size.width * 0.5 - 8, worker: state.selected!);
+                    } else {
+                      return Expanded(
+                        child: Center(
+                          child: Text(
+                            "Nessun lavoratore selezionato",
+                            style: Theme.of(context).textTheme.caption,
                           ),
                         ),
-                      )
-                    else if (state.selected != null)
-                      SingleChildScrollView(
-                        controller: ScrollController(),
-                        child: SizedBox(
-                          width: size.width * 0.5 - 8,
-                          child: Wrap(
-                            children: [
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: Text(
-                                  '${state.selected!.firstname} ${state.selected!.lastname}',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Text(
-                                  'e-mail: ${state.selected!.email}',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Text(
-                                  'Nato il: ${DateFormat('dd/MM/yyyy').format(state.selected!.birthday)}',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Text(
-                                  'telefono: ${state.selected!.phone}',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Text(
-                                  'A: ${state.selected!.birthplace}',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Text(
-                                  'indirizzo: ${state.selected!.address}',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Text(
-                                  'Nazionalità: ${state.selected!.nationality}',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              Divider(),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: [
-                                    SizedBox(
-                                      width: size.width * 0.25 - 8,
-                                      child: Text(
-                                        'Lingue parlate:',
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    ),
-                                    for (final lang
-                                        in state.selected!.languages)
-                                      Chip(
-                                        label: Text(lang),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: [
-                                    SizedBox(
-                                      width: size.width * 0.25 - 8,
-                                      child: Text(
-                                        'Patenti:',
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    ),
-                                    for (final lic in state.selected!.licenses)
-                                      Chip(
-                                        label: Text(lic),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: [
-                                    SizedBox(
-                                      width: size.width * 0.25 - 8,
-                                      child: Text(
-                                        'Zone:',
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    ),
-                                    for (final area in state.selected!.areas)
-                                      Chip(
-                                        label: Text(area),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Automunito',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    Checkbox(
-                                      value: state.selected!.ownCar,
-                                      onChanged: (value) {},
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: [
-                                    SizedBox(
-                                      width: size.width * 0.25 - 8,
-                                      child: Text(
-                                        'Specializzazioni:',
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    ),
-                                    for (final field in state.selected!.fields)
-                                      Chip(
-                                        label: Text(field),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.25 - 8,
-                                child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: [
-                                    SizedBox(
-                                      width: size.width * 0.25 - 8,
-                                      child: Text(
-                                        'Periodi:',
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    ),
-                                    for (final period
-                                        in state.selected!.periods)
-                                      Chip(
-                                        label: Text(
-                                            '${DateFormat('dd/MM').format(period.start)} - ${DateFormat('dd/MM').format(period.end)}'),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              Divider(),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: [
-                                    SizedBox(
-                                      width: size.width * 0.5 - 8,
-                                      child: Text(
-                                        'Esperienze:',
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    ),
-                                    for (final experience
-                                        in state.selected!.experiences)
-                                      ExperienceCard(
-                                          width: size.width * 0.5 - 8,
-                                          experience: experience),
-                                  ],
-                                ),
-                              ),
-                              Divider(),
-                              SizedBox(
-                                width: size.width * 0.5 - 8,
-                                child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: [
-                                    SizedBox(
-                                      width: size.width * 0.5 - 8,
-                                      child: Text(
-                                        'Contatti di emergenza:',
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                    ),
-                                    for (final contact
-                                        in state.selected!.emergencyContacts)
-                                      ContactCard(
-                                          width: size.width * 0.5 - 8,
-                                          contact: contact),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                  ],
-                );
-              },
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         );
