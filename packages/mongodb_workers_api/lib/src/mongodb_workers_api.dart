@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -18,8 +17,6 @@ class MongoDBWorkersApi extends WorkersApi {
   final _workerStreamController =
       BehaviorSubject<List<Worker>>.seeded(const []);
 
-  final _watchController = BehaviorSubject<List<Worker>>.seeded(const []);
-
   @visibleForTesting
   static const kWorkersCollectionKey = 'workers';
 
@@ -33,40 +30,24 @@ class MongoDBWorkersApi extends WorkersApi {
       await _plugin.deleteOne(where.eq('id', id));
 
   @override
-  Stream get watch{
-    final pipeline = AggregationPipelineBuilder().addStage(Match(
-        where.eq('operationType', 'insert').or(where.eq('operationType', 'delete')).map['\$query']));
-    //.addStage(Match(where.eq('operationType', 'delete').map['\$query']));
-    // .addStage(Match(where.eq('operationType', 'update').map['\$query']));
+  Stream get watch {
+    final pipeline = AggregationPipelineBuilder().addStage(Match(where
+        .eq('operationType', 'insert')
+        .or(where
+            .eq('operationType', 'update')
+            .or(where.eq('operationType', 'delete')))
+        .map['\$query']));
 
-    return _plugin
-        .watch(pipeline,
-            changeStreamOptions:
-                ChangeStreamOptions(fullDocument: 'updateLookup'));
-    // var controller = stream.listen((changeEvent) {
-    //   List<Map<String, dynamic>> fullDocument = changeEvent.updateLookup;
-    //
-    //   List<Worker> w = List.generate(
-    //       fullDocument.length, (index) => Worker.fromJson(fullDocument[index]));
-    //
-    //   print('CIOAO');
-    //
-    //   _watchController.add(w);
-    // });
-    //
-    // return _watchController.stream;
+    return _plugin.watch(pipeline,
+        changeStreamOptions: ChangeStreamOptions(fullDocument: 'updateLookup'));
   }
 
   @override
   Future<void> init() async {
     final workersJson = await _getValue();
-    if (workersJson != null) {
-      List<Worker> workers = List.generate(
-          workersJson.length, (index) => Worker.fromJson(workersJson[index]));
-      _workerStreamController.add(workers);
-    } else {
-      _workerStreamController.add(const []);
-    }
+    List<Worker> workers = List.generate(
+        workersJson.length, (index) => Worker.fromJson(workersJson[index]));
+    _workerStreamController.add(workers);
   }
 
   @override
