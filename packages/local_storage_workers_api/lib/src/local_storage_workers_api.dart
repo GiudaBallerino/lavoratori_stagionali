@@ -10,7 +10,7 @@ class LocalStorageWorkersApi extends WorkersApi {
   LocalStorageWorkersApi({
     required SharedPreferences plugin,
   }) : _plugin = plugin {
-    _init();
+    init();
   }
 
   final SharedPreferences _plugin;
@@ -24,7 +24,8 @@ class LocalStorageWorkersApi extends WorkersApi {
   Future<void> _setValue(String key, String value) =>
       _plugin.setString(key, value);
 
-  void _init() {
+  @override
+  Future<void> init() async {
     final workersJson = _getValue(kWorkersCollectionKey);
     if (workersJson != null) {
       final workers = List<Map>.from(json.decode(workersJson) as List)
@@ -68,10 +69,4 @@ class LocalStorageWorkersApi extends WorkersApi {
 
   @override
   Stream<List<Worker>> get watch => throw UnimplementedError();
-
-  @override
-  Future<void> init() {
-    // TODO: implement init
-    throw UnimplementedError();
-  }
 }
