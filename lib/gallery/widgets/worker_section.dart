@@ -28,7 +28,7 @@ class WorkerSection extends StatelessWidget {
             SizedBox(
               width: width*0.5,
               child: Text(
-                'e-mail: ${worker.email}',
+                'E-mail: ${worker.email}',
                 style: TextStyle(fontSize: 15),
               ),
             ),
@@ -42,7 +42,7 @@ class WorkerSection extends StatelessWidget {
             SizedBox(
               width: width*0.5,
               child: Text(
-                'telefono: ${worker.phone}',
+                'Telefono: ${worker.phone}',
                 style: TextStyle(fontSize: 15),
               ),
             ),
@@ -56,7 +56,7 @@ class WorkerSection extends StatelessWidget {
             SizedBox(
               width: width*0.5,
               child: Text(
-                'indirizzo: ${worker.address}',
+                'Indirizzo: ${worker.address}',
                 style: TextStyle(fontSize: 15),
               ),
             ),
