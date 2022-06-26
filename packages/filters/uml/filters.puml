@@ -1,0 +1,22 @@
+@startuml
+set namespaceSeparator ::
+
+class "filters::filters.dart::Filters" {
+  +String keywords
+  +List<String> fields
+  +List<String> languages
+  +List<String> areas
+  +List<String> licenses
+  +bool ownCar
+  +List<Period> periods
+  {static} +Filters empty
+  +bool isEmpty
+  +bool isNotEmpty
+  +List<Object?> props
+  +Filters copyWith()
+}
+
+"filters::filters.dart::Filters" o-- "filters::filters.dart::Filters"
+
+
+@enduml

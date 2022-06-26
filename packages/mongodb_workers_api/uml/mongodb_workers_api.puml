@@ -1,0 +1,25 @@
+@startuml
+set namespaceSeparator ::
+
+class "mongodb_workers_api::src::mongodb_workers_api.dart::MongoDBWorkersApi" {
+  -DbCollection _plugin
+  -BehaviorSubject<List<Worker>> _workerStreamController
+  {static} +String kWorkersCollectionKey
+  +Stream<dynamic> watch
+  -Future<List<Map<String, dynamic>>> _getValue()
+  -Future<void> _updateValue()
+  -Future<void> _setValue()
+  -Future<void> _deleteValue()
+  +Future<void> init()
+  +Stream<List<Worker>> getWorkers()
+  +Future<void> saveWorker()
+  +Future<void> deleteWorker()
+}
+
+"mongodb_workers_api::src::mongodb_workers_api.dart::MongoDBWorkersApi" o-- "mongo_dart::mongo_dart.dart::DbCollection"
+"mongodb_workers_api::src::mongodb_workers_api.dart::MongoDBWorkersApi" o-- "rxdart::src::subjects::behavior_subject.dart::BehaviorSubject<List<Worker>>"
+"mongodb_workers_api::src::mongodb_workers_api.dart::MongoDBWorkersApi" o-- "dart::async::Stream<dynamic>"
+"workers_api::src::workers_api.dart::WorkersApi" <|-- "mongodb_workers_api::src::mongodb_workers_api.dart::MongoDBWorkersApi"
+
+
+@enduml

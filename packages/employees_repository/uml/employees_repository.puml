@@ -1,0 +1,14 @@
+@startuml
+set namespaceSeparator ::
+
+class "employees_repository::src::employees_repository.dart::EmployeesRepository" {
+  -EmployeesApi _employeesApi
+  +Stream<List<Employee>> getEmployees()
+  +Future<void> saveWorker()
+  +Future<void> deleteWorker()
+}
+
+"employees_repository::src::employees_repository.dart::EmployeesRepository" o-- "employees_api::src::employees_api.dart::EmployeesApi"
+
+
+@enduml

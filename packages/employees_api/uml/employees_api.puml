@@ -1,0 +1,37 @@
+@startuml
+set namespaceSeparator ::
+
+abstract class "employees_api::src::employees_api.dart::EmployeesApi" {
+  +Stream<List<Employee>> getEmployees()
+  +Future<void> saveEmployee()
+  +Future<void> deleteEmployee()
+}
+
+class "employees_api::src::employees_api.dart::EmployeeNotFoundException" {
+}
+
+"dart::core::Exception" <|-- "employees_api::src::employees_api.dart::EmployeeNotFoundException"
+
+class "employees_api::src::models::employee.dart::Employee" {
+  +String id
+  +String firstname
+  +String lastname
+  +String email
+  +String phone
+  +DateTime? birthday
+  +String username
+  +String password
+  {static} +Employee empty
+  +bool isEmpty
+  +bool isNotEmpty
+  +List<Object?> props
+  +Employee copyWith()
+  {static} +Employee fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"employees_api::src::models::employee.dart::Employee" o-- "employees_api::src::models::employee.dart::Employee"
+"equatable::src::equatable.dart::Equatable" <|-- "employees_api::src::models::employee.dart::Employee"
+
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+set namespaceSeparator ::
+
+class "authentication_repository::src::authentication_repository.dart::LogInWithEmailAndPasswordFailure" {
+  +String message
+}
+
+"dart::core::Exception" <|-- "authentication_repository::src::authentication_repository.dart::LogInWithEmailAndPasswordFailure"
+
+class "authentication_repository::src::authentication_repository.dart::LogOutFailure" {
+}
+
+"dart::core::Exception" <|-- "authentication_repository::src::authentication_repository.dart::LogOutFailure"
+
+class "authentication_repository::src::authentication_repository.dart::AuthenticationRepository" {
+  -CacheClient _cache
+  -DbCollection _dbPlugin
+  -SharedPreferences _authPlugin
+  -String _pepper
+  {static} +String authCacheKey
+  +BehaviorSubject<Employee> controller
+  +Employee currentEmployee
+  +Stream<Employee> employee
+  +Future<void> logInWithEmailAndPassword()
+  +Future<void> logInWithEmailAndEncryptedPassword()
+  +Future<void> logInWithUserAndPassword()
+  +Future<void> logOut()
+}
+
+"authentication_repository::src::authentication_repository.dart::AuthenticationRepository" o-- "cache::cache.dart::CacheClient"
+"authentication_repository::src::authentication_repository.dart::AuthenticationRepository" o-- "mongo_dart::mongo_dart.dart::DbCollection"
+"authentication_repository::src::authentication_repository.dart::AuthenticationRepository" o-- "shared_preferences::shared_preferences.dart::SharedPreferences"
+"authentication_repository::src::authentication_repository.dart::AuthenticationRepository" o-- "rxdart::src::subjects::behavior_subject.dart::BehaviorSubject<Employee>"
+"authentication_repository::src::authentication_repository.dart::AuthenticationRepository" o-- "employees_api::src::models::employee.dart::Employee"
+"authentication_repository::src::authentication_repository.dart::AuthenticationRepository" o-- "dart::async::Stream<Employee>"
+
+
+@enduml

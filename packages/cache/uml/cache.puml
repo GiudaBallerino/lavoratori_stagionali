@@ -1,0 +1,11 @@
+@startuml
+set namespaceSeparator ::
+
+class "cache::cache.dart::CacheClient" {
+  -Map<String, Object> _cache
+  +void write()
+  +T? read()
+}
+
+
+@enduml

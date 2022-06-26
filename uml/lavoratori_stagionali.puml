@@ -1,0 +1,958 @@
+@startuml
+set namespaceSeparator ::
+
+class "lavoratori_stagionali::app::app_bloc_observer.dart::AppBlocObserver" {
+  +void onChange()
+  +void onError()
+}
+
+"bloc::src::bloc_observer.dart::BlocObserver" <|-- "lavoratori_stagionali::app::app_bloc_observer.dart::AppBlocObserver"
+
+class "lavoratori_stagionali::app::bloc::app_bloc.dart::AppBloc" {
+  -AuthenticationRepository _authenticationRepository
+  -StreamSubscription<Employee?> _employeeSubscription
+  -void _onUserChanged()
+  -void _onLogoutRequested()
+  +Future<void> close()
+}
+
+"lavoratori_stagionali::app::bloc::app_bloc.dart::AppBloc" o-- "authentication_repository::src::authentication_repository.dart::AuthenticationRepository"
+"lavoratori_stagionali::app::bloc::app_bloc.dart::AppBloc" o-- "dart::async::StreamSubscription<Employee>"
+"bloc::src::bloc.dart::Bloc" <|-- "lavoratori_stagionali::app::bloc::app_bloc.dart::AppBloc"
+
+abstract class "lavoratori_stagionali::app::bloc::app_bloc.dart::AppEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "lavoratori_stagionali::app::bloc::app_bloc.dart::AppEvent"
+
+class "lavoratori_stagionali::app::bloc::app_bloc.dart::AppLogoutRequested" {
+}
+
+"lavoratori_stagionali::app::bloc::app_bloc.dart::AppEvent" <|-- "lavoratori_stagionali::app::bloc::app_bloc.dart::AppLogoutRequested"
+
+class "lavoratori_stagionali::app::bloc::app_bloc.dart::AppEmployeeChanged" {
+  +Employee employee
+  +List<Object> props
+}
+
+"lavoratori_stagionali::app::bloc::app_bloc.dart::AppEmployeeChanged" o-- "employees_api::src::models::employee.dart::Employee"
+"lavoratori_stagionali::app::bloc::app_bloc.dart::AppEvent" <|-- "lavoratori_stagionali::app::bloc::app_bloc.dart::AppEmployeeChanged"
+
+class "lavoratori_stagionali::app::bloc::app_bloc.dart::AppState" {
+  +AppStatus status
+  +Employee employee
+  +List<Object> props
+}
+
+"lavoratori_stagionali::app::bloc::app_bloc.dart::AppState" o-- "lavoratori_stagionali::app::bloc::app_bloc.dart::AppStatus"
+"lavoratori_stagionali::app::bloc::app_bloc.dart::AppState" o-- "employees_api::src::models::employee.dart::Employee"
+"equatable::src::equatable.dart::Equatable" <|-- "lavoratori_stagionali::app::bloc::app_bloc.dart::AppState"
+
+class "lavoratori_stagionali::app::bloc::app_bloc.dart::AppStatus" {
+  +int index
+  {static} +List<AppStatus> values
+  {static} +AppStatus authenticated
+  {static} +AppStatus unauthenticated
+}
+
+"lavoratori_stagionali::app::bloc::app_bloc.dart::AppStatus" o-- "lavoratori_stagionali::app::bloc::app_bloc.dart::AppStatus"
+"dart::core::Enum" <|-- "lavoratori_stagionali::app::bloc::app_bloc.dart::AppStatus"
+
+class "lavoratori_stagionali::app::view::app.dart::App" {
+  +WorkersRepository workersRepository
+  +AuthenticationRepository authenticationRepository
+  +Widget build()
+}
+
+"lavoratori_stagionali::app::view::app.dart::App" o-- "workers_repository::src::workers_repository.dart::WorkersRepository"
+"lavoratori_stagionali::app::view::app.dart::App" o-- "authentication_repository::src::authentication_repository.dart::AuthenticationRepository"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::app::view::app.dart::App"
+
+class "lavoratori_stagionali::app::view::app.dart::AppView" {
+  +WorkersRepository workersRepository
+  +Widget build()
+}
+
+"lavoratori_stagionali::app::view::app.dart::AppView" o-- "workers_repository::src::workers_repository.dart::WorkersRepository"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::app::view::app.dart::AppView"
+
+class "lavoratori_stagionali::config.dart::Config" {
+  {static} +String MONGO_DATABASE
+  {static} +List<String> MONGO_COLLECTIONS
+  {static} +String MONGO_HOST
+  {static} +String MONGO_USER
+  {static} +String MONGO_PASSWORD
+  {static} +String SALT
+  {static} +String PEPPER
+}
+
+class "lavoratori_stagionali::config.sample.dart::Config" {
+  {static} +String MONGO_DATABASE
+  {static} +List<String> MONGO_COLLECTIONS
+  {static} +String MONGO_HOST
+  {static} +String MONGO_USER
+  {static} +String MONGO_PASSWORD
+  {static} +String PEPPER
+}
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationBloc" {
+  -WorkersRepository _workersRepository
+  -Future<void> _onEditSubscriptionRequested()
+  -Future<void> _onLanguagesSubscriptionRequested()
+  -Future<void> _onLicensesSubscriptionRequested()
+  -Future<void> _onAreasSubscriptionRequested()
+  -Future<void> _onFieldsSubscriptionRequested()
+  -Future<void> _onReset()
+  -Future<void> _onWorkerSubmitted()
+  -Future<void> _onFirstNameChanged()
+  -Future<void> _onLastNameChanged()
+  -Future<void> _onBirthdayChanged()
+  -Future<void> _onBirthplaceChanged()
+  -Future<void> _onNationalityChanged()
+  -Future<void> _onAddressChanged()
+  -Future<void> _onPhoneChanged()
+  -Future<void> _onEmailChanged()
+  -Future<void> _onOwnCarChanged()
+  -Future<void> _onLanguageAdded()
+  -Future<void> _onLanguageDeleted()
+  -Future<void> _onLicenseAdded()
+  -Future<void> _onLicenseDeleted()
+  -Future<void> _onAreaAdded()
+  -Future<void> _onAreaDeleted()
+  -Future<void> _onPeriodAdded()
+  -Future<void> _onPeriodDeleted()
+  -Future<void> _onTaskAdded()
+  -Future<void> _onTaskDeleted()
+  -Future<void> _onExperienceAdded()
+  -Future<void> _onExperienceDeleted()
+  -Future<void> _onEmergencyContactAdded()
+  -Future<void> _onEmergencyContactDeleted()
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationBloc" o-- "workers_repository::src::workers_repository.dart::WorkersRepository"
+"bloc::src::bloc.dart::Bloc" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationBloc"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationState" {
+  +CreationStatus status
+  +List<String> allLanguages
+  +List<String> allLicenses
+  +List<String> allAreas
+  +List<String> allFields
+  +String firstname
+  +String lastname
+  +String birthday
+  +String birthplace
+  +String nationality
+  +String address
+  +String phone
+  +String email
+  +bool ownCar
+  +List<String> languages
+  +List<String> licenses
+  +List<String> areas
+  +List<String> fields
+  +List<Period> periods
+  +List<Experience> experiences
+  +List<EmergencyContact> emergencyContacts
+  +List<Object?> props
+  +CreationState copyWith()
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationState" o-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationStatus"
+"equatable::src::equatable.dart::Equatable" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationState"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationStatus" {
+  +int index
+  {static} +List<CreationStatus> values
+  {static} +CreationStatus initial
+  {static} +CreationStatus loading
+  {static} +CreationStatus success
+  {static} +CreationStatus failure
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationStatus" o-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationStatus"
+"dart::core::Enum" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationStatus"
+
+abstract class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::EditSubscriptionRequested" {
+  +Worker worker
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::EditSubscriptionRequested" o-- "workers_api::src::models::worker.dart::Worker"
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::EditSubscriptionRequested"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LanguagesSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LanguagesSubscriptionRequested"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LicensesSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LicensesSubscriptionRequested"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::AreasSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::AreasSubscriptionRequested"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::FieldsSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::FieldsSubscriptionRequested"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::ResetAllState" {
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::ResetAllState"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::WorkerSubmitted" {
+  +Worker worker
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::WorkerSubmitted" o-- "workers_api::src::models::worker.dart::Worker"
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::WorkerSubmitted"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::FirstNameChanged" {
+  +String text
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::FirstNameChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LastNameChanged" {
+  +String text
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LastNameChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::BirthdayChanged" {
+  +String text
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::BirthdayChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::BirthplaceChanged" {
+  +String text
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::BirthplaceChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::NationalityChanged" {
+  +String text
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::NationalityChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::AddressChanged" {
+  +String text
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::AddressChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::PhoneChanged" {
+  +String text
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::PhoneChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::EmailChanged" {
+  +String text
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::EmailChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::OwnCarChanged" {
+  +bool status
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::OwnCarChanged"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LanguageAdded" {
+  +String language
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LanguageAdded"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LanguageDeleted" {
+  +String language
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LanguageDeleted"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LicenseAdded" {
+  +String license
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LicenseAdded"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LicenseDeleted" {
+  +String license
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::LicenseDeleted"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::AreaAdded" {
+  +String area
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::AreaAdded"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::AreaDeleted" {
+  +String area
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::AreaDeleted"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::FieldAdded" {
+  +String field
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::FieldAdded"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::FieldDeleted" {
+  +String field
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::FieldDeleted"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::PeriodAdded" {
+  +DateTime start
+  +DateTime end
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::PeriodAdded"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::PeriodDeleted" {
+  +Period period
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::PeriodDeleted" o-- "workers_api::src::models::submodels::period::period.dart::Period"
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::PeriodDeleted"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::ExperienceAdded" {
+  +Experience experience
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::ExperienceAdded" o-- "workers_api::src::models::submodels::experience::experience.dart::Experience"
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::ExperienceAdded"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::ExperienceDeleted" {
+  +Experience experience
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::ExperienceDeleted" o-- "workers_api::src::models::submodels::experience::experience.dart::Experience"
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::ExperienceDeleted"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::EmergencyContactAdded" {
+  +EmergencyContact emergencyContact
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::EmergencyContactAdded" o-- "workers_api::src::models::submodels::emergency_contact::emergency_contact.dart::EmergencyContact"
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::EmergencyContactAdded"
+
+class "lavoratori_stagionali::creation::bloc::creation_bloc.dart::EmergencyContactDeleted" {
+  +EmergencyContact emergencyContact
+  +List<Object> props
+}
+
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::EmergencyContactDeleted" o-- "workers_api::src::models::submodels::emergency_contact::emergency_contact.dart::EmergencyContact"
+"lavoratori_stagionali::creation::bloc::creation_bloc.dart::CreationEvent" <|-- "lavoratori_stagionali::creation::bloc::creation_bloc.dart::EmergencyContactDeleted"
+
+class "lavoratori_stagionali::creation::view::creation_page.dart::CreationPage" {
+  +Worker? toEdit
+  -GlobalKey<FormState> _formKey
+  -GlobalKey<FormFieldState<dynamic>> _fistnameKey
+  -GlobalKey<FormFieldState<dynamic>> _lastnameKey
+  -GlobalKey<FormFieldState<dynamic>> _phoneKey
+  -GlobalKey<FormFieldState<dynamic>> _mailKey
+  -GlobalKey<FormFieldState<dynamic>> _birthdayKey
+  -GlobalKey<FormFieldState<dynamic>> _birthplaceKey
+  -GlobalKey<FormFieldState<dynamic>> _nationalityKey
+  -GlobalKey<FormFieldState<dynamic>> _addressKey
+  -GlobalKey<ScaffoldState> _scaffoldKey
+  +Widget build()
+  +bool allFieldsIsCompiled()
+}
+
+"lavoratori_stagionali::creation::view::creation_page.dart::CreationPage" o-- "workers_api::src::models::worker.dart::Worker"
+"lavoratori_stagionali::creation::view::creation_page.dart::CreationPage" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"lavoratori_stagionali::creation::view::creation_page.dart::CreationPage" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormFieldState<dynamic>>"
+"lavoratori_stagionali::creation::view::creation_page.dart::CreationPage" o-- "flutter::src::widgets::framework.dart::GlobalKey<ScaffoldState>"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::creation::view::creation_page.dart::CreationPage"
+
+class "lavoratori_stagionali::creation::widgets::chip_list.dart::ChipList" {
+  +String title
+  +String hint
+  +double width
+  +List<String> list
+  +dynamic Function(String) onAdd
+  +dynamic Function(String) onDelete
+  -TextEditingController _controller
+  +Widget build()
+}
+
+"lavoratori_stagionali::creation::widgets::chip_list.dart::ChipList" o-- "null::dynamic Function(String)"
+"lavoratori_stagionali::creation::widgets::chip_list.dart::ChipList" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::creation::widgets::chip_list.dart::ChipList"
+
+class "lavoratori_stagionali::creation::widgets::emergency_contact_list.dart::EmergencyContactList" {
+  +String title
+  +String hint
+  +double width
+  +double height
+  +List<EmergencyContact> list
+  +dynamic Function(EmergencyContact) onAdd
+  +dynamic Function(EmergencyContact) onDelete
+  +GlobalKey<ScaffoldState> scaffoldKey
+  +Widget build()
+  +Future<EmergencyContact?> showEmergencyContactBuilder()
+}
+
+"lavoratori_stagionali::creation::widgets::emergency_contact_list.dart::EmergencyContactList" o-- "null::dynamic Function(EmergencyContact)"
+"lavoratori_stagionali::creation::widgets::emergency_contact_list.dart::EmergencyContactList" o-- "flutter::src::widgets::framework.dart::GlobalKey<ScaffoldState>"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::creation::widgets::emergency_contact_list.dart::EmergencyContactList"
+
+class "lavoratori_stagionali::creation::widgets::experience_list.dart::ExperienceList" {
+  +String title
+  +String hint
+  +double width
+  +double height
+  +List<Experience> list
+  +dynamic Function(Experience) onAdd
+  +dynamic Function(Experience) onDelete
+  +GlobalKey<ScaffoldState> scaffoldKey
+  +Widget build()
+  +Future<Experience?> showExperienceBuilder()
+}
+
+"lavoratori_stagionali::creation::widgets::experience_list.dart::ExperienceList" o-- "null::dynamic Function(Experience)"
+"lavoratori_stagionali::creation::widgets::experience_list.dart::ExperienceList" o-- "flutter::src::widgets::framework.dart::GlobalKey<ScaffoldState>"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::creation::widgets::experience_list.dart::ExperienceList"
+
+class "lavoratori_stagionali::creation::widgets::period_list.dart::PeriodList" {
+  +String title
+  +String hint
+  +double width
+  +List<Period> list
+  +dynamic Function(DateTimeRange) onAdd
+  +dynamic Function(Period) onDelete
+  +Widget build()
+}
+
+"lavoratori_stagionali::creation::widgets::period_list.dart::PeriodList" o-- "null::dynamic Function(DateTimeRange)"
+"lavoratori_stagionali::creation::widgets::period_list.dart::PeriodList" o-- "null::dynamic Function(Period)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::creation::widgets::period_list.dart::PeriodList"
+
+class "lavoratori_stagionali::creation::widgets::selection_list.dart::SelectionList" {
+  +String title
+  +String hint
+  +double width
+  +List<String> selected
+  +List<String> list
+  +dynamic Function(String) onAdd
+  +dynamic Function(String) onDelete
+  -TextEditingController _controller
+  +Set<dynamic> items
+  +Widget build()
+}
+
+"lavoratori_stagionali::creation::widgets::selection_list.dart::SelectionList" o-- "null::dynamic Function(String)"
+"lavoratori_stagionali::creation::widgets::selection_list.dart::SelectionList" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::creation::widgets::selection_list.dart::SelectionList"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryBloc" {
+  -WorkersRepository _workersRepository
+  -StreamSubscription<dynamic> _workersSubscription
+  -Future<void> _onWorkersSubscriptionRequested()
+  -Future<void> _onLanguagesSubscriptionRequested()
+  -Future<void> _onLicensesSubscriptionRequested()
+  -Future<void> _onAreasSubscriptionRequested()
+  -Future<void> _onFieldsSubscriptionRequested()
+  -Future<void> _onWorkerDeleted()
+  -Future<void> _onUndoDeletionRequested()
+  -Future<void> _onWorkerSelected()
+  -Future<void> _onOpenFilters()
+  -Future<void> _onOwnCarChange()
+  -Future<void> _onSearchModeChange()
+  -Future<void> _onAddLanguages()
+  -Future<void> _onAddLicenses()
+  -Future<void> _onAddAreas()
+  -Future<void> _onAddFields()
+  -Future<void> _onAddPeriods()
+  -Future<void> _onRemoveLanguages()
+  -Future<void> _onRemoveLicenses()
+  -Future<void> _onRemoveAreas()
+  -Future<void> _onRemoveFields()
+  -Future<void> _onRemovePeriods()
+  -Future<void> _onKeywordsChanged()
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryBloc" o-- "workers_repository::src::workers_repository.dart::WorkersRepository"
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryBloc" o-- "dart::async::StreamSubscription<dynamic>"
+"bloc::src::bloc.dart::Bloc" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryBloc"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryState" {
+  +GalleryStatus status
+  +List<Worker> workers
+  +Worker? lastDeletedWorker
+  +Worker? selected
+  +bool filtersIsOpen
+  +List<String> allLanguages
+  +List<String> allLicenses
+  +List<String> allAreas
+  +List<String> allFields
+  +Filters filters
+  +bool searchMode
+  +Iterable<Worker> filteredWorkers
+  +List<Object?> props
+  +GalleryState copyWith()
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryState" o-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryStatus"
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryState" o-- "workers_api::src::models::worker.dart::Worker"
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryState" o-- "filters::filters.dart::Filters"
+"equatable::src::equatable.dart::Equatable" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryState"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryStatus" {
+  +int index
+  {static} +List<GalleryStatus> values
+  {static} +GalleryStatus initial
+  {static} +GalleryStatus loading
+  {static} +GalleryStatus success
+  {static} +GalleryStatus failure
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryStatus" o-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryStatus"
+"dart::core::Enum" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryStatus"
+
+abstract class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkersSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkersSubscriptionRequested"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::LanguagesSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::LanguagesSubscriptionRequested"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::LicensesSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::LicensesSubscriptionRequested"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AreasSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AreasSubscriptionRequested"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::FieldsSubscriptionRequested" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::FieldsSubscriptionRequested"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkerDeleted" {
+  +Worker worker
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkerDeleted" o-- "workers_api::src::models::worker.dart::Worker"
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkerDeleted"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkerUndoDeletionRequested" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkerUndoDeletionRequested"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkerSelection" {
+  +Worker selection
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkerSelection" o-- "workers_api::src::models::worker.dart::Worker"
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::WorkerSelection"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::OpenFilters" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::OpenFilters"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddLanguages" {
+  +String language
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddLanguages"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddLicenses" {
+  +String license
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddLicenses"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddAreas" {
+  +String area
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddAreas"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddFields" {
+  +String field
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddFields"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddPeriods" {
+  +Period period
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddPeriods" o-- "workers_api::src::models::submodels::period::period.dart::Period"
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::AddPeriods"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemoveLanguages" {
+  +String language
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemoveLanguages"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemoveLicenses" {
+  +String license
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemoveLicenses"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemoveAreas" {
+  +String area
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemoveAreas"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemoveFields" {
+  +String field
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemoveFields"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemovePeriods" {
+  +Period period
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemovePeriods" o-- "workers_api::src::models::submodels::period::period.dart::Period"
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::RemovePeriods"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::OwnCarChange" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::OwnCarChange"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::ChangeSearchMode" {
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::ChangeSearchMode"
+
+class "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::KeywordsChange" {
+  +String keywords
+  +List<Object> props
+}
+
+"lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::GalleryEvent" <|-- "lavoratori_stagionali::gallery::bloc::gallery_bloc.dart::KeywordsChange"
+
+class "lavoratori_stagionali::gallery::view::gallery_page.dart::GalleryPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::view::gallery_page.dart::GalleryPage"
+
+class "lavoratori_stagionali::gallery::widgets::contact_card.dart::ContactCard" {
+  +double width
+  +EmergencyContact contact
+  +Widget build()
+}
+
+"lavoratori_stagionali::gallery::widgets::contact_card.dart::ContactCard" o-- "workers_api::src::models::submodels::emergency_contact::emergency_contact.dart::EmergencyContact"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::widgets::contact_card.dart::ContactCard"
+
+class "lavoratori_stagionali::gallery::widgets::experience_card.dart::ExperienceCard" {
+  +double width
+  +Experience experience
+  +Widget build()
+}
+
+"lavoratori_stagionali::gallery::widgets::experience_card.dart::ExperienceCard" o-- "workers_api::src::models::submodels::experience::experience.dart::Experience"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::widgets::experience_card.dart::ExperienceCard"
+
+class "lavoratori_stagionali::gallery::widgets::filters_section.dart::FilterSection" {
+  +double width
+  +Filters filters
+  +List<String> allLanguages
+  +List<String> allLicenses
+  +List<String> allAreas
+  +List<String> allFields
+  +bool searchMode
+  +dynamic Function() changeMode
+  +dynamic Function(String) addLanguages
+  +dynamic Function(String) removeLanguages
+  +dynamic Function(String) addLicenses
+  +dynamic Function(String) removeLicenses
+  +dynamic Function(String) addAreas
+  +dynamic Function(String) removeAreas
+  +dynamic Function(String) addFields
+  +dynamic Function(String) removeFields
+  +dynamic Function(Period) addPeriods
+  +dynamic Function(Period) removePeriods
+  +dynamic Function(bool) changeOwnCar
+  +Widget build()
+}
+
+"lavoratori_stagionali::gallery::widgets::filters_section.dart::FilterSection" o-- "filters::filters.dart::Filters"
+"lavoratori_stagionali::gallery::widgets::filters_section.dart::FilterSection" o-- "null::dynamic Function()"
+"lavoratori_stagionali::gallery::widgets::filters_section.dart::FilterSection" o-- "null::dynamic Function(String)"
+"lavoratori_stagionali::gallery::widgets::filters_section.dart::FilterSection" o-- "null::dynamic Function(Period)"
+"lavoratori_stagionali::gallery::widgets::filters_section.dart::FilterSection" o-- "null::dynamic Function(bool)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::widgets::filters_section.dart::FilterSection"
+
+class "lavoratori_stagionali::gallery::widgets::selection_list.dart::SelectionWidget" {
+  +String title
+  +double width
+  +List<String> selected
+  +List<String> list
+  +dynamic Function(String) onAdd
+  +dynamic Function(String) onDelete
+  +Widget build()
+}
+
+"lavoratori_stagionali::gallery::widgets::selection_list.dart::SelectionWidget" o-- "null::dynamic Function(String)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::widgets::selection_list.dart::SelectionWidget"
+
+class "lavoratori_stagionali::gallery::widgets::serach_bar.dart::SearchBarWidget" {
+  +Color backgroudColor
+  +String hintText
+  +Widget? suffix
+  +Widget? prefix
+  +dynamic Function(String) onChange
+  +Widget build()
+}
+
+"lavoratori_stagionali::gallery::widgets::serach_bar.dart::SearchBarWidget" o-- "dart::ui::Color"
+"lavoratori_stagionali::gallery::widgets::serach_bar.dart::SearchBarWidget" o-- "flutter::src::widgets::framework.dart::Widget"
+"lavoratori_stagionali::gallery::widgets::serach_bar.dart::SearchBarWidget" o-- "null::dynamic Function(String)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::widgets::serach_bar.dart::SearchBarWidget"
+
+class "lavoratori_stagionali::gallery::widgets::simple_text.dart::SimpleText" {
+  +double width
+  +String text
+  +double fontSize
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::widgets::simple_text.dart::SimpleText"
+
+class "lavoratori_stagionali::gallery::widgets::worker_card.dart::WorkerCard" {
+  +Worker worker
+  +bool selected
+  +dynamic Function() onDelete
+  +dynamic Function() onSelected
+  +dynamic Function() onStartEdit
+  +Widget build()
+}
+
+"lavoratori_stagionali::gallery::widgets::worker_card.dart::WorkerCard" o-- "workers_api::src::models::worker.dart::Worker"
+"lavoratori_stagionali::gallery::widgets::worker_card.dart::WorkerCard" o-- "null::dynamic Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::widgets::worker_card.dart::WorkerCard"
+
+class "lavoratori_stagionali::gallery::widgets::worker_card.dart::Menu" {
+  +int index
+  {static} +List<Menu> values
+  {static} +Menu Modifica
+  {static} +Menu Elimina
+}
+
+"lavoratori_stagionali::gallery::widgets::worker_card.dart::Menu" o-- "lavoratori_stagionali::gallery::widgets::worker_card.dart::Menu"
+"dart::core::Enum" <|-- "lavoratori_stagionali::gallery::widgets::worker_card.dart::Menu"
+
+class "lavoratori_stagionali::gallery::widgets::worker_section.dart::WorkerSection" {
+  +double width
+  +Worker worker
+  +Widget build()
+}
+
+"lavoratori_stagionali::gallery::widgets::worker_section.dart::WorkerSection" o-- "workers_api::src::models::worker.dart::Worker"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::gallery::widgets::worker_section.dart::WorkerSection"
+
+class "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeCubit" {
+  +void setTab()
+  +void editWorker()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeCubit"
+
+class "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeState" {
+  +HomeTab tab
+  +Worker? toEdit
+  +List<Object> props
+}
+
+"lavoratori_stagionali::home::cubit::home_cubit.dart::HomeState" o-- "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeTab"
+"lavoratori_stagionali::home::cubit::home_cubit.dart::HomeState" o-- "workers_api::src::models::worker.dart::Worker"
+"equatable::src::equatable.dart::Equatable" <|-- "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeState"
+
+class "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeTab" {
+  +int index
+  {static} +List<HomeTab> values
+  {static} +HomeTab gallery
+  {static} +HomeTab creation
+}
+
+"lavoratori_stagionali::home::cubit::home_cubit.dart::HomeTab" o-- "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeTab"
+"dart::core::Enum" <|-- "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeTab"
+
+class "lavoratori_stagionali::home::view::home_page.dart::HomePage" {
+  +WorkersRepository workersRepository
+  {static} +Page<dynamic> page()
+  +Widget build()
+}
+
+"lavoratori_stagionali::home::view::home_page.dart::HomePage" o-- "workers_repository::src::workers_repository.dart::WorkersRepository"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::home::view::home_page.dart::HomePage"
+
+class "lavoratori_stagionali::home::view::home_page.dart::HomeView" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::home::view::home_page.dart::HomeView"
+
+class "lavoratori_stagionali::home::view::home_page.dart::_HomeTabButton" {
+  +HomeTab groupValue
+  +HomeTab value
+  +Widget icon
+  +String title
+  +Widget build()
+}
+
+"lavoratori_stagionali::home::view::home_page.dart::_HomeTabButton" o-- "lavoratori_stagionali::home::cubit::home_cubit.dart::HomeTab"
+"lavoratori_stagionali::home::view::home_page.dart::_HomeTabButton" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::home::view::home_page.dart::_HomeTabButton"
+
+class "lavoratori_stagionali::home::view::home_page.dart::Menu" {
+  +int index
+  {static} +List<Menu> values
+  {static} +Menu Logout
+}
+
+"lavoratori_stagionali::home::view::home_page.dart::Menu" o-- "lavoratori_stagionali::home::view::home_page.dart::Menu"
+"dart::core::Enum" <|-- "lavoratori_stagionali::home::view::home_page.dart::Menu"
+
+class "lavoratori_stagionali::login::cubit::login_cubit.dart::LoginCubit" {
+  -AuthenticationRepository _authenticationRepository
+  +void emailChanged()
+  +void passwordChanged()
+  +void passwordVisibilityChanged()
+  +Future<void> logInWithCredentials()
+}
+
+"lavoratori_stagionali::login::cubit::login_cubit.dart::LoginCubit" o-- "authentication_repository::src::authentication_repository.dart::AuthenticationRepository"
+"bloc::src::cubit.dart::Cubit" <|-- "lavoratori_stagionali::login::cubit::login_cubit.dart::LoginCubit"
+
+class "lavoratori_stagionali::login::cubit::login_cubit.dart::LoginState" {
+  +String email
+  +String password
+  +bool password_visibility
+  +String? errorMessage
+  +LoginStatus status
+  +List<Object> props
+  +LoginState copyWith()
+}
+
+"lavoratori_stagionali::login::cubit::login_cubit.dart::LoginState" o-- "lavoratori_stagionali::login::cubit::login_cubit.dart::LoginStatus"
+"equatable::src::equatable.dart::Equatable" <|-- "lavoratori_stagionali::login::cubit::login_cubit.dart::LoginState"
+
+class "lavoratori_stagionali::login::cubit::login_cubit.dart::LoginStatus" {
+  +int index
+  {static} +List<LoginStatus> values
+  {static} +LoginStatus invalid
+  {static} +LoginStatus isValidated
+  {static} +LoginStatus submissionInProgress
+  {static} +LoginStatus submissionSuccess
+  {static} +LoginStatus isSubmissionFailure
+}
+
+"lavoratori_stagionali::login::cubit::login_cubit.dart::LoginStatus" o-- "lavoratori_stagionali::login::cubit::login_cubit.dart::LoginStatus"
+"dart::core::Enum" <|-- "lavoratori_stagionali::login::cubit::login_cubit.dart::LoginStatus"
+
+class "lavoratori_stagionali::login::view::login_form.dart::LoginForm" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::login::view::login_form.dart::LoginForm"
+
+class "lavoratori_stagionali::login::view::login_form.dart::_EmailInput" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::login::view::login_form.dart::_EmailInput"
+
+class "lavoratori_stagionali::login::view::login_form.dart::_PasswordInput" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::login::view::login_form.dart::_PasswordInput"
+
+class "lavoratori_stagionali::login::view::login_form.dart::_LoginButton" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::login::view::login_form.dart::_LoginButton"
+
+class "lavoratori_stagionali::login::view::login_page.dart::LoginPage" {
+  {static} +Page<dynamic> page()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "lavoratori_stagionali::login::view::login_page.dart::LoginPage"
+
+
+@enduml
