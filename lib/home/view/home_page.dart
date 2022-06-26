@@ -6,7 +6,9 @@ import 'package:workers_repository/workers_repository.dart';
 
 //Project imports
 import '../../app/bloc/app_bloc.dart';
+import '../../creation/bloc/creation_bloc.dart' as c;
 import '../../creation/view/creation_page.dart';
+import '../../gallery/bloc/gallery_bloc.dart';
 import '../../gallery/view/gallery_page.dart';
 import '../cubit/home_cubit.dart';
 
@@ -28,7 +30,44 @@ class HomePage extends StatelessWidget {
       create: (_) => HomeCubit(),
       child: RepositoryProvider<WorkersRepository>(
         create: (context) => workersRepository,
-        child: HomeView(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => GalleryBloc(workersRepository: workersRepository)        ..add(
+                const WorkersSubscriptionRequested(),
+              )
+                ..add(
+                  const LanguagesSubscriptionRequested(),
+                )
+                ..add(
+                  const LicensesSubscriptionRequested(),
+                )
+                ..add(
+                  const AreasSubscriptionRequested(),
+                )
+                ..add(
+                  const FieldsSubscriptionRequested(),
+                ),
+            ),
+            BlocProvider(
+              create: (_) =>
+                  c.CreationBloc(workersRepository: workersRepository)
+                    ..add(
+                      const c.LanguagesSubscriptionRequested(),
+                    )
+                    ..add(
+                      const c.LicensesSubscriptionRequested(),
+                    )
+                    ..add(
+                      const c.AreasSubscriptionRequested(),
+                    )
+                    ..add(
+                      const c.FieldsSubscriptionRequested(),
+                    ),
+            ),
+          ],
+          child: HomeView(),
+        ),
       ),
     );
   }
@@ -44,17 +83,20 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       body: IndexedStack(
         index: selectedTab.index,
-        children: const [
+        children: [
           GalleryPage(),
-          CreationPage(),
+          CreationPage(toEdit: context.select((HomeCubit cubit) => cubit.state.toEdit),),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-            tooltip: "Logout",
-            backgroundColor: Colors.white,
-            child: Icon(Icons.logout,color: Colors.black,),
-            onPressed: ()=>context.read<AppBloc>().add(AppLogoutRequested()),
-          ),
+        tooltip: "Logout",
+        backgroundColor: Colors.white,
+        child: Icon(
+          Icons.logout,
+          color: Colors.black,
+        ),
+        onPressed: () => context.read<AppBloc>().add(AppLogoutRequested()),
+      ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniStartDocked,
       bottomNavigationBar: BottomAppBar(

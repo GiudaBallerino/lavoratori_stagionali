@@ -7,6 +7,14 @@ abstract class CreationEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class EditSubscriptionRequested extends CreationEvent {
+  const EditSubscriptionRequested(this.worker);
+  final Worker worker;
+
+  @override
+  List<Object> get props => [worker];
+}
+
 class LanguagesSubscriptionRequested extends CreationEvent {
   const LanguagesSubscriptionRequested();
 }
@@ -23,7 +31,7 @@ class FieldsSubscriptionRequested extends CreationEvent {
   const FieldsSubscriptionRequested();
 }
 
-class ResetAllState extends CreationEvent{
+class ResetAllState extends CreationEvent {
   const ResetAllState();
 }
 
@@ -36,7 +44,7 @@ class WorkerSubmitted extends CreationEvent {
   List<Object> get props => [worker];
 }
 
-class FirstNameChanged extends CreationEvent{
+class FirstNameChanged extends CreationEvent {
   const FirstNameChanged(this.text);
 
   final String text;
@@ -45,7 +53,7 @@ class FirstNameChanged extends CreationEvent{
   List<Object> get props => [text];
 }
 
-class LastNameChanged extends CreationEvent{
+class LastNameChanged extends CreationEvent {
   const LastNameChanged(this.text);
 
   final String text;
@@ -54,7 +62,7 @@ class LastNameChanged extends CreationEvent{
   List<Object> get props => [text];
 }
 
-class BirthdayChanged extends CreationEvent{
+class BirthdayChanged extends CreationEvent {
   const BirthdayChanged(this.text);
 
   final String text;
@@ -63,7 +71,7 @@ class BirthdayChanged extends CreationEvent{
   List<Object> get props => [text];
 }
 
-class BirthplaceChanged extends CreationEvent{
+class BirthplaceChanged extends CreationEvent {
   const BirthplaceChanged(this.text);
 
   final String text;
@@ -72,17 +80,16 @@ class BirthplaceChanged extends CreationEvent{
   List<Object> get props => [text];
 }
 
-class NationalityChanged extends CreationEvent{
+class NationalityChanged extends CreationEvent {
   const NationalityChanged(this.text);
 
   final String text;
 
   @override
   List<Object> get props => [text];
-
 }
 
-class AddressChanged extends CreationEvent{
+class AddressChanged extends CreationEvent {
   const AddressChanged(this.text);
 
   final String text;
@@ -91,7 +98,7 @@ class AddressChanged extends CreationEvent{
   List<Object> get props => [text];
 }
 
-class PhoneChanged extends CreationEvent{
+class PhoneChanged extends CreationEvent {
   const PhoneChanged(this.text);
 
   final String text;
@@ -100,7 +107,7 @@ class PhoneChanged extends CreationEvent{
   List<Object> get props => [text];
 }
 
-class EmailChanged extends CreationEvent{
+class EmailChanged extends CreationEvent {
   const EmailChanged(this.text);
 
   final String text;
@@ -109,7 +116,7 @@ class EmailChanged extends CreationEvent{
   List<Object> get props => [text];
 }
 
-class OwnCarChanged extends CreationEvent{
+class OwnCarChanged extends CreationEvent {
   const OwnCarChanged(this.status);
 
   final bool status;
@@ -197,7 +204,7 @@ class PeriodAdded extends CreationEvent {
   final DateTime end;
 
   @override
-  List<Object> get props => [start,end];
+  List<Object> get props => [start, end];
 }
 
 class PeriodDeleted extends CreationEvent {

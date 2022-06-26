@@ -16,14 +16,14 @@ class CreationState extends Equatable {
     this.allLanguages = const [],
     this.allAreas = const [],
     this.allFields = const [],
-    this.firstname,
-    this.lastname,
-    this.birthday,
-    this.birthplace,
-    this.nationality,
-    this.address,
-    this.phone,
-    this.email,
+    this.firstname = "",
+    this.lastname = "",
+    this.birthday = "",
+    this.birthplace = "",
+    this.nationality = "",
+    this.address = "",
+    this.phone = "",
+    this.email = "",
     this.ownCar = false,
     this.languages = const ['Italiano'],
     this.licenses = const [],
@@ -42,14 +42,14 @@ class CreationState extends Equatable {
   final List<String> allFields;
 
   //inserimento
-  final String? firstname;
-  final String? lastname;
-  final String? birthday;
-  final String? birthplace;
-  final String? nationality;
-  final String? address;
-  final String? phone;
-  final String? email;
+  final String firstname;
+  final String lastname;
+  final String birthday;
+  final String birthplace;
+  final String nationality;
+  final String address;
+  final String phone;
+  final String email;
   final bool ownCar;
   final List<String> languages;
   final List<String> licenses;
@@ -65,14 +65,14 @@ class CreationState extends Equatable {
     List<String> Function()? allLicenses,
     List<String> Function()? allAreas,
     List<String> Function()? allFields,
-    String? Function()? firstname,
-    String? Function()? lastname,
-    String? Function()? birthday,
-    String? Function()? birthplace,
-    String? Function()? nationality,
-    String? Function()? address,
-    String? Function()? phone,
-    String? Function()? email,
+    String Function()? firstname,
+    String Function()? lastname,
+    String Function()? birthday,
+    String Function()? birthplace,
+    String Function()? nationality,
+    String Function()? address,
+    String Function()? phone,
+    String Function()? email,
     bool Function()? ownCar,
     List<String> Function()? languages,
     List<String> Function()? licenses,

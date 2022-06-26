@@ -41,7 +41,7 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
     on<KeywordsChange>(_onKeywordsChanged);
     _workersSubscription = _workersRepository.watch.listen(
       (event) async {
-        var fullDocument=(await event).fullDocument;
+        var fullDocument = (await event).fullDocument;
 
         await _workersRepository.init();
       },
@@ -457,5 +457,4 @@ class GalleryBloc extends Bloc<GalleryEvent, GalleryState> {
       emit(state.copyWith(status: () => GalleryStatus.failure));
     }
   }
-
 }

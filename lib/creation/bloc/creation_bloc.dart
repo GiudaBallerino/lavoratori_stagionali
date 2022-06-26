@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:lavoratori_stagionali/utils/string_extension.dart';
 import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
@@ -14,6 +15,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
         super(
           const CreationState(),
         ) {
+    on<EditSubscriptionRequested>(_onEditSubscriptionRequested);
     on<LanguagesSubscriptionRequested>(_onLanguagesSubscriptionRequested);
     on<LicensesSubscriptionRequested>(_onLicensesSubscriptionRequested);
     on<AreasSubscriptionRequested>(_onAreasSubscriptionRequested);
@@ -47,10 +49,41 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
 
   final WorkersRepository _workersRepository;
 
+  Future<void> _onEditSubscriptionRequested(
+    EditSubscriptionRequested event,
+    Emitter<CreationState> emit,
+  ) async {
+    try {
+      emit(
+        state.copyWith(
+          status: () => CreationStatus.success,
+          firstname: () => event.worker.firstname,
+          lastname: () => event.worker.lastname,
+          birthday: ()=> DateFormat('dd/MM/yyyy').format(event.worker.birthday),
+          birthplace: ()=>event.worker.birthplace,
+          nationality: ()=>event.worker.nationality,
+          address: ()=>event.worker.address,
+          phone: ()=>event.worker.phone,
+          email: ()=>event.worker.email,
+          ownCar: ()=>event.worker.ownCar,
+          languages: ()=>event.worker.languages,
+          licenses: ()=>event.worker.licenses,
+          areas: ()=>event.worker.areas,
+          fields: ()=>event.worker.fields,
+          periods: ()=>event.worker.periods,
+          experiences: ()=>event.worker.experiences,
+          emergencyContacts: ()=>event.worker.emergencyContacts,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(status: () => CreationStatus.failure));
+    }
+  }
+
   Future<void> _onLanguagesSubscriptionRequested(
-      LanguagesSubscriptionRequested event,
-      Emitter<CreationState> emit,
-      ) async {
+    LanguagesSubscriptionRequested event,
+    Emitter<CreationState> emit,
+  ) async {
     emit(state.copyWith(status: () => CreationStatus.loading));
 
     await emit.forEach<List<Worker>>(
@@ -77,9 +110,9 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
   }
 
   Future<void> _onLicensesSubscriptionRequested(
-      LicensesSubscriptionRequested event,
-      Emitter<CreationState> emit,
-      ) async {
+    LicensesSubscriptionRequested event,
+    Emitter<CreationState> emit,
+  ) async {
     emit(state.copyWith(status: () => CreationStatus.loading));
 
     await emit.forEach<List<Worker>>(
@@ -106,9 +139,9 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
   }
 
   Future<void> _onAreasSubscriptionRequested(
-      AreasSubscriptionRequested event,
-      Emitter<CreationState> emit,
-      ) async {
+    AreasSubscriptionRequested event,
+    Emitter<CreationState> emit,
+  ) async {
     emit(state.copyWith(status: () => CreationStatus.loading));
 
     await emit.forEach<List<Worker>>(
@@ -134,9 +167,9 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
   }
 
   Future<void> _onFieldsSubscriptionRequested(
-      FieldsSubscriptionRequested event,
-      Emitter<CreationState> emit,
-      ) async {
+    FieldsSubscriptionRequested event,
+    Emitter<CreationState> emit,
+  ) async {
     emit(state.copyWith(status: () => CreationStatus.loading));
 
     await emit.forEach<List<Worker>>(
@@ -174,7 +207,7 @@ class CreationBloc extends Bloc<CreationEvent, CreationState> {
         lastname: () => '',
         phone: () => '',
         email: () => '',
-        birthday: () => null,
+        birthday: () => '',
         birthplace: () => '',
         nationality: () => '',
         address: () => '',

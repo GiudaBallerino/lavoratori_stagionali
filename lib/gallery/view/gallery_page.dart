@@ -13,40 +13,13 @@ import 'package:lavoratori_stagionali/gallery/widgets/worker_section.dart';
 import 'package:workers_api/workers_api.dart';
 import 'package:workers_repository/workers_repository.dart';
 
+import '../../creation/bloc/creation_bloc.dart' show CreationBloc, EditSubscriptionRequested;
+import '../../home/cubit/home_cubit.dart';
 import '../bloc/gallery_bloc.dart';
 import '../widgets/contact_card.dart';
 
 class GalleryPage extends StatelessWidget {
-  const GalleryPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GalleryBloc(
-        workersRepository: context.read<WorkersRepository>(),
-      )
-        ..add(
-          const WorkersSubscriptionRequested(),
-        )
-        ..add(
-          const LanguagesSubscriptionRequested(),
-        )
-        ..add(
-          const LicensesSubscriptionRequested(),
-        )
-        ..add(
-          const AreasSubscriptionRequested(),
-        )
-        ..add(
-          const FieldsSubscriptionRequested(),
-        ),
-      child: GalleryView(),
-    );
-  }
-}
-
-class GalleryView extends StatelessWidget {
-  GalleryView({Key? key}) : super(key: key);
+  GalleryPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -173,6 +146,10 @@ class GalleryView extends StatelessWidget {
                                       onSelected: () => context
                                           .read<GalleryBloc>()
                                           .add(WorkerSelection(worker)),
+                                      onStartEdit: (){
+                                        context.read<CreationBloc>().add(EditSubscriptionRequested(worker));
+                                        context.read<HomeCubit>().editWorker(worker);
+                                      },
                                     ),
                                 ],
                               ),
@@ -231,7 +208,9 @@ class GalleryView extends StatelessWidget {
                       );
                     } else if (state.selected != null) {
                       return WorkerSection(
-                          width: size.width * 0.5 - 8, worker: state.selected!);
+                        width: size.width * 0.5 - 8,
+                        worker: state.selected!,
+                      );
                     } else {
                       return Expanded(
                         child: Center(
