@@ -23,7 +23,7 @@ class MongoDBWorkersApi extends WorkersApi {
   Future<List<Map<String, dynamic>>> _getValue() async =>
       await _plugin.find().toList();
   Future<void> _updateValue(String id, Map<String, dynamic> value) async =>
-      await _plugin.updateOne(where.eq('id', id), value);
+      await _plugin.replaceOne(where.eq('id', id), value);
   Future<void> _setValue(Map<String, dynamic> value) async =>
       await _plugin.insertOne(value);
   Future<void> _deleteValue(String id) async =>
@@ -61,7 +61,7 @@ class MongoDBWorkersApi extends WorkersApi {
     if (workerIndex >= 0) {
       workers[workerIndex] = worker;
       _workerStreamController.add(workers);
-      return await _updateValue(workers[workerIndex].id, worker.toJson());
+      return _updateValue(workers[workerIndex].id, worker.toJson());
     } else {
       workers.add(worker);
       _workerStreamController.add(workers);

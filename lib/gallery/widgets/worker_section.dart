@@ -1,88 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lavoratori_stagionali/gallery/widgets/simple_text.dart';
 import 'package:workers_api/workers_api.dart' show Worker;
 
 import 'contact_card.dart';
 import 'experience_card.dart';
 
 class WorkerSection extends StatelessWidget {
-  const WorkerSection({Key? key,required this.width,required this.worker}) : super(key: key);
+  const WorkerSection({
+    Key? key,
+    required this.width,
+    required this.worker,
+  }) : super(key: key);
 
   final double width;
   final Worker worker;
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
+    return SingleChildScrollView(
       controller: ScrollController(),
       child: SizedBox(
         width: width,
         child: Wrap(
           children: [
-            SizedBox(
+            SimpleText(
               width: width,
-              child: Text(
-                '${worker.firstname} ${worker.lastname}',
-                style: TextStyle(fontSize: 20),
-              ),
+              text: '${worker.firstname} ${worker.lastname}',
+              fontSize: 20,
             ),
-            SizedBox(
-              width: width*0.5,
-              child: Text(
-                'E-mail: ${worker.email}',
-                style: TextStyle(fontSize: 15),
-              ),
+            SimpleText(
+              width: width * 0.5,
+              text: 'e-mail: ${worker.email}',
+              fontSize: 15,
             ),
-            SizedBox(
-              width: width*0.5,
-              child: Text(
-                'Nato il: ${DateFormat('dd/MM/yyyy').format(worker.birthday)}',
-                style: TextStyle(fontSize: 15),
-              ),
+            SimpleText(
+              width: width * 0.5,
+              text:
+                  'Nato il: ${DateFormat('dd/MM/yyyy').format(worker.birthday)}',
+              fontSize: 15,
             ),
-            SizedBox(
-              width: width*0.5,
-              child: Text(
-                'Telefono: ${worker.phone}',
-                style: TextStyle(fontSize: 15),
-              ),
+            SimpleText(
+              width: width * 0.5,
+              text: 'telefono: ${worker.phone}',
+              fontSize: 15,
             ),
-            SizedBox(
-              width: width*0.5,
-              child: Text(
-                'A: ${worker.birthplace}',
-                style: TextStyle(fontSize: 15),
-              ),
+            SimpleText(
+              width: width * 0.5,
+              text: 'A: ${worker.birthplace}',
+              fontSize: 15,
             ),
-            SizedBox(
-              width: width*0.5,
-              child: Text(
-                'Indirizzo: ${worker.address}',
-                style: TextStyle(fontSize: 15),
-              ),
+            SimpleText(
+              width: width * 0.5,
+              text: 'indirizzo: ${worker.address}',
+              fontSize: 15,
             ),
-            SizedBox(
-              width: width*0.5,
-              child: Text(
-                'Nazionalità: ${worker.nationality}',
-                style: TextStyle(fontSize: 15),
-              ),
+            SimpleText(
+              width: width * 0.5,
+              text: 'Nazionalità: ${worker.nationality}',
+              fontSize: 15,
             ),
             Divider(),
             SizedBox(
-              width: width*0.5,
+              width: width * 0.5,
               child: Wrap(
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  SizedBox(
-                    width: width*0.5,
-                    child: Text(
-                      'Lingue parlate:',
-                      style: TextStyle(fontSize: 15),
-                    ),
+                  SimpleText(
+                    width: width * 0.5,
+                    text: 'Lingue parlate:',
+                    fontSize: 15,
                   ),
-                  for (final lang
-                  in worker.languages)
+                  for (final lang in worker.languages)
                     Chip(
                       label: Text(lang),
                     ),
@@ -90,17 +79,15 @@ class WorkerSection extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: width*0.5,
+              width: width * 0.5,
               child: Wrap(
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  SizedBox(
-                    width: width*0.58,
-                    child: Text(
-                      'Patenti:',
-                      style: TextStyle(fontSize: 15),
-                    ),
+                  SimpleText(
+                    width: width * 0.58,
+                    text: 'Patenti:',
+                    fontSize: 15,
                   ),
                   for (final lic in worker.licenses)
                     Chip(
@@ -110,17 +97,15 @@ class WorkerSection extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: width*0.5,
+              width: width * 0.5,
               child: Wrap(
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  SizedBox(
-                    width: width*0.5,
-                    child: Text(
-                      'Zone:',
-                      style: TextStyle(fontSize: 15),
-                    ),
+                  SimpleText(
+                    width: width * 0.5,
+                    text: 'Zone:',
+                    fontSize: 15,
                   ),
                   for (final area in worker.areas)
                     Chip(
@@ -130,7 +115,7 @@ class WorkerSection extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: width*0.5,
+              width: width * 0.5,
               child: Row(
                 children: [
                   Text(
@@ -147,17 +132,15 @@ class WorkerSection extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: width*0.5,
+              width: width * 0.5,
               child: Wrap(
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  SizedBox(
-                    width: width*0.5,
-                    child: Text(
-                      'Specializzazioni:',
-                      style: TextStyle(fontSize: 15),
-                    ),
+                  SimpleText(
+                    width: width * 0.5,
+                    text: 'Specializzazioni:',
+                    fontSize: 15,
                   ),
                   for (final field in worker.fields)
                     Chip(
@@ -167,20 +150,17 @@ class WorkerSection extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: width*0.5,
+              width: width * 0.5,
               child: Wrap(
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  SizedBox(
-                    width: width*0.5,
-                    child: Text(
-                      'Periodi:',
-                      style: TextStyle(fontSize: 15),
-                    ),
+                  SimpleText(
+                    width: width * 0.5,
+                    text: 'Periodi:',
+                    fontSize: 15,
                   ),
-                  for (final period
-                  in worker.periods)
+                  for (final period in worker.periods)
                     Chip(
                       label: Text(
                           '${DateFormat('dd/MM').format(period.start)} - ${DateFormat('dd/MM').format(period.end)}'),
@@ -195,18 +175,13 @@ class WorkerSection extends StatelessWidget {
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  SizedBox(
+                  SimpleText(
                     width: width,
-                    child: Text(
-                      'Esperienze:',
-                      style: TextStyle(fontSize: 15),
-                    ),
+                    text: 'Esperienze:',
+                    fontSize: 15,
                   ),
-                  for (final experience
-                  in worker.experiences)
-                    ExperienceCard(
-                        width: width,
-                        experience: experience),
+                  for (final experience in worker.experiences)
+                    ExperienceCard(width: width, experience: experience),
                 ],
               ),
             ),
@@ -217,18 +192,13 @@ class WorkerSection extends StatelessWidget {
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  SizedBox(
+                  SimpleText(
                     width: width,
-                    child: Text(
-                      'Contatti di emergenza:',
-                      style: TextStyle(fontSize: 15),
-                    ),
+                    text: 'Contatti di emergenza:',
+                    fontSize: 15,
                   ),
-                  for (final contact
-                  in worker.emergencyContacts)
-                    ContactCard(
-                        width: width,
-                        contact: contact),
+                  for (final contact in worker.emergencyContacts)
+                    ContactCard(width: width, contact: contact),
                 ],
               ),
             ),

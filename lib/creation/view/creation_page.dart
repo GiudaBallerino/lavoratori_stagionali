@@ -12,33 +12,9 @@ import '../bloc/creation_bloc.dart';
 import '../widgets/emergency_contact_list.dart';
 
 class CreationPage extends StatelessWidget {
-  const CreationPage({Key? key}) : super(key: key);
+  CreationPage({Key? key, required this.toEdit}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CreationBloc(
-        workersRepository: context.read<WorkersRepository>(),
-      )
-        ..add(
-          const LanguagesSubscriptionRequested(),
-        )
-        ..add(
-          const LicensesSubscriptionRequested(),
-        )
-        ..add(
-          const AreasSubscriptionRequested(),
-        )
-        ..add(
-          const FieldsSubscriptionRequested(),
-        ),
-      child: CreationView(),
-    );
-  }
-}
-
-class CreationView extends StatelessWidget {
-  CreationView({Key? key}) : super(key: key);
+  final Worker? toEdit;
 
   final _formKey = GlobalKey<FormState>();
   final _fistnameKey = GlobalKey<FormFieldState>();
@@ -86,29 +62,52 @@ class CreationView extends StatelessWidget {
                       periods: state.periods,
                       emergencyContacts: state.emergencyContacts);
                   if (_formKey.currentState!.validate() && allFieldCompiled) {
-                    Worker worker = Worker(
-                        firstname: state.firstname!,
-                        lastname: state.lastname!,
-                        birthday:
-                            DateFormat('dd/MM/yyyy').parse(state.birthday!),
-                        birthplace: state.birthplace!,
-                        nationality: state.nationality!,
-                        address: state.address!,
-                        phone: state.phone!,
-                        email: state.email!,
-                        ownCar: state.ownCar,
-                        languages: state.languages,
-                        licenses: state.licenses,
-                        areas: state.areas,
-                        fields: state.fields,
-                        experiences: state.experiences,
-                        periods: state.periods,
-                        emergencyContacts: state.emergencyContacts);
+                    Worker worker;
+                    if (toEdit == null) {
+                      worker = Worker(
+                          firstname: state.firstname,
+                          lastname: state.lastname,
+                          birthday:
+                              DateFormat('dd/MM/yyyy').parse(state.birthday),
+                          birthplace: state.birthplace,
+                          nationality: state.nationality,
+                          address: state.address,
+                          phone: state.phone,
+                          email: state.email,
+                          ownCar: state.ownCar,
+                          languages: state.languages,
+                          licenses: state.licenses,
+                          areas: state.areas,
+                          fields: state.fields,
+                          experiences: state.experiences,
+                          periods: state.periods,
+                          emergencyContacts: state.emergencyContacts);
+                    } else {
+                      worker = toEdit!.copyWith(
+                          firstname: state.firstname,
+                          lastname: state.lastname,
+                          birthday:
+                              DateFormat('dd/MM/yyyy').parse(state.birthday),
+                          birthplace: state.birthplace,
+                          nationality: state.nationality,
+                          address: state.address,
+                          phone: state.phone,
+                          email: state.email,
+                          ownCar: state.ownCar,
+                          languages: state.languages,
+                          licenses: state.licenses,
+                          areas: state.areas,
+                          fields: state.fields,
+                          experiences: state.experiences,
+                          periods: state.periods,
+                          emergencyContacts: state.emergencyContacts);
+                    }
                     context.read<CreationBloc>().add(WorkerSubmitted(worker));
                     context.read<CreationBloc>().add(ResetAllState());
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Aggiunta avvenuta con successo')),
+                      SnackBar(
+                          content: Text(
+                              '${toEdit == null ? 'Aggiunta' : 'Modifica'} avvenuta con successo')),
                     );
                   } else
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -125,22 +124,22 @@ class CreationView extends StatelessWidget {
       body: BlocBuilder<CreationBloc, CreationState>(
         builder: (context, state) {
           TextEditingController _firstName =
-              TextEditingController(text: state.firstname ?? '');
+              TextEditingController(text: state.firstname);
           TextEditingController _lastName =
-              TextEditingController(text: state.lastname ?? '');
+              TextEditingController(text: state.lastname);
           TextEditingController _phone =
-              TextEditingController(text: state.phone ?? '');
+              TextEditingController(text: state.phone);
           TextEditingController _email =
-              TextEditingController(text: state.email ?? '');
+              TextEditingController(text: state.email);
 
           TextEditingController _birthday =
-              TextEditingController(text: state.birthday ?? '');
+              TextEditingController(text: state.birthday);
           TextEditingController _birthplace =
-              TextEditingController(text: state.birthplace ?? '');
+              TextEditingController(text: state.birthplace);
           TextEditingController _nationality =
-              TextEditingController(text: state.nationality ?? '');
+              TextEditingController(text: state.nationality);
           TextEditingController _address =
-              TextEditingController(text: state.address ?? '');
+              TextEditingController(text: state.address);
 
           return SingleChildScrollView(
             controller: ScrollController(),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:workers_api/workers_api.dart';
 
 enum Menu {
-  Elimina,
   Modifica,
+  Elimina,
 }
 
 class WorkerCard extends StatelessWidget {
@@ -13,12 +13,14 @@ class WorkerCard extends StatelessWidget {
     required this.selected,
     required this.onDelete,
     required this.onSelected,
+    required this.onStartEdit,
   }) : super(key: key);
 
   final Worker worker;
   final bool selected;
   final Function() onDelete;
   final Function() onSelected;
+  final Function() onStartEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class WorkerCard extends StatelessWidget {
                 onDelete();
               }
               if (item == Menu.Modifica) {
-                //onEdit();
+                onStartEdit();
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
