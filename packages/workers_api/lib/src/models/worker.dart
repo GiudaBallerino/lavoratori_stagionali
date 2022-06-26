@@ -1,9 +1,7 @@
-import 'package:equatable/equatable.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:person_abstract_model/person_abstract_model.dart';
-import 'package:uuid/uuid.dart';
-import 'package:workers_api/src/models/submodels/submodels.dart';
 
 import '../../workers_api.dart';
 

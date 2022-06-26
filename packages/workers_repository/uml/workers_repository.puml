@@ -1,0 +1,17 @@
+@startuml
+set namespaceSeparator ::
+
+class "workers_repository::src::workers_repository.dart::WorkersRepository" {
+  -WorkersApi _workersApi
+  +Stream<dynamic> watch
+  +Stream<List<Worker>> getWorkers()
+  +Future<void> saveWorker()
+  +Future<void> deleteWorker()
+  +Future<void> init()
+}
+
+"workers_repository::src::workers_repository.dart::WorkersRepository" o-- "workers_api::src::workers_api.dart::WorkersApi"
+"workers_repository::src::workers_repository.dart::WorkersRepository" o-- "dart::async::Stream<dynamic>"
+
+
+@enduml

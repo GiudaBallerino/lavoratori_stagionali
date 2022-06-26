@@ -7,7 +7,7 @@ import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/experience_card.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/filters_section.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/selection_list.dart';
-import 'package:lavoratori_stagionali/gallery/widgets/serach_bar.dart';
+import 'package:lavoratori_stagionali/gallery/widgets/search_bar.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/worker_card.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/worker_section.dart';
 import 'package:workers_api/workers_api.dart';

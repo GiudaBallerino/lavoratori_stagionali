@@ -1,0 +1,90 @@
+@startuml
+set namespaceSeparator ::
+
+class "workers_api::src::models::submodels::emergency_contact::emergency_contact.dart::EmergencyContact" {
+  +dynamic getId
+  +dynamic getFirstname
+  +dynamic getLastname
+  +dynamic getPhone
+  +dynamic getEmail
+  +List<Object> props
+  +EmergencyContact copyWith()
+  {static} +EmergencyContact fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"person_abstract_model::person_abstract_model.dart::Person" <|-- "workers_api::src::models::submodels::emergency_contact::emergency_contact.dart::EmergencyContact"
+
+class "workers_api::src::models::submodels::experience::experience.dart::Experience" {
+  +String id
+  +Period period
+  +String company
+  +List<String> task
+  +String place
+  +double pay
+  +List<Object> props
+  +Experience copyWith()
+  {static} +Experience fromJson()
+  +Map<String, dynamic> toJson()
+  +String toString()
+}
+
+"workers_api::src::models::submodels::experience::experience.dart::Experience" o-- "workers_api::src::models::submodels::period::period.dart::Period"
+"equatable::src::equatable.dart::Equatable" <|-- "workers_api::src::models::submodels::experience::experience.dart::Experience"
+
+class "workers_api::src::models::submodels::period::period.dart::Period" {
+  +String id
+  +DateTime start
+  +DateTime end
+  +List<Object> props
+  +Period copyWith()
+  +bool include()
+  {static} +Period fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "workers_api::src::models::submodels::period::period.dart::Period"
+
+class "workers_api::src::models::worker.dart::Worker" {
+  +DateTime birthday
+  +String birthplace
+  +String nationality
+  +String address
+  +bool ownCar
+  +List<String> languages
+  +List<String> licenses
+  +List<String> areas
+  +List<String> fields
+  +List<Experience> experiences
+  +List<Period> periods
+  +List<EmergencyContact> emergencyContacts
+  +dynamic getId
+  +dynamic getFirstname
+  +dynamic getLastname
+  +dynamic getPhone
+  +dynamic getEmail
+  +List<Object> props
+  +Worker copyWith()
+  {static} +Worker fromJson()
+  +Map<String, dynamic> toJson()
+}
+
+"person_abstract_model::person_abstract_model.dart::Person" <|-- "workers_api::src::models::worker.dart::Worker"
+
+abstract class "workers_api::src::workers_api.dart::WorkersApi" {
+  +Stream<dynamic> watch
+  +Stream<List<Worker>> getWorkers()
+  +Future<void> saveWorker()
+  +Future<void> deleteWorker()
+  +Future<void> init()
+}
+
+"workers_api::src::workers_api.dart::WorkersApi" o-- "dart::async::Stream<dynamic>"
+
+class "workers_api::src::workers_api.dart::WorkerNotFoundException" {
+}
+
+"dart::core::Exception" <|-- "workers_api::src::workers_api.dart::WorkerNotFoundException"
+
+
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+set namespaceSeparator ::
+
+class "mongodb_employees_api::src::mongodb_employees_api.dart::MongoDBEmployeesApi" {
+  -DbCollection _plugin
+  -BehaviorSubject<List<Employee>> _employeeStreamController
+  {static} +String kEmployeesCollectionKey
+  -Future<List<Map<String, dynamic>>> _getValue()
+  -Future<void> _updateValue()
+  -Future<void> _setValue()
+  -Future<void> _deleteValue()
+  -Future<void> _init()
+  +Stream<List<Employee>> getEmployees()
+  +Future<void> saveEmployee()
+  +Future<void> deleteEmployee()
+}
+
+"mongodb_employees_api::src::mongodb_employees_api.dart::MongoDBEmployeesApi" o-- "mongo_dart::mongo_dart.dart::DbCollection"
+"mongodb_employees_api::src::mongodb_employees_api.dart::MongoDBEmployeesApi" o-- "rxdart::src::subjects::behavior_subject.dart::BehaviorSubject<List<Employee>>"
+"employees_api::src::employees_api.dart::EmployeesApi" <|-- "mongodb_employees_api::src::mongodb_employees_api.dart::MongoDBEmployeesApi"
+
+
+@enduml
