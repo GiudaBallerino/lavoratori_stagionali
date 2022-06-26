@@ -30,7 +30,7 @@ class WorkerSection extends StatelessWidget {
             ),
             SimpleText(
               width: width * 0.5,
-              text: 'e-mail: ${worker.email}',
+              text: 'E-mail: ${worker.email}',
               fontSize: 15,
             ),
             SimpleText(
@@ -41,7 +41,7 @@ class WorkerSection extends StatelessWidget {
             ),
             SimpleText(
               width: width * 0.5,
-              text: 'telefono: ${worker.phone}',
+              text: 'Telefono: ${worker.phone}',
               fontSize: 15,
             ),
             SimpleText(
@@ -51,7 +51,7 @@ class WorkerSection extends StatelessWidget {
             ),
             SimpleText(
               width: width * 0.5,
-              text: 'indirizzo: ${worker.address}',
+              text: 'Indirizzo: ${worker.address}',
               fontSize: 15,
             ),
             SimpleText(
