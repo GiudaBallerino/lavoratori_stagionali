@@ -8,17 +8,15 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
-  bloc: ^8.0.1
-  equatable: ^2.0.3
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.0
-  flutter_localizations:
-    sdk: flutter
-  flutter_services_binding: ^0.1.0
+
   intl: ^0.17.0
-  person_abstract_model:
-    path: packages/person_abstract_model
+  bloc: ^8.0.1
+  equatable: ^2.0.3
+  flow_builder: ^0.0.9
+
   workers_api:
     path: packages/workers_api
   employees_api:
@@ -39,12 +37,11 @@ dependencies:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
       ref: a738913c8ce2c9f47515382d40827e794a334274
-  flow_builder: ^0.0.9
-  crypto: ^3.0.2
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  test: ^1.16.0
+  bloc_test: ^9.0.0
+  dependency_validator: ^3.2.0
 
 flutter:
   uses-material-design: true
