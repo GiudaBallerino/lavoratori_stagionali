@@ -39,9 +39,10 @@ dependencies:
       ref: a738913c8ce2c9f47515382d40827e794a334274
 
 dev_dependencies:
+  bloc_test: ^9.0.0
   flutter_test:
     sdk: flutter
-  bloc_test: ^9.0.0
+  mocktail: ^0.2.0
   dependency_validator: ^3.2.0
 
 flutter:
