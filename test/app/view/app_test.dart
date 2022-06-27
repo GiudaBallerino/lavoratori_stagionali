@@ -22,31 +22,33 @@ class MockAppBloc extends MockBloc<AppEvent, AppState> implements AppBloc {}
 
 
 void main(){
-  // group('App', () {
-  //   late AuthenticationRepository authenticationRepository;
-  //   late WorkersRepository workersRepository;
-  //   late Employee employee;
-  //
-  //   setUp(() {
-  //     authenticationRepository = MockAuthenticationRepository();
-  //     workersRepository = MockWorkersRepository();
-  //     employee = MockEmployee();
-  //     when(() => authenticationRepository.employee).thenAnswer(
-  //           (_) => const Stream.empty(),);
-  //     when(() => authenticationRepository.currentEmployee).thenReturn(employee);
-  //     when(() => employee.isNotEmpty).thenReturn(true);
-  //     when(() => employee.isEmpty).thenReturn(false);
-  //     when(() => employee.email).thenReturn('test@gmail.com');
-  //   });
-  //
-  //   testWidgets('renders AppView', (tester) async {
-  //     await tester.pumpWidget(
-  //       App(authenticationRepository: authenticationRepository, workersRepository: workersRepository,),
-  //     );
-  //     await tester.pump();
-  //     expect(find.byType(AppView), findsOneWidget);
-  //   });
-  // });
+  group('App', () {
+    late AuthenticationRepository authenticationRepository;
+    late WorkersRepository workersRepository;
+    late Employee employee;
+
+    setUp(() {
+      authenticationRepository = MockAuthenticationRepository();
+      workersRepository = MockWorkersRepository();
+      employee = MockEmployee();
+      when(() => authenticationRepository.employee).thenAnswer(
+            (_) => const Stream.empty(),);
+      when(() => authenticationRepository.currentEmployee).thenReturn(employee);
+      when(() => employee.isNotEmpty).thenReturn(true);
+      when(() => employee.isEmpty).thenReturn(false);
+      when(() => employee.email).thenReturn('test@gmail.com');
+      when(() => workersRepository.getWorkers()).thenAnswer((_) => Stream.empty());
+      when(() => workersRepository.watch).thenAnswer((_) => Stream.empty());
+    });
+
+    testWidgets('renders AppView', (tester) async {
+      await tester.pumpWidget(
+        App(authenticationRepository: authenticationRepository, workersRepository: workersRepository,),
+      );
+      await tester.pump();
+      expect(find.byType(AppView), findsOneWidget);
+    });
+  });
 
   group('AppView', () {
     late AuthenticationRepository authenticationRepository;
@@ -74,21 +76,21 @@ void main(){
       expect(find.byType(LoginPage), findsOneWidget);
     });
 
-    // testWidgets('navigates to HomePage when authenticated', (tester) async {
-    //   final employee = MockEmployee();
-    //   when(() => employee.email).thenReturn('test@gmail.com');
-    //   when(() => appBloc.state).thenReturn(AppState.authenticated(employee));
-    //   when(() => workersRepository.getWorkers()).thenAnswer((_) => Stream.empty());
-    //   await tester.pumpWidget(
-    //     RepositoryProvider.value(
-    //       value: workersRepository,
-    //       child: MaterialApp(
-    //         home: BlocProvider.value(value: appBloc, child: AppView(workersRepository: workersRepository,)),
-    //       ),
-    //     ),
-    //   );
-    //   await tester.pumpAndSettle();
-    //   expect(find.byType(HomePage), findsOneWidget);
-    // });
+    testWidgets('navigates to HomePage when authenticated', (tester) async {
+      final employee = MockEmployee();
+      when(() => employee.email).thenReturn('test@gmail.com');
+      when(() => appBloc.state).thenReturn(AppState.authenticated(employee));
+      when(() => workersRepository.getWorkers()).thenAnswer((_) => Stream.empty());
+      when(() => workersRepository.watch).thenAnswer((_) => Stream.empty());
+      await tester.pumpWidget(
+        RepositoryProvider.value(
+          value: workersRepository,
+          child: MaterialApp(
+            home: BlocProvider.value(value: appBloc, child: AppView(workersRepository: workersRepository,)),
+          ),
+        ),
+      );
+      expect(find.byType(HomePage), findsOneWidget);
+    });
   });
 }
