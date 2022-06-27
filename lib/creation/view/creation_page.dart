@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:lavoratori_stagionali/creation/widgets/chip_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/experience_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/selection_list.dart';
 import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
 import 'package:workers_api/workers_api.dart';
-import 'package:workers_repository/workers_repository.dart';
 
 import '../bloc/creation_bloc.dart';
 import '../widgets/emergency_contact_list.dart';

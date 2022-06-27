@@ -4,9 +4,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:employees_api/employees_api.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:very_good_analysis/very_good_analysis.dart';
-import 'package:workers_repository/workers_repository.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';

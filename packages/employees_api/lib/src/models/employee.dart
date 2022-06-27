@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:person_abstract_model/person_abstract_model.dart' show Person;
-import 'package:uuid/uuid.dart';
 
 import '../../employees_api.dart';
 

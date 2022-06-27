@@ -1,22 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:lavoratori_stagionali/creation/widgets/selection_list.dart';
-import 'package:lavoratori_stagionali/creation/widgets/period_list.dart';
-import 'package:lavoratori_stagionali/gallery/widgets/experience_card.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/filters_section.dart';
-import 'package:lavoratori_stagionali/gallery/widgets/selection_list.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/search_bar.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/worker_card.dart';
 import 'package:lavoratori_stagionali/gallery/widgets/worker_section.dart';
-import 'package:workers_api/workers_api.dart';
-import 'package:workers_repository/workers_repository.dart';
 
 import '../../creation/bloc/creation_bloc.dart' show CreationBloc, EditSubscriptionRequested;
 import '../../home/cubit/home_cubit.dart';
 import '../bloc/gallery_bloc.dart';
-import '../widgets/contact_card.dart';
 
 class GalleryPage extends StatelessWidget {
   GalleryPage({Key? key}) : super(key: key);
