@@ -61,7 +61,6 @@ class Filters {
 
   bool get isNotEmpty => this != Filters.empty;
 
-  @override
   List<Object?> get props =>
       [keywords, fields, languages, areas, ownCar, licenses, periods];
 }

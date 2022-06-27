@@ -3,11 +3,8 @@ import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lavoratori_stagionali/app/app.dart';
-import 'package:lavoratori_stagionali/gallery/bloc/gallery_bloc.dart';
-import 'package:lavoratori_stagionali/gallery/view/gallery_page.dart';
 import 'package:workers_repository/workers_repository.dart';
 
-import '../../home/view/view.dart';
 import '../bloc/app_bloc.dart';
 import '../routes/routes.dart';
 

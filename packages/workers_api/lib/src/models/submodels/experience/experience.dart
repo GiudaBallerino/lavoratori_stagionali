@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../workers_api.dart';
-import '../period/models.dart';
 
 part 'experience.g.dart';
 
