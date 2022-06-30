@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier for a employee"
+    },
+    "firstname": {
+      "type": "string"
+    },
+    "lastname": {
+      "type": "string"
+    },
+    "birthday": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    }
+    "password": {
+      "type": "string"
+    },
+    "salt": {
+      "type": "string",
+      "description": "Random string used as additional input for password encryption"
+    }
+  },
+  "required": [
+    "id",
+    "firstname",
+    "lastname",
+    "birthday",
+    "email",
+    "password",
+    "phone",
+    "username",
+    "salt"
+  ]
+}
